@@ -5,8 +5,11 @@ module.exports = function (eleventyConfig) {
   // Copy the custom-domain file (GitHub Pages) if present.
   eleventyConfig.addPassthroughCopy("src/CNAME");
 
-  // Copy any real images you drop in later, e.g. src/images/*.
-  eleventyConfig.addPassthroughCopy("src/images");
+  // Copy image assets you drop in src/images straight through to /images.
+  eleventyConfig.addPassthroughCopy("src/images/**/*.{jpg,jpeg,png,gif,webp,svg,avif,ico}");
+
+  // The images README is repo documentation only — don't publish it.
+  eleventyConfig.ignores.add("src/images/README.md");
 
   return {
     dir: {
