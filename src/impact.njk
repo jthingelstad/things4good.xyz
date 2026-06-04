@@ -46,7 +46,6 @@ description: Every nonprofit Things 4 Good has supported since 2021 — who pick
           <option value="Tammy">Tammy</option>
           <option value="Mazie">Mazie</option>
           <option value="Tyler">Tyler</option>
-          <option value="The Things">The Things (2021&ndash;22)</option>
         </select>
       </div>
       <div class="ctrl select">
@@ -72,14 +71,13 @@ description: Every nonprofit Things 4 Good has supported since 2021 — who pick
       </div>
     </div>
 
-    <p class="result-count" id="count">Showing all 20 organizations</p>
+    <p class="result-count" id="count">Showing all {{ metrics.orgCount }} organizations</p>
     <div class="impact-grid" id="grid"></div>
     <div class="empty" id="empty" style="display:none">
       <b>No causes match that.</b>
       Try clearing a filter or your search.
     </div>
 
-    <p class="note-est"><b>A note on the numbers:</b> per-organization amounts shown here are estimates while we wire in the exact figures from each year&rsquo;s tally. Yearly totals are exact.</p>
   </div>
 </section>
 
@@ -91,12 +89,12 @@ description: Every nonprofit Things 4 Good has supported since 2021 — who pick
 </style>
 <script>
   // ---- data (from src/_data/organizations.json) ----
-  // per-org `amount` is an ESTIMATE (yearly totals are exact).
-  // `logo`: add a path like "/images/logo-oceanites.svg" to replace the letter glyph.
-  // `reason`: the picker's own words. 2021–22 were chosen collectively — backfill when ready.
+  // per-org `amount` is the exact figure from each year's tally.
+  // `logo`: a filename in src/images/logos/ (e.g. "oceanites.png"); shown as the card icon when set.
+  // `reason`: the picker's own words; "" hides the "Why … picked it" details (e.g. 2021–22, not yet backfilled).
   const ORGS = {{ organizations | dump | safe }};
 
-  const fmt = (n) => "$" + n.toLocaleString('en-US');
+  const fmt = (n) => "$" + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   const state = { who:"all", year:"all", sort:"year-desc" };
 
   const grid = document.getElementById('grid');
@@ -120,13 +118,12 @@ description: Every nonprofit Things 4 Good has supported since 2021 — who pick
     });
 
     grid.innerHTML = list.map(o => {
-      const initial = o.who === "The Things" ? "T4G" : o.who[0];
-      const whoLabel = o.who === "The Things" ? "The Things" : o.who;
-      const sub = o.who === "The Things" ? "chosen together" : "picked it";
+      const collective = o.who === "Everyone";
+      const whoLabel = o.who;
       const glyph = o.logo
-        ? `<div class="glyph haslogo"><img src="${o.logo}" alt="${o.name} logo" /></div>`
-        : `<div class="glyph">${o.glyph}</div>`;
-      const whyLabel = o.who === "The Things" ? "Why we chose it" : `Why ${o.who} picked it`;
+        ? `<div class="glyph haslogo"><img src="/images/logos/${o.logo}" alt="${o.name} logo" /></div>`
+        : "";
+      const whyLabel = collective ? "Why we supported it" : `Why ${o.who} picked it`;
       const why = o.reason
         ? `<details class="why"><summary>${whyLabel}</summary><blockquote>&ldquo;${o.reason}&rdquo;<cite>&mdash; ${whoLabel}</cite></blockquote></details>`
         : "";
@@ -134,16 +131,15 @@ description: Every nonprofit Things 4 Good has supported since 2021 — who pick
       <article class="icard">
         <div class="itop">
           ${glyph}
-          <span class="ybadge">${o.year}</span>
+          <div class="cardtags">
+            <span class="who-pill" data-who="${o.who}">${whoLabel}</span>
+            <span class="ybadge">${o.year}</span>
+          </div>
         </div>
         <a class="iname" href="${o.url}" target="_blank" rel="noopener">${o.name}</a>
         <p class="iblurb">${o.blurb}</p>
         <div class="imeta">
-          <div class="iwho">
-            <span class="iav" data-who="${o.who}">${initial}</span>
-            <span class="nm">${whoLabel}<small>${sub}</small></span>
-          </div>
-          <div class="iamt"><b>${fmt(o.amount)}</b><span class="est">est.</span></div>
+          <div class="iamt"><b>${fmt(o.amount)}</b><span>raised</span></div>
         </div>
         ${why}
         <a class="go" href="${o.url}" target="_blank" rel="noopener">Visit <span class="arr">&rarr;</span></a>
@@ -151,18 +147,55 @@ description: Every nonprofit Things 4 Good has supported since 2021 — who pick
     }).join('');
 
     const n = list.length;
-    countEl.innerHTML = n === ORGS.length
+    const raised = list.reduce((s, o) => s + o.amount, 0);
+    const head = n === ORGS.length
       ? `Showing all <b>${n}</b> organizations`
       : `Showing <b>${n}</b> of ${ORGS.length} organizations`;
+    countEl.innerHTML = n
+      ? `${head} &middot; <b>${fmt(raised)}</b> raised`
+      : head;
     emptyEl.style.display = n ? 'none' : 'block';
     grid.style.display = n ? 'grid' : 'none';
     grid.style.animation = 'none'; void grid.offsetWidth; grid.style.animation = 'fadeUp .4s ease';
   }
 
-  document.getElementById('whoSel').addEventListener('change', (e) => { state.who = e.target.value; apply(); });
-  document.getElementById('yearSel').addEventListener('change', (e) => { state.year = e.target.value; apply(); });
-  document.getElementById('sort').addEventListener('change', (e) => { state.sort = e.target.value; apply(); });
+  // ---- shareable filters: each control <-> a URL query param ----
+  // e.g. /impact/?who=Tyler&year=2024 links straight to a filtered view.
+  const SELS = { who: 'whoSel', year: 'yearSel', sort: 'sort' };
+  const DEFAULTS = { who: 'all', year: 'all', sort: 'year-desc' };
 
+  const isValidOption = (id, val) =>
+    [...document.getElementById(id).options].some(o => o.value === val);
+
+  function readURL() {
+    const p = new URLSearchParams(location.search);
+    for (const key in SELS) {
+      const v = p.get(key);
+      if (v && isValidOption(SELS[key], v)) {
+        state[key] = v;
+        document.getElementById(SELS[key]).value = v;
+      }
+    }
+  }
+
+  function writeURL() {
+    const p = new URLSearchParams();
+    for (const key in SELS) {
+      if (state[key] !== DEFAULTS[key]) p.set(key, state[key]);
+    }
+    const qs = p.toString();
+    history.replaceState(null, '', qs ? `${location.pathname}?${qs}` : location.pathname);
+  }
+
+  for (const key in SELS) {
+    document.getElementById(SELS[key]).addEventListener('change', (e) => {
+      state[key] = e.target.value;
+      apply();
+      writeURL();
+    });
+  }
+
+  readURL();
   apply();
 </script>
 {% endblock %}

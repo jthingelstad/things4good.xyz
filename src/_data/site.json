@@ -7,9 +7,9 @@
   "tinylyticsEmbed": "",
   "blogUrl": "https://www.thingelstad.com/categories/things-4-good/",
   "makers": [
-    { "name": "Jamie", "role": "the original spark", "url": "https://www.thingelstad.com", "site": "thingelstad.com" },
-    { "name": "Tammy", "role": "quality control", "url": "https://tammy.thingelstad.com", "site": "tammy.thingelstad.com", "alt": true },
-    { "name": "Mazie", "role": "label artist", "url": "https://mazie.thingelstad.com", "site": "mazie.thingelstad.com" },
-    { "name": "Tyler", "role": "production crew", "url": "https://tyler.thingelstad.com", "site": "tyler.thingelstad.com", "alt": true }
+    { "name": "Jamie", "role": "the original spark", "url": "https://www.thingelstad.com", "site": "thingelstad.com", "photo": "/images/family/jamie.jpg" },
+    { "name": "Tammy", "role": "quality control", "url": "https://tammy.thingelstad.com", "site": "tammy.thingelstad.com", "alt": true, "photo": "/images/family/tammy.jpg" },
+    { "name": "Mazie", "role": "label artist", "url": "https://mazie.thingelstad.com", "site": "mazie.thingelstad.com", "photo": "/images/family/mazie.jpg" },
+    { "name": "Tyler", "role": "production crew", "url": "https://tyler.thingelstad.com", "site": "tyler.thingelstad.com", "alt": true, "photo": "/images/family/tyler.jpg" }
   ]
 }

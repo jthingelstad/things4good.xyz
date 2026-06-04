@@ -17,6 +17,8 @@ module.exports = (() => {
   const years = [...sales.perYear].sort((a, b) => a.year - b.year);
   const maxRaised = Math.max(...years.map((y) => y.raised));
   const latestYear = Math.max(...years.map((y) => y.year));
+  // Tallest bar tops out at this % of the plot, leaving headroom for the $ label above it.
+  const BAR_MAX_PCT = 82;
 
   // ---- per-year, carrying a running cumulative + previous-year reference ----
   let cumulative = 0;
@@ -33,7 +35,7 @@ module.exports = (() => {
       growthPct,
       growthDisplay: growthPct === null ? "start" : "+" + growthPct.toFixed(1) + "%",
       deltaDollars: prevRaised === null ? null : y.raised - prevRaised,
-      barHeightPct: Math.round((y.raised / maxRaised) * 100),
+      barHeightPct: Math.round((y.raised / maxRaised) * BAR_MAX_PCT),
       isLatest: y.year === latestYear,
       candles: y.candles,
       candlesEstimate: y.candlesEstimate,

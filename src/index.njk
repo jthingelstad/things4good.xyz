@@ -64,7 +64,7 @@ description: Since 2021 the Thingelstad family has hand-poured wooden-wick candl
 
     <div class="impact-chart reveal">
       {% for y in metrics.perYear %}
-      <div class="bar{% if y.isLatest %} now{% endif %}"><span class="val">${{ y.raisedDisplay }}</span><span class="col" style="height:{{ y.barHeightPct }}%;transition-delay:{{ 0.05 + loop.index0 * 0.08 }}s"></span><span class="yr">{{ y.year }}</span></div>
+      <a class="bar{% if y.isLatest %} now{% endif %}" href="/impact/?year={{ y.year }}" aria-label="See the {{ y.year }} organizations"><span class="val">${{ y.raisedDisplay }}</span><span class="col" style="height:{{ y.barHeightPct }}%;transition-delay:{{ 0.05 + loop.index0 * 0.08 }}s"></span><span class="yr">{{ y.year }}</span></a>
       {% endfor %}
     </div>
 
@@ -208,7 +208,7 @@ description: Since 2021 the Thingelstad family has hand-poured wooden-wick candl
     <div class="makers">
       {% for m in site.makers %}
       <div class="maker reveal">
-        <div class="ph{% if m.alt %} alt{% endif %}" role="img" aria-label="Portrait placeholder: {{ m.name }}"><span class="ph-label">{{ m.name }}</span></div>
+        <div class="ph{% if m.alt %} alt{% endif %}" role="img" aria-label="{% if m.photo %}{{ m.name }}{% else %}Portrait placeholder: {{ m.name }}{% endif %}">{% if m.photo %}<img class="ph-photo" src="{{ m.photo }}" alt="{{ m.name }}">{% else %}<span class="ph-label">{{ m.name }}</span>{% endif %}</div>
         <h3>{{ m.name }}</h3>
         <div class="role">{{ m.role }}</div>
         <a class="site" href="{{ m.url }}" target="_blank" rel="noopener">{{ m.site }} <span aria-hidden="true">&#8599;</span></a>
@@ -227,32 +227,12 @@ description: Since 2021 the Thingelstad family has hand-poured wooden-wick candl
       <p class="lead">Every candle&rsquo;s full $25 goes to a nonprofit &mdash; and you decide which. Each year the four of us each pick a cause we care about. Here&rsquo;s where it&rsquo;s gone.</p>
     </div>
 
-    <div class="good-note reveal">
-      <span class="hand" style="font-size:1.7rem">100% &mdash; for real.</span>
-      <span style="font-weight:500;color:var(--pine-d)">We cover every cost of making the candles ourselves, so the entire sale price becomes a donation.</span>
+    <div class="logo-wall reveal">
+      {% for o in organizations %}<span class="lw"><img src="/images/logos/{{ o.logo }}" alt="{{ o.name }}" /></span>{% endfor %}
     </div>
 
-    <h3 class="good-sub reveal">Our 2025 causes &mdash; in our own words</h3>
-    <div class="causes">
-      {% for c in metrics.currentCauses %}
-      <div class="cause reveal">
-        <div class="who"><span class="av" data-who="{{ c.who }}">{{ c.who[0] }}</span><span class="nm">{{ c.who }}<small>picked {{ c.name }}</small></span></div>
-        <blockquote>&ldquo;{{ c.reason }}&rdquo;</blockquote>
-        <div class="org"><a href="{{ c.url }}" target="_blank" rel="noopener">{{ c.name }} <span aria-hidden="true">&#8599;</span></a></div>
-      </div>
-      {% endfor %}
-    </div>
-
-    <h3 class="good-sub reveal">Sixteen more we&rsquo;ve supported since 2021</h3>
-    <div class="charities">
-      {% for ch in metrics.pastOrgs %}
-      <a class="charity reveal" href="{{ ch.url }}" target="_blank" rel="noopener">
-        <div class="ctop"><div class="glyph">{{ ch.glyph }}</div><span class="yr">{{ ch.place }}</span></div>
-        <h3>{{ ch.name }}</h3>
-        <p>{{ ch.blurb }}</p>
-        <span class="go">Visit <span class="arr">&rarr;</span></span>
-      </a>
-      {% endfor %}
+    <div class="good-summary reveal">
+      <a class="btn btn--primary" href="/impact/">See every cause &amp; what it raised <span class="arr">&rarr;</span></a>
     </div>
   </div>
 </section>

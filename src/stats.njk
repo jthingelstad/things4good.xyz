@@ -52,7 +52,7 @@ description: Five years of Things 4 Good by the numbers — dollars raised, cand
 
     <div class="impact-chart reveal">
       {% for y in metrics.perYear %}
-      <div class="bar{% if y.isLatest %} now{% endif %}"><span class="val">${{ y.raisedDisplay }}</span><span class="col" style="height:{{ y.barHeightPct }}%;transition-delay:{{ 0.05 + loop.index0 * 0.08 }}s"></span><span class="yr">{{ y.year }}</span></div>
+      <a class="bar{% if y.isLatest %} now{% endif %}" href="/impact/?year={{ y.year }}" aria-label="See the {{ y.year }} organizations"><span class="val">${{ y.raisedDisplay }}</span><span class="col" style="height:{{ y.barHeightPct }}%;transition-delay:{{ 0.05 + loop.index0 * 0.08 }}s"></span><span class="yr">{{ y.year }}</span></a>
       {% endfor %}
     </div>
 
