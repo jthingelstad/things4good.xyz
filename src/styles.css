@@ -475,7 +475,7 @@ em.it { font-style: italic; }
 }
 @media (max-width: 560px) {
   body { font-size: 17px; }
-  .steps, .charities, .makers { grid-template-columns: 1fr; }
+  .steps, .charities, .makers, .gifts { grid-template-columns: 1fr; }
   .hero-cta .btn { flex: 1; justify-content: center; }
   .nav-cta { display: none; }
 }

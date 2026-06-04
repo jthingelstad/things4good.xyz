@@ -133,7 +133,7 @@ description: Since 2021 the Thingelstad family has hand-poured wooden-wick candl
         </div>
         <div class="info-row">
           <div class="k">Pre-orders</div>
-          <div class="v">Ordering <b>six or more</b>? Add your candles and scents to our <a href="{{ site.preorderSheet }}" target="_blank" rel="noopener" style="color:var(--marigold-d);font-weight:600;text-decoration:none">pre-order sheet</a> and we&rsquo;ll have them ready for Sunday pickup.</div>
+          <div class="v">Ordering <b>six or more</b>? {% if site.preorderSheet %}Add your candles and scents to our <a href="{{ site.preorderSheet }}" target="_blank" rel="noopener" style="color:var(--marigold-d);font-weight:600;text-decoration:none">pre-order sheet</a> and we&rsquo;ll have them ready for Sunday pickup.{% else %}The pre-order sheet will open closer to the sale, and we&rsquo;ll share it with subscribers first.{% endif %}</div>
         </div>
         <div class="info-row">
           <div class="k">Scents</div>
@@ -291,7 +291,7 @@ description: Since 2021 the Thingelstad family has hand-poured wooden-wick candl
       </details>
       <details class="qa reveal">
         <summary>Can I pre-order candles? <span class="ic" aria-hidden="true"></span></summary>
-        <div class="ans">Absolutely &mdash; and it&rsquo;s easier than ever this year. For any order of <b>six or more</b>, add your candle count and scents to our <a href="{{ site.preorderSheet }}" target="_blank" rel="noopener" style="color:var(--marigold-d);font-weight:600;text-decoration:none">pre-order Google Sheet</a> and we&rsquo;ll have them ready. (We moved pre-orders to a shared sheet because the volume finally outgrew email!) Please plan to pick up pre-orders on <b>Sunday</b>.</div>
+        <div class="ans">Absolutely. For any order of <b>six or more</b>, {% if site.preorderSheet %}add your candle count and scents to our <a href="{{ site.preorderSheet }}" target="_blank" rel="noopener" style="color:var(--marigold-d);font-weight:600;text-decoration:none">pre-order Google Sheet</a> and we&rsquo;ll have them ready.{% else %}we&rsquo;ll open a pre-order sheet closer to the sale and share it with subscribers first.{% endif %} Please plan to pick up pre-orders on <b>Sunday</b>.</div>
       </details>
       <details class="qa reveal">
         <summary>When and where is the 2026 sale? <span class="ic" aria-hidden="true"></span></summary>
@@ -307,7 +307,6 @@ description: Since 2021 the Thingelstad family has hand-poured wooden-wick candl
     <p class="eyebrow" style="justify-content:center">Stay in the loop</p>
     <h2 class="t" style="max-width:18ch;margin-inline:auto">Be the first to know when the candles drop.</h2>
     <p class="lead" style="margin:18px auto 0;text-align:center">We&rsquo;ll send the dates, hours, location, and this year&rsquo;s scents &mdash; nothing else.</p>
-    <!-- TODO: point action at your email provider (Buttondown, Mailchimp, etc.) or keep the mailto fallback below -->
     <form class="sub-form" action="mailto:{{ site.email }}" method="post" enctype="text/plain">
       <input type="email" name="email" placeholder="you@email.com" aria-label="Email address" required />
       <button class="btn btn--primary" type="submit">Notify me</button>

@@ -5,7 +5,8 @@
   "saleYear": "2026",
   "totalRaised": 31787,
   "totalRaisedDisplay": "31,787",
-  "preorderSheet": "https://docs.google.com/spreadsheets/",
+  "preorderSheet": "",
+  "tinylyticsEmbed": "",
   "blogUrl": "https://www.thingelstad.com/categories/things-4-good/",
   "raisedStats": [
     { "value": "20", "label": "Organizations supported" },

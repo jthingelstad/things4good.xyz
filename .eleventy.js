@@ -5,6 +5,9 @@ module.exports = function (eleventyConfig) {
   // Copy the custom-domain file (GitHub Pages) if present.
   eleventyConfig.addPassthroughCopy("src/CNAME");
 
+  // Copy the browser favicon to the site root.
+  eleventyConfig.addPassthroughCopy("src/favicon.svg");
+
   // Copy image assets you drop in src/images straight through to /images.
   eleventyConfig.addPassthroughCopy("src/images/**/*.{jpg,jpeg,png,gif,webp,svg,avif,ico}");
 
