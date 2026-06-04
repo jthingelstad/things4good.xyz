@@ -1,0 +1,18 @@
+[
+  { "glyph": "C", "place": "Twin Cities", "name": "Constellation Fund", "url": "https://constellationfund.org/", "blurb": "Fights poverty across the Twin Cities by funding the region’s most effective local nonprofits." },
+  { "glyph": "F", "place": "Twin Cities", "name": "Free Bikes 4 Kidz", "url": "https://fb4k.org/", "blurb": "Collects and refurbishes used bikes, then gives them to kids who need a set of wheels." },
+  { "glyph": "A", "place": "North Mpls", "name": "Appetite for Change", "url": "https://appetiteforchangemn.org/", "blurb": "Uses food as a tool to build health, wealth, and community in North Minneapolis." },
+  { "glyph": "F", "place": "Global", "name": "Feed My Starving Children", "url": "https://www.fmsc.org/", "blurb": "Volunteers hand-pack nutritious meals for malnourished kids around the world." },
+  { "glyph": "U", "place": "Ukraine", "name": "United Help Ukraine", "url": "https://unitedhelpukraine.org/", "blurb": "Delivers humanitarian aid and medical supplies to Ukrainians affected by the war." },
+  { "glyph": "A", "place": "Minneapolis", "name": "Agate Housing + Services", "url": "https://agatemn.org/", "blurb": "Works to prevent and end homelessness through shelter, housing, and food programs." },
+  { "glyph": "S", "place": "Global", "name": "Save the Snakes", "url": "https://savethesnakes.org/", "blurb": "Protects snake populations and eases human–snake conflict through conservation and education." },
+  { "glyph": "F", "place": "Minnesota", "name": "Free Guitars 4 Kids", "url": "https://fg4k.org/", "blurb": "Puts guitars and music lessons into the hands of kids who want to play." },
+  { "glyph": "O", "place": "Antarctica", "name": "Oceanites", "url": "https://www.oceanites.org/", "blurb": "Studies Antarctic penguins and ecosystems to track the health of our planet." },
+  { "glyph": "F", "place": "National", "name": "Food Recovery Network", "url": "https://www.foodrecoverynetwork.org/", "blurb": "Rescues surplus food from campuses and businesses to fight waste and hunger." },
+  { "glyph": "H", "place": "Tanzania", "name": "Heart to Care Tanzania", "url": "https://www.hearttocaretanzania.org/", "blurb": "Supports education, health, and opportunity for communities in Tanzania." },
+  { "glyph": "A", "place": "Montana", "name": "American Prairie", "url": "https://americanprairie.org/", "blurb": "Building one of the largest nature reserves in America across the Montana prairie." },
+  { "glyph": "S", "place": "Research", "name": "SynGAP Research Fund", "url": "https://curesyngap1.org/", "blurb": "Funds research toward treatments and a cure for SYNGAP1-related disorders." },
+  { "glyph": "W", "place": "Africa", "name": "Water to Thrive", "url": "https://www.watertothrive.org/", "blurb": "Brings clean, safe drinking water to communities in rural Africa." },
+  { "glyph": "S", "place": "Haiti", "name": "Sprint to Cité Soleil", "url": "https://www.sprinttocitesoleil.org/", "blurb": "Supports kids and families in the Cité Soleil community of Haiti." },
+  { "glyph": "W", "place": "Global", "name": "World Central Kitchen", "url": "https://www.worldcentralkitchen.org/", "blurb": "Serves fresh meals to communities in the wake of disasters worldwide." }
+]

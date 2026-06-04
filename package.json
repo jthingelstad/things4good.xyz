@@ -1,0 +1,14 @@
+{
+  "name": "things4good.xyz",
+  "version": "1.0.0",
+  "description": "Things 4 Good — handmade candle fundraiser. Built with Eleventy.",
+  "license": "MIT",
+  "scripts": {
+    "start": "eleventy --serve",
+    "build": "eleventy",
+    "clean": "rm -rf _site"
+  },
+  "devDependencies": {
+    "@11ty/eleventy": "^3.0.0"
+  }
+}

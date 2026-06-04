@@ -1,0 +1,356 @@
+---
+title: Things 4 Good — Handmade candles for good
+description: Since 2021 the Thingelstad family has hand-poured wooden-wick candles for our annual fall fundraiser. Every candle is a $25 donation, and 100% goes to good causes.
+---
+{% extends "base.njk" %}
+
+{% block navLinks %}
+    <a href="#sale">The Sale</a>
+    <a href="/maker-night/">Maker Night</a>
+    <a href="#impact">Impact</a>
+    <a href="#good">The Good</a>
+    <a href="#faq">FAQ</a>
+{% endblock %}
+{% block navDate %}{{ site.saleDates }}{% endblock %}
+{% block navCta %}<a class="btn btn--primary nav-cta" href="#subscribe">Get the announcement</a>{% endblock %}
+
+{% block content %}
+
+<!-- ============================ HERO ============================ -->
+<section class="section hero" id="hero">
+  <div class="hero-glow" aria-hidden="true"></div>
+  <div class="wrap hero-grid">
+    <div class="hero-copy reveal">
+      <span class="pill"><span class="dot"></span>6th annual fall fundraiser</span>
+      <h1 style="margin-top:18px">Hand-poured candles,
+        <br /><span class="pine">100% for good.</span></h1>
+      <p class="lead">Since 2021 the Thingelstad family has hand-poured wooden-wick candles for one weekend a year. Every candle is a $25 donation &mdash; and every dollar goes straight to causes we love.</p>
+      <div class="hero-cta">
+        <a class="btn btn--primary" href="#sale">See this year&rsquo;s sale <span class="arr">&rarr;</span></a>
+        <a class="btn btn--ghost" href="#good">Meet the causes</a>
+      </div>
+      <div class="hero-meta">
+        <span class="pill"><span class="dot"></span>Wooden wick &middot; hand-poured</span>
+        <span class="pill"><span class="dot"></span>$25 each donation</span>
+        <span class="pill"><span class="dot"></span>Minneapolis, MN</span>
+      </div>
+    </div>
+
+    <div class="hero-art reveal">
+      <div class="tape">
+        <span class="hand">listen for the crackle&hellip;</span>
+        <small>WOODEN WICK · HAND POURED</small>
+      </div>
+      <div class="ph" role="img" aria-label="Photo placeholder: a lit hand-poured candle">
+        <span class="ph-label">candle hero photo</span>
+      </div>
+      <div class="badge" aria-hidden="true">
+        <b>100%</b><span>to charity</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====================== RAISED STAT BAND ====================== -->
+<section class="section section--ink raised" id="raised">
+  <div class="wrap">
+    <p class="eyebrow" style="justify-content:center">Since 2021, together we&rsquo;ve raised</p>
+    <div class="big"><span class="pre">$</span><span id="counter" data-target="{{ site.totalRaised }}">{{ site.totalRaisedDisplay }}</span></div>
+    <p class="sub">&hellip;and 100% of it went to the nonprofits below.</p>
+    <div class="statrow">
+      {% for stat in site.raisedStats %}
+      <div class="stat reveal"><b>{{ stat.value | safe }}</b><span>{{ stat.label | safe }}</span></div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ========================= IMPACT ========================= -->
+<section class="section section--paper2" id="impact">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">Five years of impact</p>
+      <h2 class="t">The good, year by year.</h2>
+      <p class="lead">Every fall the community shows up &mdash; and the candles add up. Here&rsquo;s how the fundraiser has grown since we started in 2021.</p>
+    </div>
+
+    <div class="impact-chart reveal">
+      {% for y in impact.years %}
+      <div class="bar{% if y.now %} now{% endif %}"><span class="val">${{ y.amount }}</span><span class="col" style="height:{{ y.height }}%;transition-delay:{{ y.delay }}"></span><span class="yr">{{ y.year }}</span></div>
+      {% endfor %}
+    </div>
+
+    <div class="impact-foot">
+      {% for stat in impact.footStats %}
+      <div class="istat reveal"><b>{{ stat.value }}</b><span>{{ stat.label }}</span></div>
+      {% endfor %}
+    </div>
+
+    <p class="impact-link reveal">We share full results &mdash; and the math behind them &mdash; on the blog after every sale. <a href="{{ site.blogUrl }}" target="_blank" rel="noopener">Read the write-ups &rarr;</a></p>
+  </div>
+</section>
+
+<!-- ========================= THE SALE ========================= -->
+<section class="section" id="sale">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">The 2026 sale</p>
+      <h2 class="t">Mark your calendar.</h2>
+      <p class="lead">One weekend, one table full of candles, and a whole lot of good. Stop by, pick your scents, and choose where your donation goes.</p>
+    </div>
+
+    <div class="sale-grid">
+      <div class="when-card reveal">
+        <div class="glow" aria-hidden="true"></div>
+        <p class="eyebrow">Save the dates</p>
+        <div class="when-days">
+          <div class="when-day">
+            <div class="dow">Saturday</div>
+            <div class="dnum">7</div>
+            <div class="mo">November 2026</div>
+          </div>
+          <div class="when-day">
+            <div class="dow">Sunday</div>
+            <div class="dnum">8</div>
+            <div class="mo">November 2026</div>
+          </div>
+        </div>
+        <p class="when-note">Pre-orders are picked up on <b style="color:#fff">Sunday</b>. Exact hours &amp; location are shared with subscribers closer to the weekend.</p>
+        <a class="btn btn--primary" style="margin-top:20px" href="#subscribe">Get the details <span class="arr">&rarr;</span></a>
+      </div>
+
+      <div class="info-card reveal">
+        <div class="info-row">
+          <div class="k">The candle</div>
+          <div class="v">A hand-poured, wooden-wick candle &mdash; <b>$25 donation</b> each. Same price it&rsquo;s been every year.</div>
+        </div>
+        <div class="info-row">
+          <div class="k">Payment</div>
+          <div class="v">
+            However&rsquo;s easiest for you.
+            <div class="pay">
+              <span>Cash</span><span>Apple Pay</span><span>Venmo</span><span>Zelle</span>
+            </div>
+          </div>
+        </div>
+        <div class="info-row">
+          <div class="k">Pre-orders</div>
+          <div class="v">Ordering <b>six or more</b>? Add your candles and scents to our <a href="{{ site.preorderSheet }}" target="_blank" rel="noopener" style="color:var(--marigold-d);font-weight:600;text-decoration:none">pre-order sheet</a> and we&rsquo;ll have them ready for Sunday pickup.</div>
+        </div>
+        <div class="info-row">
+          <div class="k">Scents</div>
+          <div class="v">This year&rsquo;s lineup is announced closer to the sale. <a href="#subscribe" style="color:var(--marigold-d);font-weight:600;text-decoration:none">Subscribe</a> to be the first to know.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== MAKER NIGHT TEASER ===================== -->
+<section class="section" id="maker-night" style="padding-top:0">
+  <div class="wrap">
+    <div class="mn-band reveal">
+      <div class="glow" aria-hidden="true"></div>
+      <div class="mn-copy">
+        <span class="tag">New for 2026 &middot; only 6 spots</span>
+        <h3>Pour your own at Maker Night.</h3>
+        <p>A new, intimate evening for six &mdash; hand-pour five Things 4 Good candles from our curated scents and take home a one-of-a-kind Maker Night candle. A $250 donation, 100% to good.</p>
+      </div>
+      <div class="mn-act">
+        <a class="btn btn--primary" href="/maker-night/">Explore Maker Night <span class="arr">&rarr;</span></a>
+        <span class="small">Held about two weeks before the sale</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= HOW IT WORKS ======================= -->
+<section class="section section--paper2" id="how">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">How it works</p>
+      <h2 class="t">Simple, by design.</h2>
+    </div>
+    <div class="steps">
+      <div class="step reveal">
+        <div class="num">1</div>
+        <h3>We make them</h3>
+        <p>We gather the materials, mix and hand-pour every candle, set the wicks, and wait for them to cure &mdash; then add labels Mazie designs herself.</p>
+      </div>
+      <div class="step alt reveal">
+        <div class="num">2</div>
+        <h3>You pick yours</h3>
+        <p>Come by the sale, choose your favorite scents, and pay whichever way is easiest. Each candle is a flat $25 donation.</p>
+      </div>
+      <div class="step reveal">
+        <div class="num">3</div>
+        <h3>You choose the good</h3>
+        <p>Split your donation however you like across the four causes our family picked this year. We tally it all and send every dollar along.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================= THE STORY ========================= -->
+<section class="section" id="story">
+  <div class="wrap split">
+    <div class="story-art reveal">
+      <div class="ph alt" role="img" aria-label="Photo placeholder: the family pouring candles">
+        <span class="ph-label">family making candles</span>
+      </div>
+    </div>
+    <div class="story reveal">
+      <p class="eyebrow">How it started</p>
+      <h2 class="t" style="margin-bottom:18px">It began with a&nbsp;<em class="it" style="font-style:italic">crackle</em>.</h2>
+      <p>In 2019, Jamie bought a wooden-wick candle at a local Christmas market and fell in love with the sound &mdash; that soft <span class="crackle">crackle</span> of a tiny wood flame. So he started making his own. A few, then a few more.</p>
+      <p>He gave them as gifts, and people started asking to buy them. Rather than open a candle shop, the family landed on something better: a once-a-year sale where <b>every dollar goes to charity</b>.</p>
+      <p>Our family name is Thingelstad &mdash; shortened to <b>Things</b>. There are four of us. Four causes, every year. That&rsquo;s Things 4 Good.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ========================= THE MAKERS ========================= -->
+<section class="section section--paper2" id="makers">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">The four Things</p>
+      <h2 class="t">Meet the makers.</h2>
+      <p class="lead">We all pitch in &mdash; acquiring materials, managing production, mixing, pouring, and setting wicks. Each of us also picks a cause we care about.</p>
+    </div>
+    <div class="makers">
+      {% for m in site.makers %}
+      <div class="maker reveal">
+        <div class="ph{% if m.alt %} alt{% endif %}" role="img" aria-label="Portrait placeholder: {{ m.name }}"><span class="ph-label">{{ m.name }}</span></div>
+        <h3>{{ m.name }}</h3>
+        <div class="role">{{ m.role }}</div>
+        <a class="site" href="{{ m.url }}" target="_blank" rel="noopener">{{ m.site }} <span aria-hidden="true">&#8599;</span></a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ========================== THE GOOD ========================== -->
+<section class="section" id="good">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">The good</p>
+      <h2 class="t">Where the money goes.</h2>
+      <p class="lead">Every candle&rsquo;s full $25 goes to a nonprofit &mdash; and you decide which. Each year the four of us each pick a cause we care about. Here&rsquo;s where it&rsquo;s gone.</p>
+    </div>
+
+    <div class="good-note reveal">
+      <span class="hand" style="font-size:1.7rem">100% &mdash; for real.</span>
+      <span style="font-weight:500;color:var(--pine-d)">We cover every cost of making the candles ourselves, so the entire sale price becomes a donation.</span>
+    </div>
+
+    <h3 class="good-sub reveal">Our 2025 causes &mdash; in our own words</h3>
+    <div class="causes">
+      {% for c in causes %}
+      <div class="cause reveal">
+        <div class="who"><span class="av">{{ c.initial }}</span><span class="nm">{{ c.maker }}<small>picked {{ c.org }}</small></span></div>
+        <blockquote>&ldquo;{{ c.quote }}&rdquo;</blockquote>
+        <div class="org"><a href="{{ c.url }}" target="_blank" rel="noopener">{{ c.org }} <span aria-hidden="true">&#8599;</span></a></div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <h3 class="good-sub reveal">Sixteen more we&rsquo;ve supported since 2021</h3>
+    <div class="charities">
+      {% for ch in charities %}
+      <a class="charity reveal" href="{{ ch.url }}" target="_blank" rel="noopener">
+        <div class="ctop"><div class="glyph">{{ ch.glyph }}</div><span class="yr">{{ ch.place }}</span></div>
+        <h3>{{ ch.name }}</h3>
+        <p>{{ ch.blurb }}</p>
+        <span class="go">Visit <span class="arr">&rarr;</span></span>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ============================ FAQ ============================ -->
+<section class="section section--paper2" id="faq">
+  <div class="wrap">
+    <div class="sec-head reveal" style="text-align:center;margin-inline:auto">
+      <p class="eyebrow" style="justify-content:center">Good questions</p>
+      <h2 class="t">The details, answered.</h2>
+    </div>
+    <div class="faq">
+      <details class="qa reveal" open>
+        <summary>So you really make the candles? <span class="ic" aria-hidden="true"></span></summary>
+        <div class="ans">Yes! It&rsquo;s not rocket science, but we like to pretend that it is. 😄 We hand-pour each one &mdash; collectively acquiring materials, managing production, mixing, pouring, and setting wicks. Then we wait for them to cure and add the labels, all custom-designed by us, with Mazie&rsquo;s artistic side on every candle.</div>
+      </details>
+      <details class="qa reveal">
+        <summary>What happens to the money you raise? <span class="ic" aria-hidden="true"></span></summary>
+        <div class="ans">During the sale we keep a careful tally of every purchase. You can split your donation across the four nonprofits each family member selected. When the weekend wraps, we add it all up and send the donations. We cover the cost of materials ourselves &mdash; <b>the full sale price of every candle goes to the nonprofits.</b></div>
+      </details>
+      <details class="qa reveal">
+        <summary>How much do candles cost? <span class="ic" aria-hidden="true"></span></summary>
+        <div class="ans">Each candle is just a <b>$25 donation</b> &mdash; the same price it&rsquo;s been for years. You can pay with whatever&rsquo;s easiest:
+          <div class="pay"><span>Cash</span><span>Apple Pay</span><span>Venmo</span><span>Zelle</span></div>
+        </div>
+      </details>
+      <details class="qa reveal">
+        <summary>Can I pre-order candles? <span class="ic" aria-hidden="true"></span></summary>
+        <div class="ans">Absolutely &mdash; and it&rsquo;s easier than ever this year. For any order of <b>six or more</b>, add your candle count and scents to our <a href="{{ site.preorderSheet }}" target="_blank" rel="noopener" style="color:var(--marigold-d);font-weight:600;text-decoration:none">pre-order Google Sheet</a> and we&rsquo;ll have them ready. (We moved pre-orders to a shared sheet because the volume finally outgrew email!) Please plan to pick up pre-orders on <b>Sunday</b>.</div>
+      </details>
+      <details class="qa reveal">
+        <summary>When and where is the 2026 sale? <span class="ic" aria-hidden="true"></span></summary>
+        <div class="ans">Saturday, <b>November 7</b> and Sunday, <b>November 8, 2026</b>, in Minneapolis. Exact hours and location go out to subscribers a bit before the weekend &mdash; <a href="#subscribe" style="color:var(--marigold-d);font-weight:600;text-decoration:none">sign up here</a> so you don&rsquo;t miss it.</div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ========================= SUBSCRIBE ========================= -->
+<section class="section section--pine subscribe" id="subscribe">
+  <div class="wrap">
+    <p class="eyebrow" style="justify-content:center">Stay in the loop</p>
+    <h2 class="t" style="max-width:18ch;margin-inline:auto">Be the first to know when the candles drop.</h2>
+    <p class="lead" style="margin:18px auto 0;text-align:center">We&rsquo;ll send the dates, hours, location, and this year&rsquo;s scents &mdash; nothing else.</p>
+    <!-- TODO: point action at your email provider (Buttondown, Mailchimp, etc.) or keep the mailto fallback below -->
+    <form class="sub-form" action="mailto:{{ site.email }}" method="post" enctype="text/plain">
+      <input type="email" name="email" placeholder="you@email.com" aria-label="Email address" required />
+      <button class="btn btn--primary" type="submit">Notify me</button>
+    </form>
+    <p class="sub-note">Prefer to just reach out? Email <a href="mailto:{{ site.email }}" style="color:#fff;font-weight:600">{{ site.email }}</a>.</p>
+  </div>
+</section>
+
+{% endblock %}
+
+{% block footerExplore %}
+          <a href="#sale">The Sale</a>
+          <a href="#how">How it works</a>
+          <a href="#good">The Good</a>
+          <a href="#faq">FAQ</a>
+{% endblock %}
+
+{% block subscribeHref %}#subscribe{% endblock %}
+
+{% block scripts %}
+<script>
+  // count-up for the raised total
+  const counter = document.getElementById('counter');
+  const target = parseInt(counter.dataset.target, 10);
+  const fmt = (n) => n.toLocaleString('en-US');
+  let counted = false;
+  const countIO = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (e.isIntersecting && !counted) {
+        counted = true;
+        const dur = 1600, t0 = performance.now();
+        const tick = (now) => {
+          const p = Math.min((now - t0) / dur, 1);
+          const eased = 1 - Math.pow(1 - p, 3);
+          counter.textContent = fmt(Math.round(target * eased));
+          if (p < 1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      }
+    });
+  }, { threshold: 0.5 });
+  countIO.observe(counter);
+</script>
+{% endblock %}

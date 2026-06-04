@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>{{ title }}</title>
+<meta name="description" content="{{ description }}" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Hanken+Grotesk:wght@400;500;600;700;800&family=Caveat:wght@500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+
+<!-- ============================ NAV ============================ -->
+<header class="nav" id="nav">
+  <a class="brand" href="{% block brandHref %}#top{% endblock %}" aria-label="Things 4 Good home">
+    <b>Things&nbsp;<span class="four">4</span>&nbsp;Good</b>
+  </a>
+  <nav class="nav-links">
+    {% block navLinks %}{% endblock %}
+  </nav>
+  <span class="nav-date">{% block navDate %}{% endblock %}</span>
+  {% block navCta %}{% endblock %}
+</header>
+
+<main id="top">
+{% block content %}{% endblock %}
+</main>
+
+<!-- ========================== FOOTER ========================== -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-top">
+      <a class="brand" href="/">
+        <b>Things&nbsp;<span class="four" style="color:var(--marigold)">4</span>&nbsp;Good</b>
+      </a>
+      <div class="fcols">
+        <div class="fcol">
+          <h4>Explore</h4>
+          {% block footerExplore %}{% endblock %}
+        </div>
+        <div class="fcol">
+          <h4>The Things</h4>
+          <a href="https://www.thingelstad.com" target="_blank" rel="noopener">Jamie</a>
+          <a href="https://tammy.thingelstad.com" target="_blank" rel="noopener">Tammy</a>
+          <a href="https://mazie.thingelstad.com" target="_blank" rel="noopener">Mazie</a>
+          <a href="https://tyler.thingelstad.com" target="_blank" rel="noopener">Tyler</a>
+        </div>
+        <div class="fcol">
+          <h4>Get in touch</h4>
+          <a href="mailto:{{ site.email }}">{{ site.email }}</a>
+          <a href="{% block subscribeHref %}/#subscribe{% endblock %}">Subscribe</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; <span id="year">2026</span> The Thingelstad Family &middot; Minneapolis, MN</span>
+      <span>Made by hand, with a <span class="heart">&hearts;</span> for good.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // sticky nav shadow
+  const nav = document.getElementById('nav');
+  const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 12);
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  // year
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // reveal on scroll
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+</script>
+{% block scripts %}{% endblock %}
+
+<!-- Tinylytics -->
+<script src="https://tinylytics.app/embed/CUwdahtFfyC-SP5xKdLp.js" defer></script>
+</body>
+</html>
