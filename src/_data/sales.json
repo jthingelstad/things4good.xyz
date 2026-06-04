@@ -1,21 +1,63 @@
 {
   "_note": "Per-year sale facts — the single source of truth for all totals, growth, and candle-math on the site. `raised` is the exact dollar figure; `candles`/`participants` are exact for 2025 and estimates for earlier years (estimate:true drives the (est.) labels). Everything aggregate (totals, cumulative, growth %, chart heights, wax/wick/burn) is computed in metrics.js — do not hardcode it elsewhere.",
-
   "perYear": [
-    { "year": 2021, "raised": 4757, "candles": 180, "candlesEstimate": true,  "participants": 85, "participantsEstimate": true },
-    { "year": 2022, "raised": 5217, "candles": 198, "candlesEstimate": true,  "participants": 84, "participantsEstimate": true },
-    { "year": 2023, "raised": 5755, "candles": 218, "candlesEstimate": true,  "participants": 82, "participantsEstimate": true },
-    { "year": 2024, "raised": 7010, "candles": 268, "candlesEstimate": true,  "participants": 76, "participantsEstimate": true },
-    { "year": 2025, "raised": 9048, "candles": 321, "candlesEstimate": false, "participants": 73, "participantsEstimate": false }
+    {
+      "year": 2021,
+      "raised": 4757,
+      "candles": 180,
+      "candlesEstimate": true,
+      "participants": 85,
+      "participantsEstimate": true
+    },
+    {
+      "year": 2022,
+      "raised": 5217,
+      "candles": 198,
+      "candlesEstimate": true,
+      "participants": 84,
+      "participantsEstimate": true
+    },
+    {
+      "year": 2023,
+      "raised": 5755,
+      "candles": 218,
+      "candlesEstimate": true,
+      "participants": 82,
+      "participantsEstimate": true
+    },
+    {
+      "year": 2024,
+      "raised": 7010,
+      "candles": 268,
+      "candlesEstimate": true,
+      "participants": 76,
+      "participantsEstimate": true
+    },
+    {
+      "year": 2025,
+      "raised": 9048,
+      "candles": 321,
+      "candlesEstimate": false,
+      "participants": 73,
+      "participantsEstimate": false
+    }
   ],
-
   "bonuses": [
-    { "label": "Bonus to Mount Olivet", "amount": 260, "year": 2024, "note": "A 2024 Holiday Boutique add-on" }
+    {
+      "label": "Bonus to Mount Olivet",
+      "amount": 260,
+      "year": 2024,
+      "note": "A 2024 Holiday Boutique add-on"
+    }
   ],
-
-  "candleConstants": { "waxLbsPerCandle": 0.75, "wickFtPerCandle": 0.25, "burnHrsPerCandle": 40 },
-
+  "candleConstants": {
+    "waxLbsPerCandle": 0.75,
+    "wickFtPerCandle": 0.25,
+    "burnHrsPerCandle": 40
+  },
   "pricePerCandle": 25,
-
-  "tightestRace": { "year": 2025, "spreadPct": 2.4 }
+  "tightestRace": {
+    "year": 2025,
+    "spreadPct": 2.4
+  }
 }
