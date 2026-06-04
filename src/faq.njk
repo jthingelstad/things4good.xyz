@@ -1,0 +1,85 @@
+---
+title: FAQ — Things 4 Good
+description: Common questions about the Things 4 Good candle fundraiser — how it works, what it costs, where the money goes, preorders, and the 2026 sale.
+---
+{% extends "base.njk" %}
+
+{% block brandHref %}/{% endblock %}
+{% block navLinks %}
+    <a href="/#sale">The Sale</a>
+    <a href="/maker-night/">Maker Night</a>
+    <a href="/impact/">Impact</a>
+    <a href="/stats/">Stats</a>
+    <a href="/faq/" aria-current="page">FAQ</a>
+{% endblock %}
+
+{% block content %}
+
+<!-- ============================ HEADER ============================ -->
+<section class="section page-head" id="head">
+  <div class="hero-glow" aria-hidden="true"></div>
+  <div class="wrap" style="text-align:center">
+    <a class="back-link" href="/">&larr; Things 4 Good</a>
+    <p class="eyebrow" style="justify-content:center">Good questions</p>
+    <h1 style="font-family:var(--serif);font-weight:500;font-size:clamp(2.4rem,5.4vw,4rem);letter-spacing:-.02em;line-height:1.02">The details, answered.</h1>
+    <p class="lead" style="margin:18px auto 0;text-align:center">Everything about the candles, the sale, and where your donation goes. Don&rsquo;t see your question? <a href="mailto:{{ site.email }}" style="color:var(--marigold-d);font-weight:700;text-decoration:none">Email a Thing</a>.</p>
+  </div>
+</section>
+
+<!-- ============================ FAQ ============================ -->
+<section class="section" id="faq" style="padding-top:clamp(20px,3vw,40px)">
+  <div class="wrap">
+    <div class="faq">
+      <details class="qa reveal" open>
+        <summary>So you really make the candles? <span class="ic" aria-hidden="true"></span></summary>
+        <div class="ans">Yes! It&rsquo;s not rocket science, but we like to pretend that it is. 😄 We hand-pour each one &mdash; collectively acquiring materials, managing production, mixing, pouring, and setting wicks. Then we wait for them to cure and add the labels, all custom-designed by us, with Mazie&rsquo;s artistic side on every candle.</div>
+      </details>
+      <details class="qa reveal">
+        <summary>What happens to the money you raise? <span class="ic" aria-hidden="true"></span></summary>
+        <div class="ans">During the sale we keep a careful tally of every purchase. You can split your donation across the four nonprofits each family member selected. When the weekend wraps, we add it all up and send the donations. We cover the cost of materials ourselves &mdash; <b>the full sale price of every candle goes to the nonprofits.</b> Since 2021 that&rsquo;s added up to <a href="/stats/" style="color:var(--marigold-d);font-weight:600;text-decoration:none">$31,787 across 20 organizations</a>.</div>
+      </details>
+      <details class="qa reveal">
+        <summary>How much do candles cost? <span class="ic" aria-hidden="true"></span></summary>
+        <div class="ans">Each candle is just a <b>$25 donation</b> &mdash; the same price it&rsquo;s been for years. You can pay with whatever&rsquo;s easiest:
+          <div class="pay"><span>Cash</span><span>Apple Pay</span><span>Venmo</span><span>Zelle</span></div>
+          See the <a href="/preorder/#payment" style="color:var(--marigold-d);font-weight:600;text-decoration:none">payment page</a> for details on each.
+        </div>
+      </details>
+      <details class="qa reveal">
+        <summary>Can I choose which causes my money supports? <span class="ic" aria-hidden="true"></span></summary>
+        <div class="ans">Absolutely &mdash; that&rsquo;s the whole idea. Each year the four of us each pick a cause we care about, and you decide how to split your donation across them. Support one, support all four, or ask for a specific allocation &mdash; some folks do. Want to see who&rsquo;s picked what over the years? Browse <a href="/impact/" style="color:var(--marigold-d);font-weight:600;text-decoration:none">the full impact list</a>.</div>
+      </details>
+      <details class="qa reveal">
+        <summary>Can I pre-order candles? <span class="ic" aria-hidden="true"></span></summary>
+        <div class="ans">Absolutely &mdash; and it&rsquo;s easier than ever this year. For any order of <b>six or more</b>, add your candle count and scents to our <a href="/preorder/" style="color:var(--marigold-d);font-weight:600;text-decoration:none">preorder sheet</a> and we&rsquo;ll have them ready. (We moved pre-orders to a shared sheet because the volume finally outgrew email!) Please plan to pick up pre-orders on <b>Sunday</b>.</div>
+      </details>
+      <details class="qa reveal">
+        <summary>What&rsquo;s Maker Night? <span class="ic" aria-hidden="true"></span></summary>
+        <div class="ans">New for 2026: an intimate evening for six guests, held about two weeks before the sale. You hand-pour five of your own Things 4 Good candles and take home a one-of-a-kind Maker Night candle. It&rsquo;s a <b>$250 donation</b>, 100% to good. <a href="/maker-night/" style="color:var(--marigold-d);font-weight:600;text-decoration:none">Explore Maker Night &rarr;</a></div>
+      </details>
+      <details class="qa reveal">
+        <summary>When and where is the 2026 sale? <span class="ic" aria-hidden="true"></span></summary>
+        <div class="ans">Saturday, <b>November 7</b> and Sunday, <b>November 8, 2026</b>, in Minneapolis. Exact hours and location go out to subscribers a bit before the weekend &mdash; <a href="/#subscribe" style="color:var(--marigold-d);font-weight:600;text-decoration:none">sign up here</a> so you don&rsquo;t miss it.</div>
+      </details>
+      <details class="qa reveal">
+        <summary>How has the fundraiser grown? <span class="ic" aria-hidden="true"></span></summary>
+        <div class="ans">Every single year. We started at $4,757 in 2021 and reached $9,048 in 2025 &mdash; our biggest year yet, up 29.1%. The whole five-year story, candle counts and all, lives on the <a href="/stats/" style="color:var(--marigold-d);font-weight:600;text-decoration:none">stats page</a>. We also post full results and the math on the <a href="{{ site.blogUrl }}" target="_blank" rel="noopener" style="color:var(--marigold-d);font-weight:600;text-decoration:none">blog</a> after every sale.</div>
+      </details>
+    </div>
+
+    <div class="mn-band reveal" style="margin-top:clamp(36px,5vw,56px)">
+      <div class="glow" aria-hidden="true"></div>
+      <div class="mn-copy">
+        <span class="tag">Still curious?</span>
+        <h3>Ask us anything.</h3>
+        <p>A real Thing reads every message. We&rsquo;re always happy to talk candles, causes, or how it all works.</p>
+      </div>
+      <div class="mn-act">
+        <a class="btn btn--primary" href="mailto:{{ site.email }}">Email {{ site.email }} <span class="arr">&rarr;</span></a>
+        <span class="small">Or <a href="/#subscribe" style="color:var(--marigold);font-weight:700">subscribe</a> for sale updates</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

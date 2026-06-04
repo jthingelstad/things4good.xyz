@@ -1,0 +1,131 @@
+---
+title: Preorder & Pay — Things 4 Good
+description: Preorder six or more Things 4 Good candles for Sunday pickup, and find every way to send your donation — cash, Apple Pay, Venmo, or Zelle.
+---
+{% extends "base.njk" %}
+
+{% block brandHref %}/{% endblock %}
+{% block navCta %}<a class="btn btn--primary nav-cta" href="/preorder/" aria-current="page">Preorder</a>{% endblock %}
+
+{% block content %}
+
+<!-- ============================ HEADER ============================ -->
+<section class="section page-head" id="head">
+  <div class="hero-glow" aria-hidden="true"></div>
+  <div class="wrap">
+    <a class="back-link" href="/">&larr; Things 4 Good</a>
+    <p class="eyebrow">Preorder &amp; pay</p>
+    <h1 style="font-family:var(--serif);font-weight:500;font-size:clamp(2.4rem,5.4vw,4rem);letter-spacing:-.02em;line-height:1.02;max-width:18ch">Order ahead. Pay it forward.</h1>
+    <p class="lead" style="margin-top:18px">Two simple things in one place: reserve a bigger batch of candles for Sunday pickup, and find whichever way is easiest to send your donation. Every candle is a flat <b style="color:var(--ink)">$25 donation</b> &mdash; 100% to good.</p>
+  </div>
+</section>
+
+<!-- ============================ PREORDER ============================ -->
+<section class="section" id="preorder" style="padding-top:clamp(20px,3vw,32px)">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">Preorder &middot; six or more</p>
+      <h2 class="t">Reserve a batch.</h2>
+      <p class="lead">Ordering <b style="color:var(--ink)">six or more</b>? Add your candles and scents to our preorder sheet and we&rsquo;ll have them poured, labeled, and ready. Smaller orders are always welcome right at the sale &mdash; no preorder needed.</p>
+    </div>
+
+    <div class="steps">
+      <div class="step reveal">
+        <div class="num">1</div>
+        <h3>Add to the sheet</h3>
+        <p>Open the shared preorder sheet and list your candle count and the scents you&rsquo;d like. (We moved to a sheet because the volume finally outgrew email!)</p>
+      </div>
+      <div class="step alt reveal">
+        <div class="num">2</div>
+        <h3>We pour &amp; prep</h3>
+        <p>We hand-pour your candles, set the wooden wicks, let them cure, and add Mazie&rsquo;s labels &mdash; all set aside with your name on them.</p>
+      </div>
+      <div class="step reveal">
+        <div class="num">3</div>
+        <h3>Pick up Sunday</h3>
+        <p>Collect your preorder on <b>Sunday, November 8</b> and choose where your donation goes. Pay whichever way is easiest &mdash; see below.</p>
+      </div>
+    </div>
+
+    <div class="mn-band reveal" style="margin-top:clamp(28px,4vw,40px)">
+      <div class="glow" aria-hidden="true"></div>
+      <div class="mn-copy">
+        <span class="tag">Preorder sheet</span>
+        <h3>Ready to reserve your batch?</h3>
+        <p>The sheet opens closer to the sale and goes out to subscribers first. Six-candle minimum, picked up Sunday.</p>
+      </div>
+      <div class="mn-act">
+        {% if site.preorderSheet %}
+        <a class="btn btn--primary" href="{{ site.preorderSheet }}" target="_blank" rel="noopener">Open the preorder sheet <span class="arr">&rarr;</span></a>
+        {% else %}
+        <span class="btn btn--primary" aria-disabled="true" style="opacity:.6;cursor:default">Preorder sheet opens soon</span>
+        {% endif %}
+        <span class="small">Or email <a href="mailto:{{ site.email }}" style="color:var(--marigold);font-weight:700">{{ site.email }}</a></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ PAYMENT ============================ -->
+<section class="section section--paper2" id="payment">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">How to pay</p>
+      <h2 class="t">Send your donation.</h2>
+      <p class="lead">Whatever&rsquo;s easiest for you. Each candle is a <b style="color:var(--ink)">$25 donation</b> &mdash; pay at the table or remotely with any of these.</p>
+    </div>
+
+    <div class="paygrid">
+      <div class="paycard reveal">
+        <div class="pname"><span class="picon">$</span>Cash</div>
+        <p class="pdesc">The classic. Bring it to the sale and we&rsquo;ll take it from there &mdash; exact change appreciated but never required.</p>
+        <div class="handle">Pay in person at the sale</div>
+      </div>
+      <div class="paycard alt reveal">
+        <div class="pname"><span class="picon"></span>Apple Pay</div>
+        <p class="pdesc">Tap to pay at the table, or send to our number from your iPhone.</p>
+        <!-- TODO: add your Apple Pay number -->
+        <div class="handle">Apple Pay: (xxx) xxx-xxxx &mdash; add number</div>
+      </div>
+      <div class="paycard reveal">
+        <div class="pname"><span class="picon">V</span>Venmo</div>
+        <p class="pdesc">Scan our code at the sale or send ahead of pickup. Add a note with the causes you&rsquo;d like to support.</p>
+        <!-- TODO: add your Venmo handle -->
+        <div class="handle">@your-venmo &mdash; add handle</div>
+      </div>
+      <div class="paycard alt reveal">
+        <div class="pname"><span class="picon">Z</span>Zelle</div>
+        <p class="pdesc">Send straight from your bank&rsquo;s app to our email or number &mdash; no fees, no app to download.</p>
+        <!-- TODO: confirm Zelle email/number -->
+        <div class="handle">{{ site.email }} &mdash; confirm Zelle</div>
+      </div>
+    </div>
+
+    <div class="good-note reveal" style="margin-top:clamp(28px,4vw,40px)">
+      <span class="hand" style="font-size:1.7rem">100% &mdash; for real.</span>
+      <span style="font-weight:500;color:var(--pine-d)">We cover every cost of making the candles ourselves, so the entire amount you send becomes a donation. Tell us how to split it across this year&rsquo;s four causes &mdash; or let us divide it evenly.</span>
+    </div>
+
+    <div class="sumstrip reveal" style="margin-top:clamp(22px,3vw,32px)">
+      <div class="s acc"><b>$25</b><span>One candle</span></div>
+      <div class="s"><b>$150</b><span>A batch of 6</span></div>
+      <div class="s"><b>$250</b><span>Ten candles</span></div>
+      <div class="s acc2"><b>100%</b><span>To charity</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ CTA ============================ -->
+<section class="section section--pine subscribe" id="cta">
+  <div class="wrap">
+    <p class="eyebrow" style="justify-content:center">Questions before you order?</p>
+    <h2 class="t" style="max-width:20ch;margin-inline:auto">We&rsquo;re happy to help.</h2>
+    <p class="lead" style="margin:18px auto 0;text-align:center">Read the common questions, or just reach out &mdash; a real Thing will answer.</p>
+    <div class="sub-form" style="max-width:none;gap:12px">
+      <a class="btn btn--primary" href="/faq/">Read the FAQ <span class="arr">&rarr;</span></a>
+      <a class="btn btn--ghost" href="mailto:{{ site.email }}">Email us</a>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

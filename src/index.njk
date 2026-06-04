@@ -4,16 +4,6 @@ description: Since 2021 the Thingelstad family has hand-poured wooden-wick candl
 ---
 {% extends "base.njk" %}
 
-{% block navLinks %}
-    <a href="#sale">The Sale</a>
-    <a href="/maker-night/">Maker Night</a>
-    <a href="#impact">Impact</a>
-    <a href="#good">The Good</a>
-    <a href="#faq">FAQ</a>
-{% endblock %}
-{% block navDate %}{{ site.saleDates }}{% endblock %}
-{% block navCta %}<a class="btn btn--primary nav-cta" href="#subscribe">Get the announcement</a>{% endblock %}
-
 {% block content %}
 
 <!-- ============================ HERO ============================ -->
@@ -53,10 +43,10 @@ description: Since 2021 the Thingelstad family has hand-poured wooden-wick candl
 <section class="section section--ink raised" id="raised">
   <div class="wrap">
     <p class="eyebrow" style="justify-content:center">Since 2021, together we&rsquo;ve raised</p>
-    <div class="big"><span class="pre">$</span><span id="counter" data-target="{{ site.totalRaised }}">{{ site.totalRaisedDisplay }}</span></div>
+    <div class="big"><span class="pre">$</span><span id="counter" data-target="{{ metrics.totalRaised }}">{{ metrics.totalRaisedDisplay }}</span></div>
     <p class="sub">&hellip;and 100% of it went to the nonprofits below.</p>
     <div class="statrow">
-      {% for stat in site.raisedStats %}
+      {% for stat in metrics.raisedStats %}
       <div class="stat reveal"><b>{{ stat.value | safe }}</b><span>{{ stat.label | safe }}</span></div>
       {% endfor %}
     </div>
@@ -73,13 +63,13 @@ description: Since 2021 the Thingelstad family has hand-poured wooden-wick candl
     </div>
 
     <div class="impact-chart reveal">
-      {% for y in impact.years %}
-      <div class="bar{% if y.now %} now{% endif %}"><span class="val">${{ y.amount }}</span><span class="col" style="height:{{ y.height }}%;transition-delay:{{ y.delay }}"></span><span class="yr">{{ y.year }}</span></div>
+      {% for y in metrics.perYear %}
+      <div class="bar{% if y.isLatest %} now{% endif %}"><span class="val">${{ y.raisedDisplay }}</span><span class="col" style="height:{{ y.barHeightPct }}%;transition-delay:{{ 0.05 + loop.index0 * 0.08 }}s"></span><span class="yr">{{ y.year }}</span></div>
       {% endfor %}
     </div>
 
     <div class="impact-foot">
-      {% for stat in impact.footStats %}
+      {% for stat in metrics.footStats %}
       <div class="istat reveal"><b>{{ stat.value }}</b><span>{{ stat.label }}</span></div>
       {% endfor %}
     </div>
@@ -244,18 +234,18 @@ description: Since 2021 the Thingelstad family has hand-poured wooden-wick candl
 
     <h3 class="good-sub reveal">Our 2025 causes &mdash; in our own words</h3>
     <div class="causes">
-      {% for c in causes %}
+      {% for c in metrics.currentCauses %}
       <div class="cause reveal">
-        <div class="who"><span class="av">{{ c.initial }}</span><span class="nm">{{ c.maker }}<small>picked {{ c.org }}</small></span></div>
-        <blockquote>&ldquo;{{ c.quote }}&rdquo;</blockquote>
-        <div class="org"><a href="{{ c.url }}" target="_blank" rel="noopener">{{ c.org }} <span aria-hidden="true">&#8599;</span></a></div>
+        <div class="who"><span class="av" data-who="{{ c.who }}">{{ c.who[0] }}</span><span class="nm">{{ c.who }}<small>picked {{ c.name }}</small></span></div>
+        <blockquote>&ldquo;{{ c.reason }}&rdquo;</blockquote>
+        <div class="org"><a href="{{ c.url }}" target="_blank" rel="noopener">{{ c.name }} <span aria-hidden="true">&#8599;</span></a></div>
       </div>
       {% endfor %}
     </div>
 
     <h3 class="good-sub reveal">Sixteen more we&rsquo;ve supported since 2021</h3>
     <div class="charities">
-      {% for ch in charities %}
+      {% for ch in metrics.pastOrgs %}
       <a class="charity reveal" href="{{ ch.url }}" target="_blank" rel="noopener">
         <div class="ctop"><div class="glyph">{{ ch.glyph }}</div><span class="yr">{{ ch.place }}</span></div>
         <h3>{{ ch.name }}</h3>
@@ -315,13 +305,6 @@ description: Since 2021 the Thingelstad family has hand-poured wooden-wick candl
   </div>
 </section>
 
-{% endblock %}
-
-{% block footerExplore %}
-          <a href="#sale">The Sale</a>
-          <a href="#how">How it works</a>
-          <a href="#good">The Good</a>
-          <a href="#faq">FAQ</a>
 {% endblock %}
 
 {% block subscribeHref %}#subscribe{% endblock %}

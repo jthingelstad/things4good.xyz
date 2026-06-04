@@ -1,0 +1,152 @@
+---
+title: Stats — Things 4 Good
+description: Five years of Things 4 Good by the numbers — dollars raised, candles poured, growth, records, and a little candle math.
+---
+{% extends "base.njk" %}
+
+{% block brandHref %}/{% endblock %}
+{% block navLinks %}
+    <a href="/#sale">The Sale</a>
+    <a href="/maker-night/">Maker Night</a>
+    <a href="/impact/">Impact</a>
+    <a href="/stats/" aria-current="page">Stats</a>
+    <a href="/faq/">FAQ</a>
+{% endblock %}
+
+{% block content %}
+
+<!-- ============================ HEADER ============================ -->
+<section class="section section--ink page-head" id="head">
+  <div class="hero-glow" aria-hidden="true"></div>
+  <div class="wrap" style="position:relative;z-index:1;text-align:center">
+    <a class="back-link" href="/">&larr; Things 4 Good</a>
+    <p class="eyebrow" style="justify-content:center">By the numbers</p>
+    <h1 style="font-family:var(--serif);font-weight:500;font-size:clamp(2.4rem,5.4vw,4rem);letter-spacing:-.02em;line-height:1.02">Five years of good,<br />counted up.</h1>
+    <div class="big" style="font-family:var(--serif);font-weight:500;font-size:clamp(4rem,14vw,10rem);line-height:.9;letter-spacing:-.03em;color:var(--marigold);text-shadow:0 0 60px rgba(238,139,38,.35);margin-top:18px"><span style="font-size:.42em;vertical-align:.42em;color:rgba(242,251,247,.6)">$</span><span id="counter" data-target="{{ metrics.totalRaised }}">{{ metrics.totalRaisedDisplay }}</span></div>
+    <p class="lead" style="margin:6px auto 0;text-align:center;color:rgba(255,255,255,.8)">raised since 2021 &mdash; every dollar to charity, one wooden-wick candle at a time.</p>
+  </div>
+</section>
+
+<!-- ============================ BIG TILES ============================ -->
+<section class="section" id="tiles" style="padding-block:clamp(48px,7vw,84px)">
+  <div class="wrap">
+    <div class="tilegrid">
+      <div class="tile reveal"><div class="k">{{ metrics.orgCount }}</div><div class="l">Organizations supported</div><div class="sub">4 causes chosen every year</div></div>
+      <div class="tile alt reveal"><div class="k">{{ metrics.yearCount }}</div><div class="l">Years &amp; counting</div><div class="sub">Since the first sale in 2021</div></div>
+      <div class="tile reveal"><div class="k">100%</div><div class="l">Goes to charity</div><div class="sub">We cover every material cost</div></div>
+      <div class="tile alt reveal"><div class="k">~{{ metrics.totalCandlesDisplay }}</div><div class="l">Candles hand-poured <span class="est">(est.)</span></div><div class="sub">{{ metrics.records.biggestYear.candles }} in {{ metrics.latestYear }} alone</div></div>
+      <div class="tile reveal"><div class="k">${{ sales.pricePerCandle }}</div><div class="l">Per candle, since day one</div><div class="sub">Same price for five years</div></div>
+      <div class="tile alt reveal"><div class="k">~{{ metrics.totalParticipants }}</div><div class="l">Neighbors who took part</div><div class="sub">Across five weekends</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ GROWTH ============================ -->
+<section class="section section--paper2" id="growth">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">The climb</p>
+      <h2 class="t">Bigger every year.</h2>
+      <p class="lead">The sale has grown all five years &mdash; and the last two were the steepest yet.</p>
+    </div>
+
+    <div class="impact-chart reveal">
+      {% for y in metrics.perYear %}
+      <div class="bar{% if y.isLatest %} now{% endif %}"><span class="val">${{ y.raisedDisplay }}</span><span class="col" style="height:{{ y.barHeightPct }}%;transition-delay:{{ 0.05 + loop.index0 * 0.08 }}s"></span><span class="yr">{{ y.year }}</span></div>
+      {% endfor %}
+    </div>
+
+    <p class="eyebrow reveal" style="margin-top:clamp(36px,5vw,56px)">Running total &amp; year-over-year growth</p>
+    <div class="timeline reveal">
+      {% for y in metrics.perYear %}
+      <div class="tnode"><div class="yr">{{ y.year }}</div><div class="amt">${{ y.raisedDisplay }}</div><div class="cum">${{ y.cumulativeDisplay }} total</div><div class="grow">{{ y.growthDisplay }}</div></div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ============================ RECORDS ============================ -->
+<section class="section" id="records">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">For the record</p>
+      <h2 class="t">Personal bests.</h2>
+    </div>
+    <div class="records">
+      <div class="record reveal">
+        <div class="rl">Biggest year</div>
+        <div class="rv">{{ metrics.records.biggestYear.raisedDisplay }} in {{ metrics.records.biggestYear.year }}</div>
+        <div class="rd">Our highest-grossing sale yet &mdash; from just {{ metrics.records.biggestYear.participants }} neighbors and {{ metrics.records.biggestYear.candles }} candles.</div>
+      </div>
+      <div class="record reveal">
+        <div class="rl">Biggest leap</div>
+        <div class="rv">{{ metrics.records.biggestLeap.growthDisplay }} &middot; {{ metrics.records.biggestLeap.deltaDisplay }}</div>
+        <div class="rd">2025 over 2024 &mdash; topping the previous records of 21.8%, 10.3%, and 9.7%.</div>
+      </div>
+      <div class="record reveal">
+        <div class="rl">Tightest race</div>
+        <div class="rv">{{ metrics.records.tightestRace.spreadDisplay }} spread</div>
+        <div class="rd">In {{ metrics.records.tightestRace.year }} the four causes finished closer together than ever &mdash; nearly an even split.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ CANDLE MATH ============================ -->
+<section class="section section--paper2" id="math">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">Just for fun</p>
+      <h2 class="t">A little candle math.</h2>
+      <p class="lead">Back-of-the-envelope numbers from five years at the pouring table. Playful estimates &mdash; not audited!</p>
+    </div>
+    <div class="tilegrid">
+      <div class="tile reveal"><div class="k">~{{ metrics.candleMath.waxLbs }}<span style="font-size:.4em"> lbs</span></div><div class="l">Wax melted &amp; poured <span class="est">(est.)</span></div></div>
+      <div class="tile alt reveal"><div class="k">~{{ metrics.candleMath.wickFt }}<span style="font-size:.4em"> ft</span></div><div class="l">Wooden wick set <span class="est">(est.)</span></div></div>
+      <div class="tile reveal"><div class="k">~{{ metrics.candleMath.burnHrsDisplay }}<span style="font-size:.4em"> hrs</span></div><div class="l">Total burn time, lit end to end <span class="est">(est.)</span></div></div>
+      <div class="tile alt span2 reveal"><div class="k">${{ metrics.avgPerYearDisplay }}</div><div class="l">Average raised per year</div><div class="sub">${{ metrics.totalRaisedDisplay }} over five sales</div></div>
+      <div class="tile ink reveal"><div class="k">+${{ metrics.candleMath.bonus.amount }}</div><div class="l">{{ metrics.candleMath.bonus.label }}</div><div class="sub">{{ metrics.candleMath.bonus.note }}</div></div>
+    </div>
+    <p class="note-est"><b>Heads up:</b> candle counts, wax, wick, and burn-time figures are friendly estimates while exact tallies get wired in. Dollars raised and growth rates are exact.</p>
+  </div>
+</section>
+
+<!-- ============================ CTA ============================ -->
+<section class="section section--pine subscribe" id="cta">
+  <div class="wrap">
+    <p class="eyebrow" style="justify-content:center">See it for yourself</p>
+    <h2 class="t" style="max-width:20ch;margin-inline:auto">Every dollar has a name behind it.</h2>
+    <p class="lead" style="margin:18px auto 0;text-align:center">Browse all twenty organizations &mdash; who picked them, the year, and what we raised.</p>
+    <div class="sub-form" style="max-width:none">
+      <a class="btn btn--primary" href="/impact/">Explore the impact <span class="arr">&rarr;</span></a>
+    </div>
+  </div>
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+  // count-up for the raised total
+  const counter = document.getElementById('counter');
+  const target = parseInt(counter.dataset.target, 10);
+  const fmt = (n) => n.toLocaleString('en-US');
+  let counted = false;
+  const countIO = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (e.isIntersecting && !counted) {
+        counted = true;
+        const dur = 1600, t0 = performance.now();
+        const tick = (now) => {
+          const p = Math.min((now - t0) / dur, 1);
+          const eased = 1 - Math.pow(1 - p, 3);
+          counter.textContent = fmt(Math.round(target * eased));
+          if (p < 1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      }
+    });
+  }, { threshold: 0.5 });
+  countIO.observe(counter);
+</script>
+{% endblock %}

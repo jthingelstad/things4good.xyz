@@ -19,10 +19,16 @@
     <b>Things&nbsp;<span class="four">4</span>&nbsp;Good</b>
   </a>
   <nav class="nav-links">
-    {% block navLinks %}{% endblock %}
+    {% block navLinks %}
+    <a href="/#sale">The Sale</a>
+    <a href="/maker-night/">Maker Night</a>
+    <a href="/impact/">Impact</a>
+    <a href="/stats/">Stats</a>
+    <a href="/faq/">FAQ</a>
+    {% endblock %}
   </nav>
-  <span class="nav-date">{% block navDate %}{% endblock %}</span>
-  {% block navCta %}{% endblock %}
+  <span class="nav-date">{% block navDate %}{{ site.saleDates }}{% endblock %}</span>
+  {% block navCta %}<a class="btn btn--primary nav-cta" href="/preorder/">Preorder</a>{% endblock %}
 </header>
 
 <main id="top">
@@ -39,7 +45,14 @@
       <div class="fcols">
         <div class="fcol">
           <h4>Explore</h4>
-          {% block footerExplore %}{% endblock %}
+          {% block footerExplore %}
+          <a href="/#sale">The Sale</a>
+          <a href="/maker-night/">Maker Night</a>
+          <a href="/impact/">Impact</a>
+          <a href="/stats/">Stats</a>
+          <a href="/preorder/">Preorder &amp; Pay</a>
+          <a href="/faq/">FAQ</a>
+          {% endblock %}
         </div>
         <div class="fcol">
           <h4>The Things</h4>

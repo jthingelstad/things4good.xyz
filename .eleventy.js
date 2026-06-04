@@ -8,6 +8,9 @@ module.exports = function (eleventyConfig) {
   // Copy the browser favicon to the site root.
   eleventyConfig.addPassthroughCopy("src/favicon.svg");
 
+  // Copy robots.txt to the site root.
+  eleventyConfig.addPassthroughCopy("src/robots.txt");
+
   // Copy image assets you drop in src/images straight through to /images.
   eleventyConfig.addPassthroughCopy("src/images/**/*.{jpg,jpeg,png,gif,webp,svg,avif,ico}");
 

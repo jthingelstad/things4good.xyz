@@ -1,0 +1,168 @@
+---
+title: Impact — Things 4 Good
+description: Every nonprofit Things 4 Good has supported since 2021 — who picked it, the year, and what we raised together. Filter and sort the full list.
+---
+{% extends "base.njk" %}
+
+{% block brandHref %}/{% endblock %}
+{% block navLinks %}
+    <a href="/#sale">The Sale</a>
+    <a href="/maker-night/">Maker Night</a>
+    <a href="/impact/" aria-current="page">Impact</a>
+    <a href="/stats/">Stats</a>
+    <a href="/faq/">FAQ</a>
+{% endblock %}
+
+{% block content %}
+
+<!-- ============================ HEADER ============================ -->
+<section class="section page-head" id="head">
+  <div class="hero-glow" aria-hidden="true"></div>
+  <div class="wrap">
+    <a class="back-link" href="/">&larr; Things 4 Good</a>
+    <p class="eyebrow">The full ledger</p>
+    <h1 style="font-family:var(--serif);font-weight:500;font-size:clamp(2.4rem,5.4vw,4rem);letter-spacing:-.02em;line-height:1.02;max-width:16ch">Where the good has gone.</h1>
+    <p class="lead" style="margin-top:18px">Every nonprofit we&rsquo;ve supported since 2021 &mdash; who picked it, the year it was chosen, and what the community raised for it. Twenty causes and counting, <b style="color:var(--ink)">100% funded</b> by hand-poured candles.</p>
+
+    <div class="sumstrip">
+      <div class="s acc"><b>${{ metrics.totalRaisedDisplay }}</b><span>Raised since 2021</span></div>
+      <div class="s acc2"><b>{{ metrics.orgCount }}</b><span>Organizations</span></div>
+      <div class="s"><b>{{ metrics.yearCount }}</b><span>Years</span></div>
+      <div class="s"><b>100%</b><span>To charity</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ LIST ============================ -->
+<section class="section" id="list" style="padding-top:clamp(20px,3vw,32px)">
+  <div class="wrap">
+
+    <div class="controls" id="controls">
+      <div class="ctrl select">
+        <label class="lab" for="whoSel">Picked by</label>
+        <select id="whoSel">
+          <option value="all">Everyone</option>
+          <option value="Jamie">Jamie</option>
+          <option value="Tammy">Tammy</option>
+          <option value="Mazie">Mazie</option>
+          <option value="Tyler">Tyler</option>
+          <option value="The Things">The Things (2021&ndash;22)</option>
+        </select>
+      </div>
+      <div class="ctrl select">
+        <label class="lab" for="yearSel">Year</label>
+        <select id="yearSel">
+          <option value="all">All years</option>
+          <option value="2025">2025</option>
+          <option value="2024">2024</option>
+          <option value="2023">2023</option>
+          <option value="2022">2022</option>
+          <option value="2021">2021</option>
+        </select>
+      </div>
+      <div class="ctrl select">
+        <label class="lab" for="sort">Sort</label>
+        <select id="sort" aria-label="Sort nonprofits">
+          <option value="year-desc">Newest first</option>
+          <option value="year-asc">Oldest first</option>
+          <option value="amt-desc">Raised: high to low</option>
+          <option value="amt-asc">Raised: low to high</option>
+          <option value="name-asc">Name: A to Z</option>
+        </select>
+      </div>
+    </div>
+
+    <p class="result-count" id="count">Showing all 20 organizations</p>
+    <div class="impact-grid" id="grid"></div>
+    <div class="empty" id="empty" style="display:none">
+      <b>No causes match that.</b>
+      Try clearing a filter or your search.
+    </div>
+
+    <p class="note-est"><b>A note on the numbers:</b> per-organization amounts shown here are estimates while we wire in the exact figures from each year&rsquo;s tally. Yearly totals are exact.</p>
+  </div>
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+<style>
+  @keyframes fadeUp { from { opacity:0; transform: translateY(10px); } to { opacity:1; transform:none; } }
+</style>
+<script>
+  // ---- data (from src/_data/organizations.json) ----
+  // per-org `amount` is an ESTIMATE (yearly totals are exact).
+  // `logo`: add a path like "/images/logo-oceanites.svg" to replace the letter glyph.
+  // `reason`: the picker's own words. 2021–22 were chosen collectively — backfill when ready.
+  const ORGS = {{ organizations | dump | safe }};
+
+  const fmt = (n) => "$" + n.toLocaleString('en-US');
+  const state = { who:"all", year:"all", sort:"year-desc" };
+
+  const grid = document.getElementById('grid');
+  const countEl = document.getElementById('count');
+  const emptyEl = document.getElementById('empty');
+
+  function apply() {
+    let list = ORGS.filter(o => {
+      if (state.who !== "all" && o.who !== state.who) return false;
+      if (state.year !== "all" && String(o.year) !== state.year) return false;
+      return true;
+    });
+    const s = state.sort;
+    list.sort((a,b) => {
+      if (s === "year-desc") return b.year - a.year || b.amount - a.amount;
+      if (s === "year-asc")  return a.year - b.year || b.amount - a.amount;
+      if (s === "amt-desc")  return b.amount - a.amount;
+      if (s === "amt-asc")   return a.amount - b.amount;
+      if (s === "name-asc")  return a.name.localeCompare(b.name);
+      return 0;
+    });
+
+    grid.innerHTML = list.map(o => {
+      const initial = o.who === "The Things" ? "T4G" : o.who[0];
+      const whoLabel = o.who === "The Things" ? "The Things" : o.who;
+      const sub = o.who === "The Things" ? "chosen together" : "picked it";
+      const glyph = o.logo
+        ? `<div class="glyph haslogo"><img src="${o.logo}" alt="${o.name} logo" /></div>`
+        : `<div class="glyph">${o.glyph}</div>`;
+      const whyLabel = o.who === "The Things" ? "Why we chose it" : `Why ${o.who} picked it`;
+      const why = o.reason
+        ? `<details class="why"><summary>${whyLabel}</summary><blockquote>&ldquo;${o.reason}&rdquo;<cite>&mdash; ${whoLabel}</cite></blockquote></details>`
+        : "";
+      return `
+      <article class="icard">
+        <div class="itop">
+          ${glyph}
+          <span class="ybadge">${o.year}</span>
+        </div>
+        <a class="iname" href="${o.url}" target="_blank" rel="noopener">${o.name}</a>
+        <p class="iblurb">${o.blurb}</p>
+        <div class="imeta">
+          <div class="iwho">
+            <span class="iav" data-who="${o.who}">${initial}</span>
+            <span class="nm">${whoLabel}<small>${sub}</small></span>
+          </div>
+          <div class="iamt"><b>${fmt(o.amount)}</b><span class="est">est.</span></div>
+        </div>
+        ${why}
+        <a class="go" href="${o.url}" target="_blank" rel="noopener">Visit <span class="arr">&rarr;</span></a>
+      </article>`;
+    }).join('');
+
+    const n = list.length;
+    countEl.innerHTML = n === ORGS.length
+      ? `Showing all <b>${n}</b> organizations`
+      : `Showing <b>${n}</b> of ${ORGS.length} organizations`;
+    emptyEl.style.display = n ? 'none' : 'block';
+    grid.style.display = n ? 'grid' : 'none';
+    grid.style.animation = 'none'; void grid.offsetWidth; grid.style.animation = 'fadeUp .4s ease';
+  }
+
+  document.getElementById('whoSel').addEventListener('change', (e) => { state.who = e.target.value; apply(); });
+  document.getElementById('yearSel').addEventListener('change', (e) => { state.year = e.target.value; apply(); });
+  document.getElementById('sort').addEventListener('change', (e) => { state.sort = e.target.value; apply(); });
+
+  apply();
+</script>
+{% endblock %}

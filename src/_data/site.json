@@ -3,17 +3,9 @@
   "email": "hello@things4good.xyz",
   "saleDates": "Nov 7–8, 2026",
   "saleYear": "2026",
-  "totalRaised": 31787,
-  "totalRaisedDisplay": "31,787",
   "preorderSheet": "",
   "tinylyticsEmbed": "",
   "blogUrl": "https://www.thingelstad.com/categories/things-4-good/",
-  "raisedStats": [
-    { "value": "20", "label": "Organizations supported" },
-    { "value": "5", "label": "Years &amp; counting" },
-    { "value": "$25", "label": "Per candle &middot; same as day one" },
-    { "value": "4", "label": "Things in the family" }
-  ],
   "makers": [
     { "name": "Jamie", "role": "the original spark", "url": "https://www.thingelstad.com", "site": "thingelstad.com" },
     { "name": "Tammy", "role": "quality control", "url": "https://tammy.thingelstad.com", "site": "tammy.thingelstad.com", "alt": true },
