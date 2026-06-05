@@ -28,7 +28,7 @@
     {% endblock %}
   </nav>
   <span class="nav-date">{% block navDate %}{{ site.saleDates }}{% endblock %}</span>
-  {% block navCta %}<a class="btn btn--primary nav-cta" href="/preorder/">Preorder</a>{% endblock %}
+  {% block navCta %}<a class="btn btn--primary nav-cta" href="{{ site.updatesUrl }}" target="_blank" rel="noopener">Get updates</a>{% endblock %}
 </header>
 
 <main id="top">
@@ -64,7 +64,7 @@
         <div class="fcol">
           <h4>Get in touch</h4>
           <a href="mailto:{{ site.email }}">{{ site.email }}</a>
-          <a href="{% block subscribeHref %}/#subscribe{% endblock %}">Subscribe</a>
+          <a href="{{ site.updatesUrl }}" target="_blank" rel="noopener">Get updates</a>
         </div>
       </div>
     </div>

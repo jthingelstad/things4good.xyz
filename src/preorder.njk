@@ -5,7 +5,7 @@ description: Preorder six or more Things 4 Good candles for Sunday pickup, with 
 {% extends "base.njk" %}
 
 {% block brandHref %}/{% endblock %}
-{% block navCta %}<a class="btn btn--primary nav-cta" href="/preorder/" aria-current="page">Preorder</a>{% endblock %}
+{% block navCta %}<a class="btn btn--primary nav-cta" href="{{ site.updatesUrl }}" target="_blank" rel="noopener">Get updates</a>{% endblock %}
 
 {% block content %}
 
@@ -14,9 +14,9 @@ description: Preorder six or more Things 4 Good candles for Sunday pickup, with 
   <div class="hero-glow" aria-hidden="true"></div>
   <div class="wrap">
     <a class="back-link" href="/">&larr; Things 4 Good</a>
-    <p class="eyebrow">Preorder &amp; pickup</p>
-    <h1 style="font-family:var(--serif);font-weight:500;font-size:clamp(2.4rem,5.4vw,4rem);letter-spacing:-.02em;line-height:1.02;max-width:18ch">Order ahead. Pay it forward.</h1>
-    <p class="lead" style="margin-top:18px">Reserve a bigger batch of candles for Sunday pickup, then send your donation however is easiest once final sale details go out. Every candle is a flat <b style="color:var(--ink)">$25 donation</b> &mdash; 100% to good.</p>
+    <p class="eyebrow">Sale logistics</p>
+    <h1 style="font-family:var(--serif);font-weight:500;font-size:clamp(2.4rem,5.4vw,4rem);letter-spacing:-.02em;line-height:1.02;max-width:18ch">Preorder, pickup, and payment.</h1>
+    <p class="lead" style="margin-top:18px">This page is here for practical sale details. When the 2026 candle lineup is ready, we&rsquo;ll share preorder timing, pickup notes, and payment options with Candle Fundraiser subscribers first.</p>
   </div>
 </section>
 
@@ -25,7 +25,7 @@ description: Preorder six or more Things 4 Good candles for Sunday pickup, with 
   <div class="wrap">
     <div class="sec-head reveal">
       <p class="eyebrow">Preorder &middot; six or more</p>
-      <h2 class="t">Reserve a batch.</h2>
+      <h2 class="t">Planning a bigger order?</h2>
       <p class="lead">Ordering <b style="color:var(--ink)">six or more</b>? The preorder sheet opens closer to the sale, and subscribers get it first. Smaller orders are always welcome right at the sale &mdash; no preorder needed.</p>
     </div>
 
@@ -52,13 +52,13 @@ description: Preorder six or more Things 4 Good candles for Sunday pickup, with 
       <div class="mn-copy">
         <span class="tag">Preorder sheet</span>
         <h3>Ready to reserve your batch?</h3>
-        <p>The sheet opens closer to the sale and goes out to subscribers first. Six-candle minimum, picked up Sunday.</p>
+        <p>The sheet opens closer to the sale and goes out to Candle Fundraiser subscribers first. Six-candle minimum, picked up Sunday.</p>
       </div>
       <div class="mn-act">
         {% if site.preorderSheet %}
         <a class="btn btn--primary" href="{{ site.preorderSheet }}" target="_blank" rel="noopener">Open the preorder sheet <span class="arr">&rarr;</span></a>
         {% else %}
-        <span class="btn btn--primary" aria-disabled="true" style="opacity:.6;cursor:default">Preorder sheet opens soon</span>
+        <a class="btn btn--primary" href="{{ site.updatesUrl }}" target="_blank" rel="noopener">Get preorder updates <span class="arr">&rarr;</span></a>
         {% endif %}
         <span class="small">Or email <a href="mailto:{{ site.email }}" style="color:var(--marigold);font-weight:700">{{ site.email }}</a></span>
       </div>
@@ -72,10 +72,15 @@ description: Preorder six or more Things 4 Good candles for Sunday pickup, with 
     <div class="sec-head reveal">
       <p class="eyebrow">How to pay</p>
       <h2 class="t">Send your donation.</h2>
-      <p class="lead">Whatever&rsquo;s easiest for you. Each candle is a <b style="color:var(--ink)">$25 donation</b>; exact payment handles are shared with confirmed sale details so nothing stale lives here.</p>
+      <p class="lead">Each candle is a <b style="color:var(--ink)">$25 donation</b>. Venmo is the most popular way people give, and final payment details are shared with sale information.</p>
     </div>
 
     <div class="paygrid">
+      <div class="paycard reveal">
+        <div class="pname"><span class="picon">V</span>Venmo</div>
+        <p class="pdesc">The easiest option for most people. Send ahead of pickup or scan our code at the sale, and add a note with the causes you&rsquo;d like to support.</p>
+        <div class="handle">Handle shared with sale announcement</div>
+      </div>
       <div class="paycard reveal">
         <div class="pname"><span class="picon">$</span>Cash</div>
         <p class="pdesc">The classic. Bring it to the sale and we&rsquo;ll take it from there &mdash; exact change appreciated but never required.</p>
@@ -84,17 +89,12 @@ description: Preorder six or more Things 4 Good candles for Sunday pickup, with 
       <div class="paycard alt reveal">
         <div class="pname"><span class="picon"></span>Apple Pay</div>
         <p class="pdesc">Tap at pickup or send from your iPhone once the sale number is shared with subscribers.</p>
-        <div class="handle">Shared with sale details</div>
-      </div>
-      <div class="paycard reveal">
-        <div class="pname"><span class="picon">V</span>Venmo</div>
-        <p class="pdesc">Scan our code at the sale or send ahead of pickup. Add a note with the causes you&rsquo;d like to support.</p>
-        <div class="handle">Shared with sale details</div>
+        <div class="handle">Details with sale announcement</div>
       </div>
       <div class="paycard alt reveal">
         <div class="pname"><span class="picon">Z</span>Zelle</div>
         <p class="pdesc">Send straight from your bank&rsquo;s app to our email or number &mdash; no fees, no app to download.</p>
-        <div class="handle">Shared with sale details</div>
+        <div class="handle">Details with sale announcement</div>
       </div>
     </div>
 
@@ -117,9 +117,10 @@ description: Preorder six or more Things 4 Good candles for Sunday pickup, with 
   <div class="wrap">
     <p class="eyebrow" style="justify-content:center">Questions before you order?</p>
     <h2 class="t" style="max-width:20ch;margin-inline:auto">We&rsquo;re happy to help.</h2>
-    <p class="lead" style="margin:18px auto 0;text-align:center">Read the common questions, or just reach out &mdash; a real Thing will answer.</p>
+    <p class="lead" style="margin:18px auto 0;text-align:center">Get the fall announcement, read the common questions, or just reach out &mdash; a real Thing will answer.</p>
     <div class="sub-form" style="max-width:none;gap:12px">
-      <a class="btn btn--primary" href="/faq/">Read the FAQ <span class="arr">&rarr;</span></a>
+      <a class="btn btn--primary" href="{{ site.updatesUrl }}" target="_blank" rel="noopener">Get sale updates <span class="arr">&rarr;</span></a>
+      <a class="btn btn--ghost" href="/faq/">Read the FAQ</a>
       <a class="btn btn--ghost" href="mailto:{{ site.email }}">Email us</a>
     </div>
   </div>

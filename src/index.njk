@@ -16,8 +16,8 @@ description: Since 2021 the Thingelstad family has hand-poured wooden-wick candl
         <br /><span class="pine">100% for good.</span></h1>
       <p class="lead">Since 2021 the Thingelstad family has hand-poured wooden-wick candles for one weekend a year. Every candle is a $25 donation &mdash; and every dollar goes straight to causes we love.</p>
       <div class="hero-cta">
-        <a class="btn btn--primary" href="#sale">See this year&rsquo;s sale <span class="arr">&rarr;</span></a>
-        <a class="btn btn--ghost" href="#good">Meet the causes</a>
+        <a class="btn btn--primary" href="{{ site.updatesUrl }}" target="_blank" rel="noopener">Get sale updates <span class="arr">&rarr;</span></a>
+        <a class="btn btn--ghost" href="#good">See the impact</a>
       </div>
       <div class="hero-meta">
         <span class="pill"><span class="dot"></span>Wooden wick &middot; hand-poured</span>
@@ -107,8 +107,8 @@ description: Since 2021 the Thingelstad family has hand-poured wooden-wick candl
             <div class="mo">November 2026</div>
           </div>
         </div>
-        <p class="when-note">Pre-orders are picked up on <b style="color:#fff">Sunday</b>. Exact hours &amp; location are shared with subscribers closer to the weekend.</p>
-        <a class="btn btn--primary" style="margin-top:20px" href="#subscribe">Get the details <span class="arr">&rarr;</span></a>
+        <p class="when-note">Pre-orders are picked up on <b style="color:#fff">Sunday</b>. Exact hours, location, scents, and preorder details are shared with subscribers closer to the weekend.</p>
+        <a class="btn btn--primary" style="margin-top:20px" href="{{ site.updatesUrl }}" target="_blank" rel="noopener">Get updates <span class="arr">&rarr;</span></a>
       </div>
 
       <div class="info-card reveal">
@@ -121,17 +121,17 @@ description: Since 2021 the Thingelstad family has hand-poured wooden-wick candl
           <div class="v">
             However&rsquo;s easiest for you.
             <div class="pay">
-              <span>Cash</span><span>Apple Pay</span><span>Venmo</span><span>Zelle</span>
+              <span>Venmo</span><span>Cash</span><span>Apple Pay</span><span>Zelle</span>
             </div>
           </div>
         </div>
         <div class="info-row">
           <div class="k">Pre-orders</div>
-          <div class="v">Ordering <b>six or more</b>? {% if site.preorderSheet %}Add your candles and scents to our <a href="{{ site.preorderSheet }}" target="_blank" rel="noopener" style="color:var(--marigold-d);font-weight:600;text-decoration:none">pre-order sheet</a> and we&rsquo;ll have them ready for Sunday pickup.{% else %}The pre-order sheet will open closer to the sale, and we&rsquo;ll share it with subscribers first.{% endif %}</div>
+          <div class="v">Ordering <b>six or more</b>? {% if site.preorderSheet %}Add your candles and scents to our <a href="{{ site.preorderSheet }}" target="_blank" rel="noopener" style="color:var(--marigold-d);font-weight:600;text-decoration:none">pre-order sheet</a> and we&rsquo;ll have them ready for Sunday pickup.{% else %}The pre-order sheet opens closer to the sale and goes to subscribers first. <a href="/preorder/" style="color:var(--marigold-d);font-weight:600;text-decoration:none">See preorder &amp; pickup notes</a>.{% endif %}</div>
         </div>
         <div class="info-row">
           <div class="k">Scents</div>
-          <div class="v">This year&rsquo;s lineup is announced closer to the sale. <a href="#subscribe" style="color:var(--marigold-d);font-weight:600;text-decoration:none">Subscribe</a> to be the first to know.</div>
+          <div class="v">This year&rsquo;s lineup is announced closer to the sale. <a href="{{ site.updatesUrl }}" target="_blank" rel="noopener" style="color:var(--marigold-d);font-weight:600;text-decoration:none">Choose Candle Fundraiser updates</a> to be first to know.</div>
         </div>
       </div>
     </div>
@@ -259,9 +259,9 @@ description: Since 2021 the Thingelstad family has hand-poured wooden-wick candl
       </a>
       <a class="path-card reveal" href="/preorder/">
         <span class="kicker">Preorder</span>
-        <h3>Plan a batch.</h3>
-        <p>Ordering six or more? The preorder page keeps the timing, pickup, and payment notes together.</p>
-        <span class="go">Preorder details <span class="arr">&rarr;</span></span>
+        <h3>Plan the logistics.</h3>
+        <p>Ordering six or more? The logistics page keeps pickup, preorder status, and payment notes together.</p>
+        <span class="go">Pickup details <span class="arr">&rarr;</span></span>
       </a>
       <a class="path-card reveal" href="/faq/">
         <span class="kicker">FAQ</span>
@@ -277,19 +277,16 @@ description: Since 2021 the Thingelstad family has hand-poured wooden-wick candl
 <section class="section section--pine subscribe" id="subscribe">
   <div class="wrap">
     <p class="eyebrow" style="justify-content:center">Stay in the loop</p>
-    <h2 class="t" style="max-width:18ch;margin-inline:auto">Be the first to know when the candles drop.</h2>
-    <p class="lead" style="margin:18px auto 0;text-align:center">We&rsquo;ll send the dates, hours, location, and this year&rsquo;s scents &mdash; nothing else.</p>
-    <form class="sub-form" action="mailto:{{ site.email }}" method="post" enctype="text/plain">
-      <input type="email" name="email" placeholder="you@email.com" aria-label="Email address" required />
-      <button class="btn btn--primary" type="submit">Notify me</button>
-    </form>
-    <p class="sub-note">Prefer to just reach out? Email <a href="mailto:{{ site.email }}" style="color:#fff;font-weight:600">{{ site.email }}</a>.</p>
+    <h2 class="t" style="max-width:20ch;margin-inline:auto">Get the fall candle sale announcement.</h2>
+    <p class="lead" style="margin:18px auto 0;text-align:center">Join the Thingelstad Family list and choose <b style="color:#fff">Candle Fundraiser</b> for sale dates, scent previews, preorder timing, and nonprofit highlights.</p>
+    <div class="sub-form" style="max-width:none">
+      <a class="btn btn--primary" href="{{ site.updatesUrl }}" target="_blank" rel="noopener">Get sale updates <span class="arr">&rarr;</span></a>
+    </div>
+    <p class="sub-note">The list also has optional family and holiday-note segments.</p>
   </div>
 </section>
 
 {% endblock %}
-
-{% block subscribeHref %}#subscribe{% endblock %}
 
 {% block scripts %}
 <script>
