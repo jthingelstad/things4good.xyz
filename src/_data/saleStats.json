@@ -1,0 +1,213 @@
+{
+  "_note": "Operational sale stats curated from private CSV exports. Public data intentionally excludes buyer names and payment handles.",
+  "years": [
+    {
+      "year": 2021,
+      "raised": 4757,
+      "growthPct": null,
+      "transactions": 51,
+      "transactionGrowthPct": null,
+      "candlesSold": 134,
+      "paymentMethods": [
+        { "method": "Venmo", "count": 23 },
+        { "method": "Cash", "count": 14 },
+        { "method": "Apple Pay", "count": 8 },
+        { "method": "Check", "count": 5 },
+        { "method": "PayPal", "count": 1 }
+      ],
+      "orderDistribution": [
+        { "candles": 1, "transactions": 13 },
+        { "candles": 2, "transactions": 18 },
+        { "candles": 3, "transactions": 5 },
+        { "candles": 4, "transactions": 7 },
+        { "candles": 5, "transactions": 3 },
+        { "candles": 7, "transactions": 1 },
+        { "candles": 8, "transactions": 1 },
+        { "candles": 12, "transactions": 1 }
+      ],
+      "note": "The first sale included candles plus extras like puzzles, honey, and cookies."
+    },
+    {
+      "year": 2022,
+      "raised": 5217,
+      "growthPct": 9.7,
+      "transactions": 52,
+      "transactionGrowthPct": 2.0,
+      "candlesSold": 180,
+      "paymentMethods": [
+        { "method": "Venmo", "count": 31 },
+        { "method": "Cash", "count": 14 },
+        { "method": "Apple Pay", "count": 4 },
+        { "method": "Check", "count": 2 },
+        { "method": "Zelle", "count": 1 }
+      ],
+      "orderDistribution": [
+        { "candles": 1, "transactions": 13 },
+        { "candles": 2, "transactions": 10 },
+        { "candles": 3, "transactions": 7 },
+        { "candles": 4, "transactions": 8 },
+        { "candles": 5, "transactions": 2 },
+        { "candles": 6, "transactions": 4 },
+        { "candles": 7, "transactions": 1 },
+        { "candles": 8, "transactions": 1 },
+        { "candles": 10, "transactions": 1 },
+        { "candles": 11, "transactions": 1 },
+        { "candles": 12, "transactions": 2 }
+      ],
+      "note": "Source tracking showed friends, TeamSPS, relatives, neighbors, and business connections all taking part."
+    },
+    {
+      "year": 2023,
+      "raised": 5755,
+      "growthPct": 10.3,
+      "transactions": 55,
+      "transactionGrowthPct": 5.8,
+      "candlesSold": 226,
+      "candlesMade": 228,
+      "candlesLeft": 2,
+      "paymentMethods": [
+        { "method": "Venmo", "count": 28 },
+        { "method": "Cash", "count": 15 },
+        { "method": "Check", "count": 4 },
+        { "method": "Apple Pay", "count": 3 },
+        { "method": "PayPal", "count": 1 },
+        { "method": "Bitcoin", "count": 1 }
+      ],
+      "orderDistribution": [
+        { "candles": 1, "transactions": 6 },
+        { "candles": 2, "transactions": 15 },
+        { "candles": 3, "transactions": 5 },
+        { "candles": 4, "transactions": 8 },
+        { "candles": 5, "transactions": 4 },
+        { "candles": 6, "transactions": 4 },
+        { "candles": 8, "transactions": 3 },
+        { "candles": 9, "transactions": 1 },
+        { "candles": 10, "transactions": 1 },
+        { "candles": 12, "transactions": 3 },
+        { "candles": 20, "transactions": 1 }
+      ],
+      "scents": [
+        { "name": "Plain Jane", "sold": 22, "made": 24, "left": 2 },
+        { "name": "Winter Wonderland", "sold": 64, "made": 64, "left": 0 },
+        { "name": "Tea Time", "sold": 28, "made": 28, "left": 0 },
+        { "name": "Apple of my Eye", "sold": 24, "made": 24, "left": 0 },
+        { "name": "Oh My Darling", "sold": 28, "made": 28, "left": 0 },
+        { "name": "True North", "sold": 24, "made": 24, "left": 0 },
+        { "name": "Pumpkin Pie", "sold": 20, "made": 20, "left": 0 },
+        { "name": "Old Fashioned", "sold": 16, "made": 16, "left": 0 }
+      ],
+      "note": "The first year with rolling scent inventory exported as a table."
+    },
+    {
+      "year": 2024,
+      "raised": 7010,
+      "growthPct": 21.8,
+      "transactions": 78,
+      "transactionGrowthPct": 41.8,
+      "candlesSold": 264,
+      "candlesMade": 252,
+      "candlesLeft": -12,
+      "paymentMethods": [
+        { "method": "Venmo", "count": 51 },
+        { "method": "Cash", "count": 14 },
+        { "method": "Zelle", "count": 5 },
+        { "method": "Apple Pay", "count": 3 },
+        { "method": "Check", "count": 3 },
+        { "method": "Cash App", "count": 1 }
+      ],
+      "orderDistribution": [
+        { "candles": 1, "transactions": 32 },
+        { "candles": 2, "transactions": 12 },
+        { "candles": 3, "transactions": 8 },
+        { "candles": 4, "transactions": 6 },
+        { "candles": 5, "transactions": 3 },
+        { "candles": 6, "transactions": 4 },
+        { "candles": 7, "transactions": 2 },
+        { "candles": 8, "transactions": 4 },
+        { "candles": 10, "transactions": 1 },
+        { "candles": 12, "transactions": 1 },
+        { "candles": 16, "transactions": 1 },
+        { "candles": 18, "transactions": 1 },
+        { "candles": 20, "transactions": 1 }
+      ],
+      "scents": [
+        { "name": "Just Crackle", "sold": 24, "made": 24, "left": 0 },
+        { "name": "Winter Wonderland", "sold": 75, "made": 72, "left": -3 },
+        { "name": "True North", "sold": 24, "made": 24, "left": 0 },
+        { "name": "Apple of my Eye", "sold": 25, "made": 24, "left": -1 },
+        { "name": "Oh My Darling", "sold": 30, "made": 24, "left": -6 },
+        { "name": "Tea Time", "sold": 24, "made": 24, "left": 0 },
+        { "name": "Pumpkin Pie", "sold": 24, "made": 24, "left": 0 },
+        { "name": "Old Fashioned", "sold": 38, "made": 36, "left": -2 }
+      ],
+      "note": "The holiday boutique created the biggest transaction jump and several scents were effectively oversold."
+    },
+    {
+      "year": 2025,
+      "raised": 9048,
+      "growthPct": 29.1,
+      "transactions": 73,
+      "transactionGrowthPct": -6.4,
+      "candlesSold": 321,
+      "candlesMade": 331,
+      "candlesLeft": 10,
+      "lidsSold": 40,
+      "paymentMethods": [
+        { "method": "Venmo", "count": 60 },
+        { "method": "Cash", "count": 12 },
+        { "method": "Apple Pay", "count": 2 },
+        { "method": "Cash App", "count": 1 },
+        { "method": "Check", "count": 0 },
+        { "method": "Zelle", "count": 0 }
+      ],
+      "orderDistribution": [
+        { "candles": 1, "transactions": 9 },
+        { "candles": 2, "transactions": 19 },
+        { "candles": 3, "transactions": 7 },
+        { "candles": 4, "transactions": 12 },
+        { "candles": 5, "transactions": 5 },
+        { "candles": 6, "transactions": 6 },
+        { "candles": 7, "transactions": 3 },
+        { "candles": 8, "transactions": 5 },
+        { "candles": 9, "transactions": 1 },
+        { "candles": 10, "transactions": 1 },
+        { "candles": 11, "transactions": 1 },
+        { "candles": 12, "transactions": 2 },
+        { "candles": 13, "transactions": 1 },
+        { "candles": 16, "transactions": 1 }
+      ],
+      "scents": [
+        { "name": "Just Crackle", "sold": 22, "made": 22, "left": 0, "type": "12 oz" },
+        { "name": "Winter Wonderland", "sold": 50, "made": 50, "left": 0, "type": "12 oz" },
+        { "name": "True North", "sold": 63, "made": 63, "left": 0, "type": "12 oz" },
+        { "name": "Apple of my Eye", "sold": 15, "made": 15, "left": 0, "type": "12 oz" },
+        { "name": "Oh My Darling", "sold": 17, "made": 17, "left": 0, "type": "12 oz" },
+        { "name": "Tea Time", "sold": 14, "made": 14, "left": 0, "type": "12 oz" },
+        { "name": "Charcoal Rose", "sold": 35, "made": 35, "left": 0, "type": "12 oz" },
+        { "name": "Pumpkin Pie", "sold": 16, "made": 16, "left": 0, "type": "12 oz" },
+        { "name": "Old Fashioned", "sold": 38, "made": 40, "left": 2, "type": "12 oz" },
+        { "name": "T4G Labs", "sold": 18, "made": 24, "left": 6, "type": "12 oz" },
+        { "name": "Rekindled", "sold": 12, "made": 13, "left": 1, "type": "12 oz" },
+        { "name": "XL Winter Wonderland", "sold": 14, "made": 14, "left": 0, "type": "24 oz" },
+        { "name": "XL True North", "sold": 7, "made": 8, "left": 1, "type": "24 oz" }
+      ],
+      "note": "The sale added XL candles, lids, Charcoal Rose, T4G Labs, and Rekindled."
+    }
+  ],
+  "milestones": [
+    {
+      "label": "1,000th candle",
+      "year": 2025,
+      "detail": "The 196th candle of the 2025 sale was the 1,000th candle sold overall, in the 40th transaction of the event."
+    }
+  ],
+  "materialCost": {
+    "title": "How much does a Things 4 Good candle cost to make?",
+    "url": "https://www.thingelstad.com/2024/11/17/how-much-does.html",
+    "costLow": 10.35,
+    "costHigh": 13.40,
+    "discountLow": 8.28,
+    "discountHigh": 10.72,
+    "note": "Materials include the vessel, soy wax, scent, wooden wick, wick clip, candle label, and warning sticker. Labor is donated."
+  }
+}

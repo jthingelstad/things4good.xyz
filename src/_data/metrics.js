@@ -7,10 +7,12 @@
 
 const data = require("./events.json");
 const site = require("./site.json");
+const saleStats = require("./saleStats.json");
 
 const fmt = (n) => n.toLocaleString("en-US");
 const round1 = (n) => Math.round(n * 10) / 10; // one decimal place
 const round10 = (n) => Math.round(n / 10) * 10; // nearest ten
+const pct = (n) => (n === null || n === undefined ? "" : n.toFixed(1) + "%");
 
 module.exports = (() => {
   const events = data.events;
@@ -181,6 +183,93 @@ module.exports = (() => {
     avgPerYearDisplay: fmt(avgPerYear),
   };
 
+  // ---- operational sale stats ----
+  // Nonprofit dollars remain canonical in events.json. These are aggregate, non-PII
+  // operating metrics curated from the private sales spreadsheets.
+  const saleYears = saleStats.years;
+  const maxSaleRaised = Math.max(...saleYears.map((y) => y.raised));
+  const maxSaleCandles = Math.max(...saleYears.map((y) => y.candlesSold));
+  const maxSaleTransactions = Math.max(...saleYears.map((y) => y.transactions));
+  const latestSale = saleYears[saleYears.length - 1];
+  const totalTransactions = saleYears.reduce((s, y) => s + y.transactions, 0);
+  const totalCandlesSold = saleYears.reduce((s, y) => s + y.candlesSold, 0);
+  const totalPaymentCount = saleYears.flatMap((y) => y.paymentMethods).reduce((s, p) => s + p.count, 0);
+  const totalVenmoCount = saleYears
+    .flatMap((y) => y.paymentMethods)
+    .filter((p) => p.method === "Venmo")
+    .reduce((s, p) => s + p.count, 0);
+  const latestPaymentTotal = latestSale.paymentMethods.reduce((s, p) => s + p.count, 0);
+  const latestVenmoCount = latestSale.paymentMethods.find((p) => p.method === "Venmo")?.count || 0;
+  const orderTotals = new Map();
+  saleYears.forEach((y) => {
+    y.orderDistribution.forEach((d) => {
+      orderTotals.set(d.candles, (orderTotals.get(d.candles) || 0) + d.transactions);
+    });
+  });
+  const allOrderDistribution = [...orderTotals.entries()]
+    .map(([candles, transactions]) => ({ candles, transactions }))
+    .sort((a, b) => a.candles - b.candles);
+  const maxOrderTransactions = Math.max(...allOrderDistribution.map((d) => d.transactions));
+  const latestMaxOrderTransactions = Math.max(...latestSale.orderDistribution.map((d) => d.transactions));
+  const maxLatestScentSold = Math.max(...latestSale.scents.map((s) => s.sold));
+  const topLatestScent = latestSale.scents.reduce((a, b) => (b.sold > a.sold ? b : a));
+  const latestLeft = latestSale.candlesLeft || 0;
+  const operations = {
+    sourceNote: saleStats._note,
+    years: saleYears.map((y) => ({
+      ...y,
+      raisedDisplay: fmt(y.raised),
+      growthDisplay: y.growthPct === null ? "start" : "+" + pct(y.growthPct),
+      transactionGrowthDisplay: y.transactionGrowthPct === null ? "start" : pct(y.transactionGrowthPct),
+      raisedBarPct: Math.round((y.raised / maxSaleRaised) * 100),
+      candleBarPct: Math.round((y.candlesSold / maxSaleCandles) * 100),
+      transactionBarPct: Math.round((y.transactions / maxSaleTransactions) * 100),
+    })),
+    latest: {
+      ...latestSale,
+      raisedDisplay: fmt(latestSale.raised),
+      venmoShareDisplay: pct((latestVenmoCount / latestPaymentTotal) * 100),
+      paymentTotal: latestPaymentTotal,
+      maxOrderTransactions: latestMaxOrderTransactions,
+      scents: latestSale.scents.map((s) => ({
+        ...s,
+        barPct: Math.round((s.sold / maxLatestScentSold) * 100),
+        leftDisplay: s.left === 0 ? "sold out" : s.left > 0 ? s.left + " left" : Math.abs(s.left) + " over",
+      })),
+    },
+    totals: {
+      candlesSold: totalCandlesSold,
+      candlesSoldDisplay: fmt(totalCandlesSold),
+      transactions: totalTransactions,
+      avgCandlesPerTransaction: (totalCandlesSold / totalTransactions).toFixed(1),
+      paymentCount: totalPaymentCount,
+      venmoCount: totalVenmoCount,
+      venmoShareDisplay: pct((totalVenmoCount / totalPaymentCount) * 100),
+      waxLbs: Math.round(totalCandlesSold * c.waxLbsPerCandle),
+      wickFt: Math.round(totalCandlesSold * c.wickFtPerCandle),
+      burnHrsDisplay: fmt(Math.round(totalCandlesSold * c.burnHrsPerCandle)),
+      latestLeft,
+    },
+    allOrderDistribution: allOrderDistribution.map((d) => ({
+      ...d,
+      barPct: Math.round((d.transactions / maxOrderTransactions) * 100),
+    })),
+    latestOrderDistribution: latestSale.orderDistribution.map((d) => ({
+      ...d,
+      barPct: Math.round((d.transactions / latestMaxOrderTransactions) * 100),
+    })),
+    topLatestScent,
+    milestones: saleStats.milestones,
+    materialCost: {
+      ...saleStats.materialCost,
+      costRangeDisplay: "$" + saleStats.materialCost.costLow.toFixed(2) + "-$" + saleStats.materialCost.costHigh.toFixed(2),
+      discountRangeDisplay: "$" + saleStats.materialCost.discountLow.toFixed(2) + "-$" + saleStats.materialCost.discountHigh.toFixed(2),
+      allTimeCostRangeDisplay:
+        "$" + fmt(Math.round(totalCandlesSold * saleStats.materialCost.discountLow)) +
+        "-$" + fmt(Math.round(totalCandlesSold * saleStats.materialCost.discountHigh)),
+    },
+  };
+
   // ---- the home "raised" stat band ----
   const raisedStats = [
     { value: String(nonprofits.length), label: "Organizations supported" },
@@ -220,6 +309,7 @@ module.exports = (() => {
     annualStories,
     records,
     candleMath,
+    operations,
     raisedStats,
     footStats,
   };

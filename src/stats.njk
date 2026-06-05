@@ -1,6 +1,6 @@
 ---
 title: Stats — Things 4 Good
-description: Five years of Things 4 Good by the numbers — dollars raised, candles poured, growth, records, and a little candle math.
+description: The spreadsheet behind Things 4 Good — dollars raised, candles sold, transactions, payment mix, scent inventory, and candle math.
 ---
 {% extends "base.njk" %}
 
@@ -14,29 +14,47 @@ description: Five years of Things 4 Good by the numbers — dollars raised, cand
 {% endblock %}
 
 {% block content %}
+{% set ops = metrics.operations %}
 
 <!-- ============================ HEADER ============================ -->
-<section class="section section--ink page-head" id="head">
+<section class="section section--ink page-head stats-hero" id="head">
   <div class="hero-glow" aria-hidden="true"></div>
-  <div class="wrap" style="position:relative;z-index:1;text-align:center">
+  <div class="wrap">
     <a class="back-link" href="/">&larr; Things 4 Good</a>
-    <p class="eyebrow" style="justify-content:center">By the numbers</p>
-    <h1 style="font-family:var(--serif);font-weight:500;font-size:clamp(2.4rem,5.4vw,4rem);letter-spacing:-.02em;line-height:1.02">Five years of good, <span style="display:block">counted up.</span></h1>
-    <div class="big" style="font-family:var(--serif);font-weight:500;font-size:clamp(4rem,14vw,10rem);line-height:.9;letter-spacing:-.03em;color:var(--marigold);text-shadow:0 0 60px rgba(238,139,38,.35);margin-top:18px"><span style="font-size:.42em;vertical-align:.42em;color:rgba(242,251,247,.6)">$</span><span id="counter" data-target="{{ metrics.grandTotal }}">{{ metrics.grandTotalDisplay }}</span></div>
-    <p class="lead" style="margin:6px auto 0;text-align:center;color:rgba(255,255,255,.8)">raised since 2021 &mdash; ${{ metrics.totalRaisedDisplay }} from the candle sale and ${{ metrics.eventsTotalDisplay }} from markets &amp; events, every dollar to charity.</p>
+    <p class="eyebrow">Data lab</p>
+    <h1>The candle sale, counted carefully.</h1>
+    <p class="lead">Every fall we pour candles, track inventory, reconcile payments, chart what happened, and use the data to make the next sale better.</p>
+
+    <div class="stats-hero-grid">
+      <div class="stats-hero-total">
+        <span>Official nonprofit total</span>
+        <b><span class="pre">$</span><span id="counter" data-target="{{ metrics.totalRaised }}">{{ metrics.totalRaisedDisplay }}</span></b>
+        <p>Sale donations only. Markets and special events add another ${{ metrics.eventsTotalDisplay }}.</p>
+      </div>
+      <div class="stats-hero-note">
+        <span class="k">Source of truth</span>
+        <p>Donation totals are canonical. Sales mechanics come from aggregate spreadsheet exports with purchaser names removed.</p>
+      </div>
+    </div>
   </div>
 </section>
 
-<!-- ============================ BIG TILES ============================ -->
-<section class="section" id="tiles" style="padding-block:clamp(48px,7vw,84px)">
+<!-- ============================ DASHBOARD ============================ -->
+<section class="section" id="dashboard">
   <div class="wrap">
-    <div class="tilegrid">
-      <div class="tile reveal"><div class="k">{{ metrics.orgCount }}</div><div class="l">Organizations supported</div><div class="sub">4 causes chosen every year</div></div>
-      <div class="tile alt reveal"><div class="k">{{ metrics.yearCount }}</div><div class="l">Years &amp; counting</div><div class="sub">Since the first sale in 2021</div></div>
-      <div class="tile reveal"><div class="k">100%</div><div class="l">Goes to charity</div><div class="sub">We cover every material cost</div></div>
-      <div class="tile alt reveal"><div class="k">~{{ metrics.totalCandlesDisplay }}</div><div class="l">Candles hand-poured <span class="est">(est.)</span></div><div class="sub">{{ metrics.records.biggestYear.candles }} in {{ metrics.latestYear }} alone</div></div>
-      <div class="tile reveal"><div class="k">${{ metrics.pricePerCandle }}</div><div class="l">Per candle, since day one</div><div class="sub">Same price for five years</div></div>
-      <div class="tile alt reveal"><div class="k">~{{ metrics.totalParticipants }}</div><div class="l">Neighbors who took part</div><div class="sub">Across five weekends</div></div>
+    <div class="sec-head reveal">
+      <p class="eyebrow">Operating dashboard</p>
+      <h2 class="t">The tiny candle economy.</h2>
+      <p class="lead">This is the working view of the fundraiser: how many candles moved, how many transactions happened, and what the spreadsheet says people actually did.</p>
+    </div>
+
+    <div class="ops-grid">
+      <div class="ops-card reveal"><div class="k">{{ ops.totals.candlesSoldDisplay }}</div><div class="l">Candles sold</div><p>Across five annual sales.</p></div>
+      <div class="ops-card reveal"><div class="k">{{ ops.totals.transactions }}</div><div class="l">Transactions</div><p>Public stats stay aggregate; purchaser names remain private.</p></div>
+      <div class="ops-card reveal"><div class="k">{{ ops.totals.avgCandlesPerTransaction }}</div><div class="l">Candles per transaction</div><p>A practical planning number for vessels, wax, and scent.</p></div>
+      <div class="ops-card reveal"><div class="k">{{ ops.totals.venmoShareDisplay }}</div><div class="l">All-time Venmo share</div><p>{{ ops.totals.venmoCount }} of {{ ops.totals.paymentCount }} recorded payments.</p></div>
+      <div class="ops-card reveal"><div class="k">{{ ops.latest.lidsSold }}</div><div class="l">Lids sold in {{ ops.latest.year }}</div><p>A new add-on that mostly helped gift purchases.</p></div>
+      <div class="ops-card reveal"><div class="k">{{ ops.totals.latestLeft }}</div><div class="l">Candles left after {{ ops.latest.year }}</div><p>{{ ops.latest.candlesSold }} sold from {{ ops.latest.candlesMade }} prepared.</p></div>
     </div>
   </div>
 </section>
@@ -45,83 +63,165 @@ description: Five years of Things 4 Good by the numbers — dollars raised, cand
 <section class="section section--paper2" id="growth">
   <div class="wrap">
     <div class="sec-head reveal">
-      <p class="eyebrow">The climb</p>
-      <h2 class="t">Bigger every year.</h2>
-      <p class="lead">The sale has grown all five years &mdash; and the last two were the steepest yet.</p>
+      <p class="eyebrow">Growth model</p>
+      <h2 class="t">Money, candles, and transactions do not grow the same way.</h2>
+      <p class="lead">The fundraiser keeps getting bigger, but each metric tells a slightly different story: dollars raised, candles sold, and the number of checkout moments.</p>
     </div>
 
-    <div class="impact-chart reveal">
-      {% for y in metrics.perYear %}
-      <a class="bar{% if y.isLatest %} now{% endif %}" href="/impact/?event={{ y.slug }}" aria-label="See the {{ y.year }} organizations"><span class="val">${{ y.yearTotalDisplay }}</span><span class="col" style="height:{{ y.barHeightPct }}%;transition-delay:{{ 0.05 + loop.index0 * 0.08 }}s">{% if y.eventsRaised %}<span class="seg seg--event" style="flex:{{ y.eventsRaised }}" title="{{ y.yearEvents[0].name }}: ${{ y.eventsRaisedDisplay }}"></span>{% endif %}<span class="seg seg--candle" style="flex:{{ y.raised }}"></span></span><span class="yr">{{ y.year }}</span></a>
+    <div class="growth-lab reveal">
+      <div class="growth-head">
+        <span>Year</span>
+        <span>Dollars raised</span>
+        <span>Candles sold</span>
+        <span>Transactions</span>
+      </div>
+      {% for y in ops.years %}
+      <a class="growth-row" href="/impact/?event=candle-sale-{{ y.year }}">
+        <div class="gyear"><b>{{ y.year }}</b><span>{{ y.growthDisplay }}</span></div>
+        <div class="gmetric"><span class="glabel">${{ y.raisedDisplay }}</span><i style="width:{{ y.raisedBarPct }}%"></i></div>
+        <div class="gmetric alt"><span class="glabel">{{ y.candlesSold }}</span><i style="width:{{ y.candleBarPct }}%"></i></div>
+        <div class="gmetric third"><span class="glabel">{{ y.transactions }}</span><i style="width:{{ y.transactionBarPct }}%"></i></div>
+      </a>
       {% endfor %}
-    </div>
-    <div class="chart-legend reveal">
-      <span class="lg"><i class="sw sw--candle"></i> Candle sale</span>
-      <span class="lg"><i class="sw sw--event"></i> Markets &amp; events</span>
     </div>
 
-    <p class="eyebrow reveal" style="margin-top:clamp(36px,5vw,56px)">Running total &amp; year-over-year growth</p>
-    <div class="timeline reveal">
-      {% for y in metrics.perYear %}
-      <div class="tnode"><div class="yr">{{ y.year }}</div><div class="amt">${{ y.raisedDisplay }}</div><div class="cum">${{ y.cumulativeDisplay }} total</div><div class="grow">{{ y.growthDisplay }}</div></div>
-      {% endfor %}
+    <div class="insight-row">
+      <div class="insight reveal">
+        <span class="k">Biggest dollar jump</span>
+        <b>{{ ops.latest.growthDisplay }}</b>
+        <p>{{ ops.latest.year }} raised ${{ ops.latest.raisedDisplay }}, even with fewer transactions than 2024.</p>
+      </div>
+      <div class="insight reveal">
+        <span class="k">1,000th candle</span>
+        <b>2025</b>
+        <p>{{ ops.milestones[0].detail }}</p>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- ============================ RECORDS ============================ -->
-<section class="section" id="records">
+<!-- ============================ HOW PEOPLE BUY ============================ -->
+<section class="section" id="buying">
   <div class="wrap">
     <div class="sec-head reveal">
-      <p class="eyebrow">For the record</p>
-      <h2 class="t">Personal bests.</h2>
+      <p class="eyebrow">Buyer behavior</p>
+      <h2 class="t">People tend to buy in pairs.</h2>
+      <p class="lead">Order size is one of the most useful planning signals. It affects inventory, checkout, bags, labels, and how much Sunday pickup becomes a logistics puzzle.</p>
     </div>
-    <div class="records">
-      <div class="record reveal">
-        <div class="rl">Biggest year</div>
-        <div class="rv">{{ metrics.records.biggestYear.raisedDisplay }} in {{ metrics.records.biggestYear.year }}</div>
-        <div class="rd">Our highest-grossing sale yet &mdash; from just {{ metrics.records.biggestYear.participants }} neighbors and {{ metrics.records.biggestYear.candles }} candles.</div>
+
+    <div class="behavior-grid">
+      <div class="histogram reveal">
+        <div class="chart-title">
+          <h3>{{ ops.latest.year }} order sizes</h3>
+          <span>Candle transactions</span>
+        </div>
+        {% for d in ops.latestOrderDistribution %}
+        <div class="hrow">
+          <span>{{ d.candles }}</span>
+          <i style="width:{{ d.barPct }}%"></i>
+          <b>{{ d.transactions }}</b>
+        </div>
+        {% endfor %}
       </div>
-      <div class="record reveal">
-        <div class="rl">Biggest leap</div>
-        <div class="rv">{{ metrics.records.biggestLeap.growthDisplay }} &middot; {{ metrics.records.biggestLeap.deltaDisplay }}</div>
-        <div class="rd">2025 over 2024 &mdash; topping the previous records of 21.8%, 10.3%, and 9.7%.</div>
+
+      <div class="payment-lab reveal">
+        <div class="chart-title">
+          <h3>Payment mix</h3>
+          <span>{{ ops.latest.year }} recorded payments</span>
+        </div>
+        <div class="venmo-callout">
+          <b>{{ ops.latest.venmoShareDisplay }}</b>
+          <p>of recorded {{ ops.latest.year }} payments were Venmo.</p>
+        </div>
+        <div class="pay-bars">
+          {% for p in ops.latest.paymentMethods %}
+          <div class="pay-row">
+            <span>{{ p.method }}</span>
+            <i style="width:{% if ops.latest.paymentTotal %}{{ (p.count / ops.latest.paymentTotal * 100) | round }}{% else %}0{% endif %}%"></i>
+            <b>{{ p.count }}</b>
+          </div>
+          {% endfor %}
+        </div>
       </div>
-      <div class="record reveal">
-        <div class="rl">Tightest race</div>
-        <div class="rv">{{ metrics.records.tightestRace.spreadDisplay }} spread</div>
-        <div class="rd">In {{ metrics.records.tightestRace.year }} the four causes finished closer together than ever &mdash; nearly an even split.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ INVENTORY ============================ -->
+<section class="section section--paper2" id="inventory">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">Inventory</p>
+      <h2 class="t">Scents are the hardest forecast.</h2>
+      <p class="lead">{{ ops.latest.year }} added more products: Charcoal Rose, T4G Labs, Rekindled, XL candles, and lids. The inventory chart is where the sale starts to look like a tiny retailer.</p>
+    </div>
+
+    <div class="inventory-layout">
+      <div class="scent-board reveal">
+        <div class="chart-title">
+          <h3>{{ ops.latest.year }} scent sell-through</h3>
+          <span>{{ ops.latest.candlesSold }} sold &middot; {{ ops.latest.candlesMade }} prepared</span>
+        </div>
+        {% for scent in ops.latest.scents %}
+        <div class="scent-row">
+          <div class="scent-name"><b>{{ scent.name }}</b><span>{{ scent.type }}</span></div>
+          <div class="scent-bar"><i style="width:{{ scent.barPct }}%"></i></div>
+          <div class="scent-count">{{ scent.sold }} sold</div>
+          <div class="scent-left">{{ scent.leftDisplay }}</div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <div class="learn-card reveal">
+        <p class="eyebrow">What the data taught us</p>
+        <h3>More products need a better checkout system.</h3>
+        <p>Adding XL candles, lids, T4G Labs, and Rekindled made the sale more interesting, but it also pushed the tracking spreadsheet harder. The lesson for 2026 is not just “make more candles” &mdash; it is “make the sale easier to operate.”</p>
+        <ul>
+          <li><b>{{ ops.topLatestScent.sold }}</b> {{ ops.topLatestScent.name }} candles sold.</li>
+          <li><b>{{ ops.latest.lidsSold }}</b> lids sold as a new add-on.</li>
+          <li><b>{{ ops.totals.latestLeft }}</b> candles left after the sale.</li>
+        </ul>
       </div>
     </div>
   </div>
 </section>
 
 <!-- ============================ CANDLE MATH ============================ -->
-<section class="section section--paper2" id="math">
+<section class="section" id="math">
   <div class="wrap">
     <div class="sec-head reveal">
-      <p class="eyebrow">Just for fun</p>
-      <h2 class="t">A little candle math.</h2>
-      <p class="lead">Back-of-the-envelope numbers from five years at the pouring table. Playful estimates &mdash; not audited!</p>
+      <p class="eyebrow">Candle math</p>
+      <h2 class="t">What {{ ops.totals.candlesSoldDisplay }} candles means in materials.</h2>
+      <p class="lead">These are production estimates based on the documented candle constants. They are useful for planning, not nonprofit accounting.</p>
     </div>
-    <div class="tilegrid">
-      <div class="tile reveal"><div class="k">~{{ metrics.candleMath.waxLbs }}<span style="font-size:.4em"> lbs</span></div><div class="l">Wax melted &amp; poured <span class="est">(est.)</span></div></div>
-      <div class="tile alt reveal"><div class="k">~{{ metrics.candleMath.wickFt }}<span style="font-size:.4em"> ft</span></div><div class="l">Wooden wick set <span class="est">(est.)</span></div></div>
-      <div class="tile reveal"><div class="k">~{{ metrics.candleMath.burnHrsDisplay }}<span style="font-size:.4em"> hrs</span></div><div class="l">Total burn time, lit end to end <span class="est">(est.)</span></div></div>
-      <div class="tile alt span2 reveal"><div class="k">${{ metrics.avgPerYearDisplay }}</div><div class="l">Average raised per year</div><div class="sub">${{ metrics.totalRaisedDisplay }} over five sales</div></div>
-      <div class="tile ink reveal"><div class="k">+${{ metrics.eventsTotalDisplay }}</div><div class="l">Raised at markets &amp; events</div><div class="sub">Beyond the candle sale &mdash; like the 2025 holiday market</div></div>
+
+    <div class="math-grid">
+      <div class="math-card reveal"><b>{{ ops.totals.waxLbs }} lbs</b><span>Wax melted and poured</span></div>
+      <div class="math-card reveal"><b>{{ ops.totals.wickFt }} ft</b><span>Wooden wick set</span></div>
+      <div class="math-card reveal"><b>{{ ops.totals.burnHrsDisplay }} hrs</b><span>Total burn time</span></div>
+      <div class="math-card reveal"><b>${{ metrics.pricePerCandle }}</b><span>Base donation per 12 oz candle</span></div>
     </div>
-    <p class="note-est"><b>Heads up:</b> candle counts, wax, wick, and burn-time figures are friendly estimates while exact tallies get wired in. Dollars raised and growth rates are exact.</p>
+
+    <div class="cost-note reveal">
+      <div>
+        <p class="eyebrow">Materials ledger</p>
+        <h3>Each candle costs roughly {{ ops.materialCost.costRangeDisplay }} in materials.</h3>
+        <p>{{ ops.materialCost.note }} When we catch sales and bulk discounts, the real range is closer to {{ ops.materialCost.discountRangeDisplay }}. We cover that ourselves, so the full ${{ metrics.pricePerCandle }} donation goes to the nonprofits.</p>
+      </div>
+      <a class="btn btn--ghost" href="{{ ops.materialCost.url }}" target="_blank" rel="noopener">Read the cost post</a>
+    </div>
+
+    <p class="note-est reveal"><b>Data note:</b> nonprofit totals are canonical. Operational sale details are aggregate spreadsheet stats, and purchaser names/payment identifiers are not published.</p>
   </div>
 </section>
 
 <!-- ============================ JOURNAL ============================ -->
-<section class="section" id="journal">
+<section class="section section--paper2" id="journal">
   <div class="wrap">
     <div class="sec-head reveal">
-      <p class="eyebrow">Behind the numbers</p>
+      <p class="eyebrow">Source notes</p>
       <h2 class="t">The charts have a backstory.</h2>
-      <p class="lead">After each sale we write up the results, the surprises, and the lessons hiding in the data. These are the best companion reads for the stats above.</p>
+      <p class="lead">After each sale we write up the results, surprises, and spreadsheet lessons. These posts are the narrative layer behind the numbers.</p>
     </div>
 
     <div class="journal-grid">
@@ -141,9 +241,9 @@ description: Five years of Things 4 Good by the numbers — dollars raised, cand
 <!-- ============================ CTA ============================ -->
 <section class="section section--pine subscribe" id="cta">
   <div class="wrap">
-    <p class="eyebrow" style="justify-content:center">See it for yourself</p>
-    <h2 class="t" style="max-width:20ch;margin-inline:auto">Every dollar has a name behind it.</h2>
-    <p class="lead" style="margin:18px auto 0;text-align:center">Browse all {{ metrics.orgCount }} organizations &mdash; who picked them, the year, and what we raised.</p>
+    <p class="eyebrow" style="justify-content:center">From numbers to names</p>
+    <h2 class="t" style="max-width:20ch;margin-inline:auto">See where the money went.</h2>
+    <p class="lead" style="margin:18px auto 0;text-align:center">The stats explain how the sale works. The impact ledger shows the causes behind every dollar.</p>
     <div class="sub-form" style="max-width:none">
       <a class="btn btn--primary" href="/impact/">Explore the impact <span class="arr">&rarr;</span></a>
     </div>
@@ -154,7 +254,6 @@ description: Five years of Things 4 Good by the numbers — dollars raised, cand
 
 {% block scripts %}
 <script>
-  // count-up for the raised total
   const counter = document.getElementById('counter');
   const target = parseInt(counter.dataset.target, 10);
   const fmt = (n) => n.toLocaleString('en-US');
@@ -163,7 +262,7 @@ description: Five years of Things 4 Good by the numbers — dollars raised, cand
     entries.forEach((e) => {
       if (e.isIntersecting && !counted) {
         counted = true;
-        const dur = 1600, t0 = performance.now();
+        const dur = 1400, t0 = performance.now();
         const tick = (now) => {
           const p = Math.min((now - t0) / dur, 1);
           const eased = 1 - Math.pow(1 - p, 3);
