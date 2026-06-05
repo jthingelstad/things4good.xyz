@@ -316,5 +316,18 @@ description: Since 2021 the Thingelstad family has hand-poured wooden-wick candl
     });
   }, { threshold: 0.5 });
   countIO.observe(counter);
+
+  // shuffle the nonprofit logo wall so the order varies each visit
+  const wall = document.querySelector('.logo-wall');
+  if (wall) {
+    const items = [...wall.children];
+    for (let i = items.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [items[i], items[j]] = [items[j], items[i]];
+    }
+    const frag = document.createDocumentFragment();
+    items.forEach((el) => frag.appendChild(el));
+    wall.appendChild(frag);
+  }
 </script>
 {% endblock %}
