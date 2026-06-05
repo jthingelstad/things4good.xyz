@@ -1,0 +1,291 @@
+{
+  "_note": "Sale events — the single source of truth for the whole site. Each event has an EXACT `raised` total; the nested `supported[]` amounts are estimates tuned to sum to it. `kind` is exactly 'candle-sale' or 'special-event'. Candle-sale events also carry `candles` and `participants`. Every aggregate (totals, growth, chart heights, candle math, grand total) is computed in metrics.js — never hardcode it. Site config (pricePerCandle, candleConstants, tightestRace) lives in site.json.",
+  "events": [
+    {
+      "slug": "candle-sale-2021",
+      "kind": "candle-sale",
+      "year": 2021,
+      "name": "2021 Candle Sale",
+      "raised": 4757,
+      "candles": 180,
+      "participants": 85,
+      "supported": [
+        {
+          "slug": "constellation-fund",
+          "name": "Constellation Fund",
+          "logo": "constellation-fund.png",
+          "url": "https://constellationfund.org/",
+          "who": "Jamie",
+          "amount": 658.71,
+          "blurb": "Fights poverty across the Twin Cities by funding the region’s most effective local nonprofits.",
+          "reason": ""
+        },
+        {
+          "slug": "free-bikes-4-kidz",
+          "name": "Free Bikes 4 Kidz",
+          "logo": "free-bikes-4-kidz.png",
+          "url": "https://fb4k.org/",
+          "who": "Tammy",
+          "amount": 1235.46,
+          "blurb": "Collects and refurbishes used bikes, then gives them to kids who need a set of wheels.",
+          "reason": ""
+        },
+        {
+          "slug": "appetite-for-change",
+          "name": "Appetite for Change",
+          "logo": "appetite-for-change.png",
+          "url": "https://appetiteforchangemn.org/",
+          "who": "Mazie",
+          "amount": 1364.88,
+          "blurb": "Uses food as a tool to build health, wealth, and community in North Minneapolis.",
+          "reason": ""
+        },
+        {
+          "slug": "feed-my-starving-children",
+          "name": "Feed My Starving Children",
+          "logo": "feed-my-starving-children.png",
+          "url": "https://www.fmsc.org/",
+          "who": "Tyler",
+          "amount": 1497.96,
+          "blurb": "Volunteers hand-pack nutritious meals for malnourished kids around the world.",
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "slug": "candle-sale-2022",
+      "kind": "candle-sale",
+      "year": 2022,
+      "name": "2022 Candle Sale",
+      "raised": 5217,
+      "candles": 198,
+      "participants": 84,
+      "supported": [
+        {
+          "slug": "united-help-ukraine",
+          "name": "United Help Ukraine",
+          "logo": "united-help-ukraine.png",
+          "url": "https://unitedhelpukraine.org/",
+          "who": "Jamie",
+          "amount": 1457.00,
+          "blurb": "Delivers humanitarian aid and medical supplies to Ukrainians affected by the war.",
+          "reason": ""
+        },
+        {
+          "slug": "agate-housing-services",
+          "name": "Agate Housing + Services",
+          "logo": "agate.png",
+          "url": "https://agatemn.org/",
+          "who": "Tammy",
+          "amount": 1290.50,
+          "blurb": "Works to prevent and end homelessness through shelter, housing, and food programs.",
+          "reason": ""
+        },
+        {
+          "slug": "save-the-snakes",
+          "name": "Save the Snakes",
+          "logo": "save-the-snakes.png",
+          "url": "https://savethesnakes.org/",
+          "who": "Tyler",
+          "amount": 1246.00,
+          "blurb": "Protects snake populations and eases human–snake conflict through conservation and education.",
+          "reason": ""
+        },
+        {
+          "slug": "free-guitars-4-kids",
+          "name": "Free Guitars 4 Kids",
+          "logo": "free-guitars-4-kids.png",
+          "url": "https://fg4k.org/",
+          "who": "Mazie",
+          "amount": 1223.50,
+          "blurb": "Puts guitars and music lessons into the hands of kids who want to play.",
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "slug": "candle-sale-2023",
+      "kind": "candle-sale",
+      "year": 2023,
+      "name": "2023 Candle Sale",
+      "raised": 5755,
+      "candles": 218,
+      "participants": 82,
+      "supported": [
+        {
+          "slug": "oceanites",
+          "name": "Oceanites",
+          "logo": "oceanites.png",
+          "url": "https://www.oceanites.org/",
+          "who": "Tyler",
+          "amount": 1675.00,
+          "blurb": "Studies Antarctic penguins and ecosystems to track the health of a warming planet.",
+          "reason": "Oceanites is a non-profit that helps the entire arctic peninsula, though penguins are their first priority. They are trying to help with the warming arctic."
+        },
+        {
+          "slug": "food-recovery-network",
+          "name": "Food Recovery Network",
+          "logo": "food-recovery-network.png",
+          "url": "https://www.foodrecoverynetwork.org/",
+          "who": "Mazie",
+          "amount": 1462.50,
+          "blurb": "Rescues surplus food from 200+ college campuses to fight waste and feed communities.",
+          "reason": "Food Recovery Network has spread to over 200 colleges in the United States after it was started by 5 college students who realized perfectly good cafeteria food was being thrown away and had the genius idea to actually do something about it! Volunteers at colleges (of which I am one!) pack up extras from their cafeteria and send them to community food shelves to feed hungry people in their communities. FRN directly refunnels food to those who need it instead of the waste yard."
+        },
+        {
+          "slug": "heart-to-care-tanzania",
+          "name": "Heart to Care Tanzania",
+          "logo": "heart-to-care-tanzania.png",
+          "url": "https://www.hearttocaretanzania.org/",
+          "who": "Tammy",
+          "amount": 1367.50,
+          "blurb": "Builds and grows a school in a small Tanzanian village, founded by a Twin Cities woman.",
+          "reason": "Heart to Care was founded by a woman from the Twin Cities. I read an article about her in the StarTrib a few years ago. She was on a trip to Tanzania several years ago and had a chance encounter with a young man that lead her to partner with him and others to start a school in a small Tanzanian village. She works tirelessly to improve the school, expand the school and make sure that all involved have everything they need."
+        },
+        {
+          "slug": "american-prairie",
+          "name": "American Prairie",
+          "logo": "american-prairie.png",
+          "url": "https://americanprairie.org/",
+          "who": "Jamie",
+          "amount": 1250.00,
+          "blurb": "Building one of the largest nature reserves in America across the Montana prairie.",
+          "reason": "I grew up on the prairie and have always had a fascination with Bison and the strength of these ecosystems. I love what this organization is doing to help in maintaining and growing a thriving prairie ecosystem."
+        }
+      ]
+    },
+    {
+      "slug": "candle-sale-2024",
+      "kind": "candle-sale",
+      "year": 2024,
+      "name": "2024 Candle Sale",
+      "raised": 7010,
+      "candles": 268,
+      "participants": 76,
+      "supported": [
+        {
+          "slug": "syngap-research-fund",
+          "name": "SynGAP Research Fund",
+          "logo": "syngap-research-fund.png",
+          "url": "https://curesyngap1.org/",
+          "who": "Tyler",
+          "amount": 1870.00,
+          "blurb": "Funds research toward treatments and a cure for SYNGAP1-related disorders.",
+          "reason": "I was first introduced to this condition by one of my favorite YouTubers UFDTech. His son has Syngap1 which is a rare genetic disorder caused by a variant on the Syngap1 gene. His son experiences a wide range of symptoms including epilepsy, Lennox-Gastaut Syndrome, Autism, Ataxia, and has about 100 seizures a day. My non-profit researchers this condition and is committed to giving support systems to make the lives of these patients and families easier."
+        },
+        {
+          "slug": "water-to-thrive",
+          "name": "Water to Thrive",
+          "logo": "water-to-thrive.png",
+          "url": "https://www.watertothrive.org/",
+          "who": "Mazie",
+          "amount": 1770.75,
+          "blurb": "Builds wells bringing clean, safe water to communities across sub-Saharan Africa.",
+          "reason": "A cool glass of water is something that I take for granted almost every day, without considering that 48% of people in sub-Saharan Africa lack access to this privilege. Women and children walk up to 6 hours each day just to get water, only to have children dying of waterborne disease every 90 seconds. Water to Thrive is a nonprofit that works directly with organizers and communities in sub-Saharan Africa to build wells that have ensured clean, safe water for over 900,000 people since their founding. The educational, economic, and health benefits of even a single well are vast, and Water to Thrive is careful to respect the unique needs and desires of every community they work with. With your donation, we have the potential to fund a well that could serve over 500 people for 20 years! Let’s make water a right, not a privilege!"
+        },
+        {
+          "slug": "sprint-to-cite-soleil",
+          "name": "Sprint to Cité Soleil",
+          "logo": "sprint-to-cite-soleil.png",
+          "url": "https://www.sprinttocitesoleil.org/",
+          "who": "Tammy",
+          "amount": 1483.88,
+          "blurb": "Empowers kids in Cité Soleil, Haiti through basketball, mentorship, and a meal.",
+          "reason": "Sprint to Cite Soleil is a non-profit in Haiti that inspires and empowers kids through basketball, mentorship, and a meal. Cite Soleil, Haiti is known for extreme poverty and gang violence, but community leaders know that this can change over time with sustainable, long term programs that build community and peace. This is where Sprint to Cite Soleil comes in, providing a weekly basketball program for over 150 kids. Harnassing the knowledge and wisdom of local people to fuel change in their community, they also employ 10 local Haitians as coaches and 4 as cooks. Sprint to Cite Soleil was founded in 2016 by a teenager in our neighborhood and his friend after they visited Haiti, where his brother is from, and witnessed the needs first hand."
+        },
+        {
+          "slug": "world-central-kitchen",
+          "name": "World Central Kitchen",
+          "logo": "world-central-kitchen.png",
+          "url": "https://www.worldcentralkitchen.org/",
+          "who": "Jamie",
+          "amount": 1625.13,
+          "blurb": "Serves fresh meals to communities in the wake of disasters worldwide.",
+          "reason": "I first heard of this organization when they were bringing meals to people in Ukraine after Russia’s attacks started. They also are on the ground in Palestine helping people. Most recently they were one of the first organizations after hurricanes hit helping people here in the US. I’ve been very impressed with Chef José Andrés and the impact World Central Kitchen is having."
+        },
+        {
+          "slug": "mt-olivet-lutheran-church",
+          "name": "Mt. Olivet Lutheran Church",
+          "logo": "mount-olivet-lutheran-church.png",
+          "url": "https://mtolivet.org",
+          "who": "Everyone",
+          "amount": 260.25,
+          "blurb": "Mt. Olivet is a church in our neighborhood that has a strong commitment to racial justice and equity, and they have a lot of programs that support people in need in our community and around the world.",
+          "reason": "As a participant in the Mt. Olivet Winter Market we contributed 10% of all sales that occurred at the market."
+        }
+      ]
+    },
+    {
+      "slug": "candle-sale-2025",
+      "kind": "candle-sale",
+      "year": 2025,
+      "name": "2025 Candle Sale",
+      "raised": 9048,
+      "candles": 321,
+      "participants": 73,
+      "supported": [
+        {
+          "slug": "sandy-hook-promise",
+          "name": "Sandy Hook Promise",
+          "logo": "sandy-hook-promise.png",
+          "url": "https://www.sandyhookpromise.org",
+          "who": "Jamie",
+          "amount": 2235.75,
+          "blurb": "Works every day to protect children from gun violence — the leading cause of death for kids in America.",
+          "reason": "I was driving up Lyndale Ave on my way to work and became alarmed at the number of police and other first responders that were racing south as I was going north. Shortly after I found out there was a school shooting at Annunciation. This was less than a mile from our home. We know many people that are connected to Annunciation. It was horrible, and should never happen. None of this should happen. Firearms are the leading cause of death for children and teens in America. Sandy Hook Promise is doing good work everyday to stop this. Join me in supporting them, and supporting our kids."
+        },
+        {
+          "slug": "the-food-group",
+          "name": "The Food Group",
+          "logo": "the-food-group.png",
+          "url": "https://www.thefoodgroupmn.org",
+          "who": "Tammy",
+          "amount": 2308.25,
+          "blurb": "Gets local, healthy food to people in need and runs a sustainable teaching farm.",
+          "reason": "The Food Group is a local non-profit that supplies food shelves with low cost, local healthy foods. They also own a organic farm in Marine on St Croix where they grow veggies and give opportunities for others to learn about sustainable farming helping the next generation of farmers gain access to land, markets, educational opportunities and a network of other likeminded individuals. In this time where so many people are food insecure, I wanted to support an organization that is working directly on this problem. I chose the Food Group because not only are they working to help get food to people who need it, they are doing it with local, healthy food and in the framework of sustainable agriculture. I also love that they operate a farm which provides organic produce to food shelves and teaches others the tools to take up sustainable farming."
+        },
+        {
+          "slug": "border-angels",
+          "name": "Border Angels",
+          "logo": "border-angels.png",
+          "url": "https://www.borderangels.org",
+          "who": "Mazie",
+          "amount": 2145.75,
+          "blurb": "Supports migrants and refugees along the US–Mexico border with water, bond aid, and supplies.",
+          "reason": "Centered around love, Border Angels help migrants and refugees along the entire US-Mexico border with legal issues and human rights cases. Founded in 1986 by Enrique Morones, it now runs multiple direct action programs and advocacy and humanitarian work. Their Water Drops program stations food, water, and other essential resources along dangerous sections of desert that migrants must cross before arriving in the US. Their Bond Program assists families with the financial burden of bonds and legal struggles to free loved ones being held in detention facilities. Also made possible by Border Angels, the Caravan of Love donates hygiene supplies and clothing to refugees being held in overcrowded shelters in Tijuana, Mexico, and Volviendo a Casa provides support for families suffering from loss."
+        },
+        {
+          "slug": "animal-welfare-institute",
+          "name": "Animal Welfare Institute",
+          "logo": "animal-welfare-institute.png",
+          "url": "https://awionline.org",
+          "who": "Tyler",
+          "amount": 2358.25,
+          "blurb": "Works to end human-caused suffering for animals everywhere — from labs to farms.",
+          "reason": "The Animal Welfare Institute is a non-profit committed to freeing animals suffering because of people. They do this for animals stuck in labs all the way to animals suffering on farms. Their mission is to end all human-caused suffering for animals everywhere, improving the welfare of all. I picked this non-profit because put simply, animals shouldn’t suffer due to humans, and I think it is our responsibility as a society to make sure that we do not make animals unnecessarily hurt."
+        }
+      ]
+    },
+    {
+      "slug": "holiday-market-2025",
+      "kind": "special-event",
+      "year": 2025,
+      "name": "Holiday Market",
+      "raised": 725,
+      "host": "A friend",
+      "note": "A friend hosted a holiday market in December and sold our candles.",
+      "supported": [
+        {
+          "slug": "second-harvest-heartland",
+          "name": "Second Harvest Heartland",
+          "logo": "second-harvest-heartland.png",
+          "url": "https://www.2harvest.org/",
+          "who": "Everyone",
+          "amount": 725,
+          "blurb": "One of the nation’s largest hunger-relief organizations, getting nutritious food to neighbors across Minnesota and beyond.",
+          "reason": ""
+        }
+      ]
+    }
+  ]
+}

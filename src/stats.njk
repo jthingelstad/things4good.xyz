@@ -22,8 +22,8 @@ description: Five years of Things 4 Good by the numbers — dollars raised, cand
     <a class="back-link" href="/">&larr; Things 4 Good</a>
     <p class="eyebrow" style="justify-content:center">By the numbers</p>
     <h1 style="font-family:var(--serif);font-weight:500;font-size:clamp(2.4rem,5.4vw,4rem);letter-spacing:-.02em;line-height:1.02">Five years of good,<br />counted up.</h1>
-    <div class="big" style="font-family:var(--serif);font-weight:500;font-size:clamp(4rem,14vw,10rem);line-height:.9;letter-spacing:-.03em;color:var(--marigold);text-shadow:0 0 60px rgba(238,139,38,.35);margin-top:18px"><span style="font-size:.42em;vertical-align:.42em;color:rgba(242,251,247,.6)">$</span><span id="counter" data-target="{{ metrics.totalRaised }}">{{ metrics.totalRaisedDisplay }}</span></div>
-    <p class="lead" style="margin:6px auto 0;text-align:center;color:rgba(255,255,255,.8)">raised since 2021 &mdash; every dollar to charity, one wooden-wick candle at a time.</p>
+    <div class="big" style="font-family:var(--serif);font-weight:500;font-size:clamp(4rem,14vw,10rem);line-height:.9;letter-spacing:-.03em;color:var(--marigold);text-shadow:0 0 60px rgba(238,139,38,.35);margin-top:18px"><span style="font-size:.42em;vertical-align:.42em;color:rgba(242,251,247,.6)">$</span><span id="counter" data-target="{{ metrics.grandTotal }}">{{ metrics.grandTotalDisplay }}</span></div>
+    <p class="lead" style="margin:6px auto 0;text-align:center;color:rgba(255,255,255,.8)">raised since 2021 &mdash; ${{ metrics.totalRaisedDisplay }} from the candle sale and ${{ metrics.eventsTotalDisplay }} from markets &amp; events, every dollar to charity.</p>
   </div>
 </section>
 
@@ -35,7 +35,7 @@ description: Five years of Things 4 Good by the numbers — dollars raised, cand
       <div class="tile alt reveal"><div class="k">{{ metrics.yearCount }}</div><div class="l">Years &amp; counting</div><div class="sub">Since the first sale in 2021</div></div>
       <div class="tile reveal"><div class="k">100%</div><div class="l">Goes to charity</div><div class="sub">We cover every material cost</div></div>
       <div class="tile alt reveal"><div class="k">~{{ metrics.totalCandlesDisplay }}</div><div class="l">Candles hand-poured <span class="est">(est.)</span></div><div class="sub">{{ metrics.records.biggestYear.candles }} in {{ metrics.latestYear }} alone</div></div>
-      <div class="tile reveal"><div class="k">${{ sales.pricePerCandle }}</div><div class="l">Per candle, since day one</div><div class="sub">Same price for five years</div></div>
+      <div class="tile reveal"><div class="k">${{ metrics.pricePerCandle }}</div><div class="l">Per candle, since day one</div><div class="sub">Same price for five years</div></div>
       <div class="tile alt reveal"><div class="k">~{{ metrics.totalParticipants }}</div><div class="l">Neighbors who took part</div><div class="sub">Across five weekends</div></div>
     </div>
   </div>
@@ -52,8 +52,12 @@ description: Five years of Things 4 Good by the numbers — dollars raised, cand
 
     <div class="impact-chart reveal">
       {% for y in metrics.perYear %}
-      <a class="bar{% if y.isLatest %} now{% endif %}" href="/impact/?year={{ y.year }}" aria-label="See the {{ y.year }} organizations"><span class="val">${{ y.raisedDisplay }}</span><span class="col" style="height:{{ y.barHeightPct }}%;transition-delay:{{ 0.05 + loop.index0 * 0.08 }}s"></span><span class="yr">{{ y.year }}</span></a>
+      <a class="bar{% if y.isLatest %} now{% endif %}" href="/impact/?event={{ y.slug }}" aria-label="See the {{ y.year }} organizations"><span class="val">${{ y.yearTotalDisplay }}</span><span class="col" style="transition-delay:{{ 0.05 + loop.index0 * 0.08 }}s">{% if y.eventsHeightPct %}<span class="seg seg--event" style="height:{{ y.eventsHeightPct }}%" title="{{ y.yearEvents[0].name }}: ${{ y.eventsRaisedDisplay }}"></span>{% endif %}<span class="seg seg--candle" style="height:{{ y.candleHeightPct }}%"></span></span><span class="yr">{{ y.year }}</span></a>
       {% endfor %}
+    </div>
+    <div class="chart-legend reveal">
+      <span class="lg"><i class="sw sw--candle"></i> Candle sale</span>
+      <span class="lg"><i class="sw sw--event"></i> Markets &amp; events</span>
     </div>
 
     <p class="eyebrow reveal" style="margin-top:clamp(36px,5vw,56px)">Running total &amp; year-over-year growth</p>
@@ -105,7 +109,7 @@ description: Five years of Things 4 Good by the numbers — dollars raised, cand
       <div class="tile alt reveal"><div class="k">~{{ metrics.candleMath.wickFt }}<span style="font-size:.4em"> ft</span></div><div class="l">Wooden wick set <span class="est">(est.)</span></div></div>
       <div class="tile reveal"><div class="k">~{{ metrics.candleMath.burnHrsDisplay }}<span style="font-size:.4em"> hrs</span></div><div class="l">Total burn time, lit end to end <span class="est">(est.)</span></div></div>
       <div class="tile alt span2 reveal"><div class="k">${{ metrics.avgPerYearDisplay }}</div><div class="l">Average raised per year</div><div class="sub">${{ metrics.totalRaisedDisplay }} over five sales</div></div>
-      <div class="tile ink reveal"><div class="k">+${{ metrics.candleMath.bonus.amount }}</div><div class="l">{{ metrics.candleMath.bonus.label }}</div><div class="sub">{{ metrics.candleMath.bonus.note }}</div></div>
+      <div class="tile ink reveal"><div class="k">+${{ metrics.eventsTotalDisplay }}</div><div class="l">Raised at markets &amp; events</div><div class="sub">Beyond the candle sale &mdash; like the 2025 holiday market</div></div>
     </div>
     <p class="note-est"><b>Heads up:</b> candle counts, wax, wick, and burn-time figures are friendly estimates while exact tallies get wired in. Dollars raised and growth rates are exact.</p>
   </div>
@@ -116,7 +120,7 @@ description: Five years of Things 4 Good by the numbers — dollars raised, cand
   <div class="wrap">
     <p class="eyebrow" style="justify-content:center">See it for yourself</p>
     <h2 class="t" style="max-width:20ch;margin-inline:auto">Every dollar has a name behind it.</h2>
-    <p class="lead" style="margin:18px auto 0;text-align:center">Browse all twenty organizations &mdash; who picked them, the year, and what we raised.</p>
+    <p class="lead" style="margin:18px auto 0;text-align:center">Browse all {{ metrics.orgCount }} organizations &mdash; who picked them, the year, and what we raised.</p>
     <div class="sub-form" style="max-width:none">
       <a class="btn btn--primary" href="/impact/">Explore the impact <span class="arr">&rarr;</span></a>
     </div>

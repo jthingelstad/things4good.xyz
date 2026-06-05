@@ -22,10 +22,10 @@ description: Every nonprofit Things 4 Good has supported since 2021 — who pick
     <a class="back-link" href="/">&larr; Things 4 Good</a>
     <p class="eyebrow">The full ledger</p>
     <h1 style="font-family:var(--serif);font-weight:500;font-size:clamp(2.4rem,5.4vw,4rem);letter-spacing:-.02em;line-height:1.02;max-width:16ch">Where the good has gone.</h1>
-    <p class="lead" style="margin-top:18px">Every nonprofit we&rsquo;ve supported since 2021 &mdash; who picked it, the year it was chosen, and what the community raised for it. Twenty causes and counting, <b style="color:var(--ink)">100% funded</b> by hand-poured candles.</p>
+    <p class="lead" style="margin-top:18px">Every nonprofit we&rsquo;ve supported since 2021 &mdash; who picked it, the year it was chosen, and what the community raised for it. {{ metrics.orgCount }} causes and counting, <b style="color:var(--ink)">100% funded</b> by hand-poured candles &mdash; through our sale and a few markets.</p>
 
     <div class="sumstrip">
-      <div class="s acc"><b>${{ metrics.totalRaisedDisplay }}</b><span>Raised since 2021</span></div>
+      <div class="s acc"><b>${{ metrics.grandTotalDisplay }}</b><span>Raised since 2021</span></div>
       <div class="s acc2"><b>{{ metrics.orgCount }}</b><span>Organizations</span></div>
       <div class="s"><b>{{ metrics.yearCount }}</b><span>Years</span></div>
       <div class="s"><b>100%</b><span>To charity</span></div>
@@ -49,14 +49,12 @@ description: Every nonprofit Things 4 Good has supported since 2021 — who pick
         </select>
       </div>
       <div class="ctrl select">
-        <label class="lab" for="yearSel">Year</label>
-        <select id="yearSel">
-          <option value="all">All years</option>
-          <option value="2025">2025</option>
-          <option value="2024">2024</option>
-          <option value="2023">2023</option>
-          <option value="2022">2022</option>
-          <option value="2021">2021</option>
+        <label class="lab" for="eventSel">Event</label>
+        <select id="eventSel">
+          <option value="all">All events</option>
+          {% for ev in metrics.eventList %}
+          <option value="{{ ev.slug }}">{{ ev.name }}{% if ev.kind == "special-event" %} ({{ ev.year }}){% endif %}</option>
+          {% endfor %}
         </select>
       </div>
       <div class="ctrl select">
@@ -88,14 +86,14 @@ description: Every nonprofit Things 4 Good has supported since 2021 — who pick
   @keyframes fadeUp { from { opacity:0; transform: translateY(10px); } to { opacity:1; transform:none; } }
 </style>
 <script>
-  // ---- data (from src/_data/organizations.json) ----
+  // ---- data (flattened from src/_data/events.json via metrics.nonprofits) ----
   // per-org `amount` is the exact figure from each year's tally.
   // `logo`: a filename in src/images/logos/ (e.g. "oceanites.png"); shown as the card icon when set.
   // `reason`: the picker's own words; "" hides the "Why … picked it" details (e.g. 2021–22, not yet backfilled).
-  const ORGS = {{ organizations | dump | safe }};
+  const ORGS = {{ metrics.nonprofits | dump | safe }};
 
   const fmt = (n) => "$" + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  const state = { who:"all", year:"all", sort:"year-desc" };
+  const state = { who:"all", event:"all", sort:"year-desc" };
 
   const grid = document.getElementById('grid');
   const countEl = document.getElementById('count');
@@ -104,7 +102,7 @@ description: Every nonprofit Things 4 Good has supported since 2021 — who pick
   function apply() {
     let list = ORGS.filter(o => {
       if (state.who !== "all" && o.who !== state.who) return false;
-      if (state.year !== "all" && String(o.year) !== state.year) return false;
+      if (state.event !== "all" && o.event !== state.event) return false;
       return true;
     });
     const s = state.sort;
@@ -123,6 +121,9 @@ description: Every nonprofit Things 4 Good has supported since 2021 — who pick
       const glyph = o.logo
         ? `<div class="glyph haslogo"><img src="/images/logos/${o.logo}" alt="${o.name} logo" /></div>`
         : "";
+      const eventTag = o.eventKind === "special-event"
+        ? `<span class="ebadge">${o.eventName}</span>`
+        : "";
       const whyLabel = collective ? "Why we supported it" : `Why ${o.who} picked it`;
       const why = o.reason
         ? `<details class="why"><summary>${whyLabel}</summary><blockquote>&ldquo;${o.reason}&rdquo;<cite>&mdash; ${whoLabel}</cite></blockquote></details>`
@@ -134,6 +135,7 @@ description: Every nonprofit Things 4 Good has supported since 2021 — who pick
           <div class="cardtags">
             <span class="who-pill" data-who="${o.who}">${whoLabel}</span>
             <span class="ybadge">${o.year}</span>
+            ${eventTag}
           </div>
         </div>
         <a class="iname" href="${o.url}" target="_blank" rel="noopener">${o.name}</a>
@@ -160,9 +162,9 @@ description: Every nonprofit Things 4 Good has supported since 2021 — who pick
   }
 
   // ---- shareable filters: each control <-> a URL query param ----
-  // e.g. /impact/?who=Tyler&year=2024 links straight to a filtered view.
-  const SELS = { who: 'whoSel', year: 'yearSel', sort: 'sort' };
-  const DEFAULTS = { who: 'all', year: 'all', sort: 'year-desc' };
+  // e.g. /impact/?who=Tyler&event=candle-sale-2024 links straight to a filtered view.
+  const SELS = { who: 'whoSel', event: 'eventSel', sort: 'sort' };
+  const DEFAULTS = { who: 'all', event: 'all', sort: 'year-desc' };
 
   const isValidOption = (id, val) =>
     [...document.getElementById(id).options].some(o => o.value === val);

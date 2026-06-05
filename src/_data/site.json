@@ -6,6 +6,9 @@
   "preorderSheet": "",
   "tinylyticsEmbed": "",
   "blogUrl": "https://www.thingelstad.com/categories/things-4-good/",
+  "pricePerCandle": 25,
+  "candleConstants": { "waxLbsPerCandle": 0.75, "wickFtPerCandle": 0.25, "burnHrsPerCandle": 40 },
+  "tightestRace": { "year": 2025, "spreadPct": 2.4 },
   "makers": [
     { "name": "Jamie", "role": "the original spark", "url": "https://www.thingelstad.com", "site": "thingelstad.com", "photo": "/images/family/jamie.jpg" },
     { "name": "Tammy", "role": "quality control", "url": "https://tammy.thingelstad.com", "site": "tammy.thingelstad.com", "alt": true, "photo": "/images/family/tammy.jpg" },

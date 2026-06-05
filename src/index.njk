@@ -43,8 +43,8 @@ description: Since 2021 the Thingelstad family has hand-poured wooden-wick candl
 <section class="section section--ink raised" id="raised">
   <div class="wrap">
     <p class="eyebrow" style="justify-content:center">Since 2021, together we&rsquo;ve raised</p>
-    <div class="big"><span class="pre">$</span><span id="counter" data-target="{{ metrics.totalRaised }}">{{ metrics.totalRaisedDisplay }}</span></div>
-    <p class="sub">&hellip;and 100% of it went to the nonprofits below.</p>
+    <div class="big"><span class="pre">$</span><span id="counter" data-target="{{ metrics.grandTotal }}">{{ metrics.grandTotalDisplay }}</span></div>
+    <p class="sub">${{ metrics.totalRaisedDisplay }} from the candle sale &middot; ${{ metrics.eventsTotalDisplay }} from markets &amp; events &mdash; 100% of it went to the nonprofits below.</p>
     <div class="statrow">
       {% for stat in metrics.raisedStats %}
       <div class="stat reveal"><b>{{ stat.value | safe }}</b><span>{{ stat.label | safe }}</span></div>
@@ -64,8 +64,12 @@ description: Since 2021 the Thingelstad family has hand-poured wooden-wick candl
 
     <div class="impact-chart reveal">
       {% for y in metrics.perYear %}
-      <a class="bar{% if y.isLatest %} now{% endif %}" href="/impact/?year={{ y.year }}" aria-label="See the {{ y.year }} organizations"><span class="val">${{ y.raisedDisplay }}</span><span class="col" style="height:{{ y.barHeightPct }}%;transition-delay:{{ 0.05 + loop.index0 * 0.08 }}s"></span><span class="yr">{{ y.year }}</span></a>
+      <a class="bar{% if y.isLatest %} now{% endif %}" href="/impact/?event={{ y.slug }}" aria-label="See the {{ y.year }} organizations"><span class="val">${{ y.yearTotalDisplay }}</span><span class="col" style="transition-delay:{{ 0.05 + loop.index0 * 0.08 }}s">{% if y.eventsHeightPct %}<span class="seg seg--event" style="height:{{ y.eventsHeightPct }}%" title="{{ y.yearEvents[0].name }}: ${{ y.eventsRaisedDisplay }}"></span>{% endif %}<span class="seg seg--candle" style="height:{{ y.candleHeightPct }}%"></span></span><span class="yr">{{ y.year }}</span></a>
       {% endfor %}
+    </div>
+    <div class="chart-legend reveal">
+      <span class="lg"><i class="sw sw--candle"></i> Candle sale</span>
+      <span class="lg"><i class="sw sw--event"></i> Markets &amp; events</span>
     </div>
 
     <div class="impact-foot">
@@ -228,7 +232,7 @@ description: Since 2021 the Thingelstad family has hand-poured wooden-wick candl
     </div>
 
     <div class="logo-wall reveal">
-      {% for o in organizations %}<span class="lw"><img src="/images/logos/{{ o.logo }}" alt="{{ o.name }}" /></span>{% endfor %}
+      {% for o in metrics.nonprofits %}<span class="lw"><img src="/images/logos/{{ o.logo }}" alt="{{ o.name }}" /></span>{% endfor %}
     </div>
 
     <div class="good-summary reveal">
