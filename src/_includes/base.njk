@@ -15,7 +15,7 @@
 
 <!-- ============================ NAV ============================ -->
 <header class="nav" id="nav">
-  <a class="brand" href="{% block brandHref %}#top{% endblock %}" aria-label="Things 4 Good home">
+  <a class="brand" href="{% if page.url == "/" %}#top{% else %}/{% endif %}" aria-label="Things 4 Good home">
     <b>Things&nbsp;<span class="four">4</span>&nbsp;Good</b>
   </a>
   <nav class="nav-links">
@@ -43,14 +43,12 @@
       <div class="fcols">
         <div class="fcol">
           <h4>Explore</h4>
-          {% block footerExplore %}
           <a href="/#sale">Fundraiser</a>
           <a href="/impact/">Impact</a>
           <a href="/stats/">Numbers</a>
           <a href="/maker-night/">Maker Night</a>
           <a href="/preorder/">Preorder &amp; Pickup</a>
           <a href="/faq/">FAQ</a>
-          {% endblock %}
         </div>
         <div class="fcol">
           <h4>The Things</h4>
