@@ -262,13 +262,14 @@ em.it { font-style: italic; }
 .bar.now:hover .val { color: var(--pine-d); }
 .bar .val { font-family: var(--serif); font-weight: 600; font-size: clamp(.92rem, 1.5vw, 1.35rem); color: var(--ink); margin-bottom: 10px; }
 .bar .col {
-  width: 100%; max-width: 92px; flex: none; height: 100%;
-  display: flex; flex-direction: column; justify-content: flex-end;
+  width: 100%; max-width: 92px; flex: none;
+  display: flex; flex-direction: column;
   transform: scaleY(0); transform-origin: bottom;
   transition: transform 1s cubic-bezier(.2,.7,.2,1), filter .15s ease;
 }
-/* stacked segments: candle sale on the bottom, special events on top */
-.bar .col .seg { width: 100%; }
+/* stacked segments: special events on top, candle sale on the bottom;
+   `flex` splits the column height in proportion to each segment's dollars */
+.bar .col .seg { width: 100%; min-height: 2px; }
 .bar .col .seg:first-child { border-radius: 10px 10px 0 0; }
 .seg--candle { background: linear-gradient(180deg, var(--marigold), var(--marigold-d)); }
 .seg--event { background: linear-gradient(180deg, #25b497, var(--pine-d)); }

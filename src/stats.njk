@@ -52,7 +52,7 @@ description: Five years of Things 4 Good by the numbers — dollars raised, cand
 
     <div class="impact-chart reveal">
       {% for y in metrics.perYear %}
-      <a class="bar{% if y.isLatest %} now{% endif %}" href="/impact/?event={{ y.slug }}" aria-label="See the {{ y.year }} organizations"><span class="val">${{ y.yearTotalDisplay }}</span><span class="col" style="transition-delay:{{ 0.05 + loop.index0 * 0.08 }}s">{% if y.eventsHeightPct %}<span class="seg seg--event" style="height:{{ y.eventsHeightPct }}%" title="{{ y.yearEvents[0].name }}: ${{ y.eventsRaisedDisplay }}"></span>{% endif %}<span class="seg seg--candle" style="height:{{ y.candleHeightPct }}%"></span></span><span class="yr">{{ y.year }}</span></a>
+      <a class="bar{% if y.isLatest %} now{% endif %}" href="/impact/?event={{ y.slug }}" aria-label="See the {{ y.year }} organizations"><span class="val">${{ y.yearTotalDisplay }}</span><span class="col" style="height:{{ y.barHeightPct }}%;transition-delay:{{ 0.05 + loop.index0 * 0.08 }}s">{% if y.eventsRaised %}<span class="seg seg--event" style="flex:{{ y.eventsRaised }}" title="{{ y.yearEvents[0].name }}: ${{ y.eventsRaisedDisplay }}"></span>{% endif %}<span class="seg seg--candle" style="flex:{{ y.raised }}"></span></span><span class="yr">{{ y.year }}</span></a>
       {% endfor %}
     </div>
     <div class="chart-legend reveal">
