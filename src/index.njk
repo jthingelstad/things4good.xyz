@@ -44,7 +44,7 @@ description: Since 2021 the Thingelstad family has hand-poured wooden-wick candl
   <div class="wrap">
     <p class="eyebrow" style="justify-content:center">Since 2021, together we&rsquo;ve raised</p>
     <div class="big"><span class="pre">$</span><span id="counter" data-target="{{ metrics.grandTotal }}">{{ metrics.grandTotalDisplay }}</span></div>
-    <p class="sub">${{ metrics.totalRaisedDisplay }} from the candle sale &middot; ${{ metrics.eventsTotalDisplay }} from markets &amp; events &mdash; 100% of it went to the nonprofits below.</p>
+    <p class="sub">&hellip;and 100% of it went to the nonprofits below.</p>
     <div class="statrow">
       {% for stat in metrics.raisedStats %}
       <div class="stat reveal"><b>{{ stat.value | safe }}</b><span>{{ stat.label | safe }}</span></div>
