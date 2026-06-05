@@ -184,8 +184,8 @@ module.exports = (() => {
   };
 
   // ---- operational sale stats ----
-  // Nonprofit dollars remain canonical in events.json. These are aggregate, non-PII
-  // operating metrics curated from the private sales spreadsheets.
+  // Nonprofit dollars remain canonical in events.json. These aggregate operating
+  // metrics are curated from the annual sales spreadsheets.
   const saleYears = saleStats.years;
   const maxSaleRaised = Math.max(...saleYears.map((y) => y.raised));
   const maxSaleCandles = Math.max(...saleYears.map((y) => y.candlesSold));

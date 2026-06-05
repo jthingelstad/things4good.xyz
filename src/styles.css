@@ -767,8 +767,7 @@ em.it { font-style: italic; }
   font-size: clamp(1.05rem, 2vw, 1.28rem);
 }
 .stats-hero-grid {
-  display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(280px, .9fr);
-  gap: clamp(18px, 4vw, 46px); align-items: stretch; margin-top: clamp(34px, 6vw, 64px);
+  max-width: 640px; margin-top: clamp(34px, 6vw, 64px);
 }
 .stats-hero-total, .stats-hero-note {
   border: 1px solid rgba(255,255,255,.14); border-radius: 16px;

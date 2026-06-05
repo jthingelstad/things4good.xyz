@@ -27,13 +27,9 @@ description: The spreadsheet behind Things 4 Good — dollars raised, candles so
 
     <div class="stats-hero-grid">
       <div class="stats-hero-total">
-        <span>Official nonprofit total</span>
-        <b><span class="pre">$</span><span id="counter" data-target="{{ metrics.totalRaised }}">{{ metrics.totalRaisedDisplay }}</span></b>
-        <p>Sale donations only. Markets and special events add another ${{ metrics.eventsTotalDisplay }}.</p>
-      </div>
-      <div class="stats-hero-note">
-        <span class="k">Source of truth</span>
-        <p>Donation totals are canonical. Sales mechanics come from aggregate spreadsheet exports with purchaser names removed.</p>
+        <span>Raised since 2021</span>
+        <b><span class="pre">$</span><span id="counter" data-target="{{ metrics.grandTotal }}">{{ metrics.grandTotalDisplay }}</span></b>
+        <p>The candle sale, markets, and little extras all count toward the same thing: every dollar onward to good.</p>
       </div>
     </div>
   </div>
@@ -50,7 +46,7 @@ description: The spreadsheet behind Things 4 Good — dollars raised, candles so
 
     <div class="ops-grid">
       <div class="ops-card reveal"><div class="k">{{ ops.totals.candlesSoldDisplay }}</div><div class="l">Candles sold</div><p>Across five annual sales.</p></div>
-      <div class="ops-card reveal"><div class="k">{{ ops.totals.transactions }}</div><div class="l">Transactions</div><p>Public stats stay aggregate; purchaser names remain private.</p></div>
+      <div class="ops-card reveal"><div class="k">{{ ops.totals.transactions }}</div><div class="l">Transactions</div><p>Across five weekends of orders, preorders, pickup, and the occasional extra.</p></div>
       <div class="ops-card reveal"><div class="k">{{ ops.totals.avgCandlesPerTransaction }}</div><div class="l">Candles per transaction</div><p>A practical planning number for vessels, wax, and scent.</p></div>
       <div class="ops-card reveal"><div class="k">{{ ops.totals.venmoShareDisplay }}</div><div class="l">All-time Venmo share</div><p>{{ ops.totals.venmoCount }} of {{ ops.totals.paymentCount }} recorded payments.</p></div>
       <div class="ops-card reveal"><div class="k">{{ ops.latest.lidsSold }}</div><div class="l">Lids sold in {{ ops.latest.year }}</div><p>A new add-on that mostly helped gift purchases.</p></div>
@@ -211,7 +207,7 @@ description: The spreadsheet behind Things 4 Good — dollars raised, candles so
       <a class="btn btn--ghost" href="{{ ops.materialCost.url }}" target="_blank" rel="noopener">Read the cost post</a>
     </div>
 
-    <p class="note-est reveal"><b>Data note:</b> nonprofit totals are canonical. Operational sale details are aggregate spreadsheet stats, and purchaser names/payment identifiers are not published.</p>
+    <p class="note-est reveal"><b>Good to know:</b> the dollar totals tell the impact story; the rest of this page is the nerdy planning layer behind the candles.</p>
   </div>
 </section>
 

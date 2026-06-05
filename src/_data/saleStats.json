@@ -1,5 +1,5 @@
 {
-  "_note": "Operational sale stats curated from private CSV exports. Public data intentionally excludes buyer names and payment handles.",
+  "_note": "Operational sale stats curated from aggregate CSV exports.",
   "years": [
     {
       "year": 2021,
