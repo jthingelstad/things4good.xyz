@@ -9,6 +9,7 @@
       "raised": 4757,
       "candles": 180,
       "participants": 85,
+      "takeaway": "The first year proved this could be more than a candle project: friends and neighbors showed up, chose causes, and made it a tradition worth repeating.",
       "posts": [
         {
           "type": "Results",
@@ -68,6 +69,7 @@
       "raised": 5217,
       "candles": 198,
       "participants": 84,
+      "takeaway": "The second sale grew beyond the first and gave us better notes on what people loved, from scents to the little extras around the table.",
       "posts": [
         {
           "type": "Results",
@@ -133,6 +135,7 @@
       "raised": 5755,
       "candles": 218,
       "participants": 82,
+      "takeaway": "More scents meant more learning. This was the year we started treating the sale like a tiny retailer and using the data to plan better.",
       "posts": [
         {
           "type": "Results",
@@ -166,7 +169,7 @@
           "who": "Mazie",
           "amount": 1462.50,
           "blurb": "Rescues surplus food from 200+ college campuses to fight waste and feed communities.",
-          "reason": "Food Recovery Network has spread to over 200 colleges in the United States after it was started by 5 college students who realized perfectly good cafeteria food was being thrown away and had the genius idea to actually do something about it! Volunteers at colleges (of which I am one!) pack up extras from their cafeteria and send them to community food shelves to feed hungry people in their communities. FRN directly refunnels food to those who need it instead of the waste yard."
+          "reason": "Food Recovery Network started with college students who saw perfectly good cafeteria food being thrown away and decided to do something about it. Volunteers like me pack up extras and send them to community food shelves."
         },
         {
           "slug": "heart-to-care-tanzania",
@@ -176,7 +179,7 @@
           "who": "Tammy",
           "amount": 1367.50,
           "blurb": "Builds and grows a school in a small Tanzanian village, founded by a Twin Cities woman.",
-          "reason": "Heart to Care was founded by a woman from the Twin Cities. I read an article about her in the StarTrib a few years ago. She was on a trip to Tanzania several years ago and had a chance encounter with a young man that lead her to partner with him and others to start a school in a small Tanzanian village. She works tirelessly to improve the school, expand the school and make sure that all involved have everything they need."
+          "reason": "Heart to Care was founded by a woman from the Twin Cities after a chance meeting in Tanzania led her to help start a school in a small village. She works tirelessly to grow the school and support everyone involved."
         },
         {
           "slug": "american-prairie",
@@ -186,7 +189,7 @@
           "who": "Jamie",
           "amount": 1250.00,
           "blurb": "Building one of the largest nature reserves in America across the Montana prairie.",
-          "reason": "I grew up on the prairie and have always had a fascination with Bison and the strength of these ecosystems. I love what this organization is doing to help in maintaining and growing a thriving prairie ecosystem."
+          "reason": "I grew up on the prairie and have always been fascinated by bison and the strength of these ecosystems. I love how American Prairie is helping a thriving prairie ecosystem grow."
         }
       ]
     },
@@ -198,6 +201,7 @@
       "raised": 7010,
       "candles": 268,
       "participants": 76,
+      "takeaway": "Opening part of the sale to the public at the holiday boutique brought a big jump and introduced the candles to a wider community.",
       "posts": [
         {
           "type": "Results",
@@ -227,7 +231,7 @@
           "who": "Tyler",
           "amount": 1870.00,
           "blurb": "Funds research toward treatments and a cure for SYNGAP1-related disorders.",
-          "reason": "I was first introduced to this condition by one of my favorite YouTubers UFDTech. His son has Syngap1 which is a rare genetic disorder caused by a variant on the Syngap1 gene. His son experiences a wide range of symptoms including epilepsy, Lennox-Gastaut Syndrome, Autism, Ataxia, and has about 100 seizures a day. My non-profit researchers this condition and is committed to giving support systems to make the lives of these patients and families easier."
+          "reason": "I first learned about SYNGAP1 from UFDTech, one of my favorite YouTubers, whose son lives with this rare genetic disorder and has about 100 seizures a day. The fund supports research and families facing it."
         },
         {
           "slug": "water-to-thrive",
@@ -237,7 +241,7 @@
           "who": "Mazie",
           "amount": 1770.75,
           "blurb": "Builds wells bringing clean, safe water to communities across sub-Saharan Africa.",
-          "reason": "A cool glass of water is something that I take for granted almost every day, without considering that 48% of people in sub-Saharan Africa lack access to this privilege. Women and children walk up to 6 hours each day just to get water, only to have children dying of waterborne disease every 90 seconds. Water to Thrive is a nonprofit that works directly with organizers and communities in sub-Saharan Africa to build wells that have ensured clean, safe water for over 900,000 people since their founding. The educational, economic, and health benefits of even a single well are vast, and Water to Thrive is careful to respect the unique needs and desires of every community they work with. With your donation, we have the potential to fund a well that could serve over 500 people for 20 years! Let’s make water a right, not a privilege!"
+          "reason": "A cool glass of water is something I take for granted, while many people in sub-Saharan Africa still walk hours for it. Water to Thrive builds wells that can change health, school, and work for years."
         },
         {
           "slug": "sprint-to-cite-soleil",
@@ -247,7 +251,7 @@
           "who": "Tammy",
           "amount": 1483.88,
           "blurb": "Empowers kids in Cité Soleil, Haiti through basketball, mentorship, and a meal.",
-          "reason": "Sprint to Cite Soleil is a non-profit in Haiti that inspires and empowers kids through basketball, mentorship, and a meal. Cite Soleil, Haiti is known for extreme poverty and gang violence, but community leaders know that this can change over time with sustainable, long term programs that build community and peace. This is where Sprint to Cite Soleil comes in, providing a weekly basketball program for over 150 kids. Harnassing the knowledge and wisdom of local people to fuel change in their community, they also employ 10 local Haitians as coaches and 4 as cooks. Sprint to Cite Soleil was founded in 2016 by a teenager in our neighborhood and his friend after they visited Haiti, where his brother is from, and witnessed the needs first hand."
+          "reason": "Sprint to Cité Soleil empowers kids in Haiti through basketball, mentorship, and a meal. It was founded by a teenager in our neighborhood and his friend, and employs local coaches and cooks."
         },
         {
           "slug": "world-central-kitchen",
@@ -257,7 +261,7 @@
           "who": "Jamie",
           "amount": 1625.13,
           "blurb": "Serves fresh meals to communities in the wake of disasters worldwide.",
-          "reason": "I first heard of this organization when they were bringing meals to people in Ukraine after Russia’s attacks started. They also are on the ground in Palestine helping people. Most recently they were one of the first organizations after hurricanes hit helping people here in the US. I’ve been very impressed with Chef José Andrés and the impact World Central Kitchen is having."
+          "reason": "I first noticed World Central Kitchen when they were bringing meals to people in Ukraine. Since then I have seen them respond in Palestine, after hurricanes in the US, and wherever fresh meals are urgently needed."
         },
         {
           "slug": "mt-olivet-lutheran-church",
@@ -279,6 +283,7 @@
       "raised": 9048,
       "candles": 321,
       "participants": 73,
+      "takeaway": "Our biggest year yet, with the tightest split between causes and the clearest proof that this has become a community tradition.",
       "posts": [
         {
           "type": "Results",
@@ -311,7 +316,7 @@
           "who": "Jamie",
           "amount": 2235.75,
           "blurb": "Works every day to protect children from gun violence — the leading cause of death for kids in America.",
-          "reason": "I was driving up Lyndale Ave on my way to work and became alarmed at the number of police and other first responders that were racing south as I was going north. Shortly after I found out there was a school shooting at Annunciation. This was less than a mile from our home. We know many people that are connected to Annunciation. It was horrible, and should never happen. None of this should happen. Firearms are the leading cause of death for children and teens in America. Sandy Hook Promise is doing good work everyday to stop this. Join me in supporting them, and supporting our kids."
+          "reason": "I was driving to work when first responders raced toward Annunciation, less than a mile from our home. It was horrible, and none of this should happen. Sandy Hook Promise works every day to protect kids from gun violence."
         },
         {
           "slug": "the-food-group",
@@ -321,7 +326,7 @@
           "who": "Tammy",
           "amount": 2308.25,
           "blurb": "Gets local, healthy food to people in need and runs a sustainable teaching farm.",
-          "reason": "The Food Group is a local non-profit that supplies food shelves with low cost, local healthy foods. They also own a organic farm in Marine on St Croix where they grow veggies and give opportunities for others to learn about sustainable farming helping the next generation of farmers gain access to land, markets, educational opportunities and a network of other likeminded individuals. In this time where so many people are food insecure, I wanted to support an organization that is working directly on this problem. I chose the Food Group because not only are they working to help get food to people who need it, they are doing it with local, healthy food and in the framework of sustainable agriculture. I also love that they operate a farm which provides organic produce to food shelves and teaches others the tools to take up sustainable farming."
+          "reason": "The Food Group gets low-cost, local, healthy food to food shelves and runs an organic teaching farm. I chose them because they address food insecurity while helping the next generation of farmers."
         },
         {
           "slug": "border-angels",
@@ -331,7 +336,7 @@
           "who": "Mazie",
           "amount": 2145.75,
           "blurb": "Supports migrants and refugees along the US–Mexico border with water, bond aid, and supplies.",
-          "reason": "Centered around love, Border Angels help migrants and refugees along the entire US-Mexico border with legal issues and human rights cases. Founded in 1986 by Enrique Morones, it now runs multiple direct action programs and advocacy and humanitarian work. Their Water Drops program stations food, water, and other essential resources along dangerous sections of desert that migrants must cross before arriving in the US. Their Bond Program assists families with the financial burden of bonds and legal struggles to free loved ones being held in detention facilities. Also made possible by Border Angels, the Caravan of Love donates hygiene supplies and clothing to refugees being held in overcrowded shelters in Tijuana, Mexico, and Volviendo a Casa provides support for families suffering from loss."
+          "reason": "Centered around love, Border Angels helps migrants and refugees along the US-Mexico border with water drops in dangerous desert crossings, bond assistance, shelter supplies, and family support."
         },
         {
           "slug": "animal-welfare-institute",
@@ -341,7 +346,7 @@
           "who": "Tyler",
           "amount": 2358.25,
           "blurb": "Works to end human-caused suffering for animals everywhere — from labs to farms.",
-          "reason": "The Animal Welfare Institute is a non-profit committed to freeing animals suffering because of people. They do this for animals stuck in labs all the way to animals suffering on farms. Their mission is to end all human-caused suffering for animals everywhere, improving the welfare of all. I picked this non-profit because put simply, animals shouldn’t suffer due to humans, and I think it is our responsibility as a society to make sure that we do not make animals unnecessarily hurt."
+          "reason": "Animal Welfare Institute works to end human-caused suffering for animals, from labs to farms. I picked them because animals should not suffer because of people, and we have a responsibility to prevent unnecessary harm."
         }
       ]
     },

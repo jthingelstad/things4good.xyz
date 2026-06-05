@@ -334,6 +334,10 @@ em.it { font-style: italic; }
 }
 .annual-card h3 { font-size: 1.28rem; line-height: 1.15; }
 .annual-card p { margin: 8px 0 16px; color: var(--ink-soft); font-size: .9rem; line-height: 1.45; }
+.annual-card .annual-takeaway {
+  color: var(--ink); font-family: var(--serif); font-style: italic;
+  font-size: 1rem; line-height: 1.42; margin-top: 12px;
+}
 .post-list { display: flex; flex-direction: column; gap: 9px; }
 .post-list a {
   color: var(--ink); text-decoration: none; font-weight: 700; font-size: .88rem; line-height: 1.35;
@@ -603,6 +607,14 @@ em.it { font-style: italic; }
 .sumstrip .s.acc2 b { color: var(--pine-d); }
 .sumstrip .s span { display: block; margin-top: 8px; font-size: .82rem; font-weight: 600; letter-spacing: .03em; color: var(--ink-soft); text-transform: uppercase; }
 
+.impact-principle {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(16px, 2vw, 28px);
+  margin-top: clamp(24px, 4vw, 38px); padding-top: clamp(20px, 3vw, 28px);
+  border-top: 1px solid var(--line);
+}
+.impact-principle p { margin: 0; color: var(--ink-soft); font-size: .96rem; line-height: 1.55; }
+.impact-principle b { color: var(--ink); }
+
 /* ---------- maker color coding ---------- */
 .av[data-who="Jamie"], .iav[data-who="Jamie"] { color: var(--marigold-d); background: var(--marigold-t); }
 .av[data-who="Tammy"], .iav[data-who="Tammy"] { color: var(--pine-d); background: var(--pine-t); }
@@ -649,6 +661,14 @@ em.it { font-style: italic; }
 }
 .ctrl.select select:focus { border-color: var(--marigold); }
 
+.ledger-head { max-width: 760px; margin-bottom: clamp(22px, 4vw, 36px); }
+.ledger-head .lead { margin-top: 10px; font-size: clamp(1rem, 1.8vw, 1.12rem); }
+.filter-story {
+  margin-top: 18px; padding: 16px 18px; border-left: 4px solid var(--pine);
+  background: var(--pine-t); color: var(--ink); border-radius: 10px;
+  font-size: .96rem; line-height: 1.55;
+}
+
 .result-count { font-weight: 600; color: var(--ink-soft); font-size: .92rem; margin: 0 0 18px; }
 .result-count b { color: var(--ink); font-weight: 700; }
 
@@ -686,19 +706,52 @@ em.it { font-style: italic; }
 .icard .iname:hover { color: var(--marigold-d); }
 .icard .glyph.haslogo { width: auto; height: auto; max-width: 64%; display: inline-flex; align-items: center; background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 7px 11px; box-shadow: var(--shadow-sm); }
 .icard .glyph.haslogo img { width: auto; height: 26px; max-width: 100%; object-fit: contain; display: block; }
-.icard .why { margin-top: 14px; border-top: 1px dashed var(--line); padding-top: 12px; }
-.icard .why summary { cursor: pointer; list-style: none; font-weight: 700; font-size: .82rem; color: var(--pine-d); display: flex; align-items: center; gap: .5em; }
-.icard .why summary::-webkit-details-marker { display: none; }
-.icard .why summary::after { content: "+"; margin-left: auto; font-size: 1.15rem; line-height: 1; color: var(--ink-soft); transition: transform .15s ease; }
-.icard .why[open] summary::after { content: "\2212"; }
-.icard .why blockquote { margin: 10px 0 0; font-family: var(--serif); font-style: italic; font-size: .95rem; line-height: 1.5; color: var(--ink); }
-.icard .why blockquote cite { display: block; margin-top: 8px; font-style: normal; font-weight: 700; font-size: .82rem; color: var(--ink-soft); }
+.icard .why-note {
+  margin-top: 16px; padding-top: 14px; border-top: 1px dashed var(--line);
+}
+.icard .why-k {
+  font-size: .74rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--pine-d); margin-bottom: 8px;
+}
+.icard .why-note blockquote {
+  margin: 0; font-family: var(--serif); font-style: italic; font-size: .96rem;
+  line-height: 1.5; color: var(--ink);
+}
+.icard .why-note blockquote cite {
+  display: block; margin-top: 8px; font-family: var(--sans); font-style: normal;
+  font-weight: 700; font-size: .8rem; color: var(--ink-soft);
+}
+.icard .why-full { margin-top: 10px; }
+.icard .why-full summary {
+  cursor: pointer; list-style: none; font-size: .78rem; font-weight: 800;
+  color: var(--marigold-d);
+}
+.icard .why-full summary::-webkit-details-marker { display: none; }
+.icard .why-full summary::after { content: " +"; color: var(--ink-soft); }
+.icard .why-full[open] summary::after { content: " \2212"; }
+.icard .why-full blockquote {
+  margin-top: 10px; padding-left: 12px; border-left: 2px solid var(--line);
+  color: var(--ink-soft); font-size: .9rem;
+}
 .icard .go { margin-top: 14px; font-weight: 700; font-size: .82rem; color: var(--marigold-d); display: inline-flex; align-items: center; gap: .4em; text-decoration: none; align-self: flex-start; }
 .icard .go:hover .arr { transform: translateX(3px); }
 .icard .arr { transition: transform .14s ease; }
 .est { font-style: italic; }
 .empty { text-align: center; padding: 60px 20px; color: var(--ink-soft); }
 .empty b { font-family: var(--serif); font-size: 1.4rem; color: var(--ink); display: block; margin-bottom: 6px; }
+.impact-close {
+  margin-top: clamp(30px, 5vw, 54px); padding: clamp(22px, 4vw, 34px);
+  border: 1px solid var(--line); border-radius: 16px; background: var(--paper-3);
+  box-shadow: var(--shadow-sm); display: flex; align-items: center; justify-content: space-between;
+  gap: clamp(18px, 4vw, 42px);
+}
+.impact-close h3 {
+  margin: 4px 0 8px; font-family: var(--serif); font-weight: 500;
+  font-size: clamp(1.7rem, 3.2vw, 2.35rem); line-height: 1.05;
+}
+.impact-close p { margin: 0; color: var(--ink-soft); max-width: 56ch; line-height: 1.55; }
+.impact-close .eyebrow { margin: 0; }
+.impact-close-actions { display: flex; align-items: center; justify-content: flex-end; gap: 10px; flex-wrap: wrap; flex: none; }
 .note-est { font-size: .86rem; color: var(--ink-soft); margin-top: clamp(26px, 4vw, 40px); text-align: center; }
 .note-est b { color: var(--ink); }
 
@@ -743,10 +796,13 @@ em.it { font-style: italic; }
 
 @media (max-width: 920px) {
   .impact-grid, .tilegrid, .records, .sumstrip { grid-template-columns: repeat(2, 1fr); }
+  .impact-principle { grid-template-columns: 1fr; }
   .tile.span2 { grid-column: span 2; }
   .paygrid { grid-template-columns: 1fr; }
   .timeline { grid-template-columns: repeat(5, 1fr); gap: 8px; }
   .controls { top: 0; }
+  .impact-close { align-items: flex-start; flex-direction: column; }
+  .impact-close-actions { justify-content: flex-start; }
 }
 @media (max-width: 560px) {
   .impact-grid, .tilegrid, .records, .sumstrip { grid-template-columns: 1fr; }

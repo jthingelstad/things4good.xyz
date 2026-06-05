@@ -76,6 +76,7 @@ module.exports = (() => {
       isLatest: e.year === latestYear,
       candles: e.candles,
       participants: e.participants,
+      takeaway: e.takeaway || "",
       posts: postsForEvent(e),
     };
     prevRaised = e.raised;
@@ -106,7 +107,18 @@ module.exports = (() => {
   // ---- the Impact-page event filter (newest first) ----
   const eventList = [...events]
     .sort((a, b) => b.year - a.year || (a.kind === "candle-sale" ? -1 : 1))
-    .map((e) => ({ slug: e.slug, name: e.name, year: e.year, kind: e.kind }));
+    .map((e) => ({
+      slug: e.slug,
+      name: e.name,
+      year: e.year,
+      kind: e.kind,
+      raised: e.raised,
+      raisedDisplay: fmt(e.raised),
+      candles: e.candles || null,
+      participants: e.participants || null,
+      orgCount: e.supported.length,
+      takeaway: e.takeaway || e.note || "",
+    }));
 
   // ---- curated blog archive ----
   // Blog posts stay manually curated in events.json so this site can highlight the
@@ -127,6 +139,7 @@ module.exports = (() => {
         raisedDisplay: row ? row.raisedDisplay : fmt(e.raised),
         candles: e.candles,
         participants: e.participants,
+        takeaway: e.takeaway || "",
         posts: postsForEvent(e),
       };
     })

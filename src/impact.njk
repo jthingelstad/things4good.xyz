@@ -20,15 +20,21 @@ description: Every nonprofit Things 4 Good has supported since 2021 — who pick
   <div class="hero-glow" aria-hidden="true"></div>
   <div class="wrap">
     <a class="back-link" href="/">&larr; Things 4 Good</a>
-    <p class="eyebrow">The full ledger</p>
+    <p class="eyebrow">Community impact</p>
     <h1 style="font-family:var(--serif);font-weight:500;font-size:clamp(2.4rem,5.4vw,4rem);letter-spacing:-.02em;line-height:1.02;max-width:16ch">Where the good has gone.</h1>
-    <p class="lead" style="margin-top:18px">Every nonprofit we&rsquo;ve supported since 2021 &mdash; who picked it, the year it was chosen, and what the community raised for it. {{ metrics.orgCount }} causes and counting, <b style="color:var(--ink)">100% funded</b> by hand-poured candles &mdash; through our sale and a few markets.</p>
+    <p class="lead" style="margin-top:18px">Every year each of us chooses one cause, and everyone who buys candles decides where their donation goes. Since 2021, that simple ritual has sent <b style="color:var(--ink)">100% of every candle donation</b> to {{ metrics.orgCount }} organizations and counting.</p>
 
     <div class="sumstrip">
       <div class="s acc"><b>${{ metrics.grandTotalDisplay }}</b><span>Raised since 2021</span></div>
       <div class="s acc2"><b>{{ metrics.orgCount }}</b><span>Organizations</span></div>
       <div class="s"><b>{{ metrics.yearCount }}</b><span>Years</span></div>
-      <div class="s"><b>100%</b><span>To charity</span></div>
+      <div class="s"><b>~{{ metrics.totalCandlesDisplay }}</b><span>Candles poured</span></div>
+    </div>
+
+    <div class="impact-principle">
+      <p><b>Four family picks.</b> One cause from each of us, every fall.</p>
+      <p><b>Community choice.</b> Support one, split across all four, or ask for a specific allocation.</p>
+      <p><b>Every dollar onward.</b> We cover materials so the full candle donation goes to good.</p>
     </div>
   </div>
 </section>
@@ -50,6 +56,7 @@ description: Every nonprofit Things 4 Good has supported since 2021 — who pick
           <span class="jraised">${{ ev.raisedDisplay }}</span>
         </div>
         <h3>{{ ev.name }}</h3>
+        <p class="annual-takeaway">{{ ev.takeaway }}</p>
         <p>{{ ev.candles }} candles &middot; {{ ev.participants }} neighbors &middot; {{ ev.posts.length }} {% if ev.posts.length == 1 %}post{% else %}posts{% endif %}</p>
         <div class="post-list">
           {% for post in ev.posts %}
@@ -65,6 +72,12 @@ description: Every nonprofit Things 4 Good has supported since 2021 — who pick
 <!-- ============================ LIST ============================ -->
 <section class="section" id="list" style="padding-top:clamp(20px,3vw,32px)">
   <div class="wrap">
+    <div class="ledger-head reveal">
+      <p class="eyebrow">Explore the ledger</p>
+      <h2 class="t">Filter the story.</h2>
+      <p class="lead">Look at a single sale year, follow one family member&rsquo;s causes, or sort the full list by amount raised. The filters are shareable, so each view has its own URL.</p>
+      <div class="filter-story" id="filterStory">Showing the full Things 4 Good impact ledger across every sale year and event.</div>
+    </div>
 
     <div class="controls" id="controls">
       <div class="ctrl select">
@@ -105,6 +118,18 @@ description: Every nonprofit Things 4 Good has supported since 2021 — who pick
       Try clearing a filter or your search.
     </div>
 
+    <div class="impact-close reveal">
+      <div>
+        <p class="eyebrow">Next chapter</p>
+        <h3>Follow the next sale.</h3>
+        <p>The latest impact stories live on the blog, and the 2026 sale details go first to Candle Fundraiser subscribers.</p>
+      </div>
+      <div class="impact-close-actions">
+        <a class="btn btn--primary" href="{{ site.updatesUrl }}" target="_blank" rel="noopener">Get sale updates <span class="arr">&rarr;</span></a>
+        <a class="btn btn--ghost" href="{{ site.blogUrl }}" target="_blank" rel="noopener">Read the blog</a>
+      </div>
+    </div>
+
   </div>
 </section>
 
@@ -120,6 +145,7 @@ description: Every nonprofit Things 4 Good has supported since 2021 — who pick
   // `logo`: a filename in src/images/logos/ (e.g. "oceanites.png"); shown as the card icon when set.
   // `reason`: the picker's own words; "" hides the "Why … picked it" details (e.g. 2021–22, not yet backfilled).
   const ORGS = {{ metrics.nonprofits | dump | safe }};
+  const EVENTS = {{ metrics.eventList | dump | safe }};
 
   const fmt = (n) => "$" + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   const state = { who:"all", event:"all", sort:"year-desc" };
@@ -127,6 +153,45 @@ description: Every nonprofit Things 4 Good has supported since 2021 — who pick
   const grid = document.getElementById('grid');
   const countEl = document.getElementById('count');
   const emptyEl = document.getElementById('empty');
+  const filterStoryEl = document.getElementById('filterStory');
+  const eventBySlug = new Map(EVENTS.map(e => [e.slug, e]));
+
+  function escapeHTML(str) {
+    return String(str).replace(/[&<>"']/g, (ch) => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;"
+    }[ch]));
+  }
+
+  function excerpt(str, max = 230) {
+    if (str.length <= max) return str;
+    const clipped = str.slice(0, max);
+    const sentence = clipped.lastIndexOf(". ");
+    const word = clipped.lastIndexOf(" ");
+    const tidy = sentence > 120
+      ? clipped.slice(0, sentence + 1)
+      : clipped.slice(0, word > 160 ? word : max).trim().replace(/[,:;/-]$/, "");
+    return tidy + "…";
+  }
+
+  function updateFilterStory(list) {
+    const event = state.event === "all" ? null : eventBySlug.get(state.event);
+    const raised = list.reduce((s, o) => s + o.amount, 0);
+    const whoText = state.who === "all" ? "" : `${state.who}'s picks`;
+    let text = "Showing the full Things 4 Good impact ledger across every sale year and event.";
+    if (event && state.who !== "all") {
+      text = `${whoText} in ${event.name}: ${list.length} ${list.length === 1 ? "organization" : "organizations"} and ${fmt(raised)} raised.`;
+    } else if (event) {
+      const candleNote = event.candles ? `, ${event.candles} candles` : "";
+      text = `${event.name}: ${fmt(event.raised)} raised for ${event.orgCount} ${event.orgCount === 1 ? "organization" : "organizations"}${candleNote}. ${event.takeaway}`;
+    } else if (state.who !== "all") {
+      text = `${whoText} across the fundraiser: ${list.length} ${list.length === 1 ? "organization" : "organizations"} and ${fmt(raised)} raised.`;
+    }
+    filterStoryEl.textContent = text;
+  }
 
   function apply() {
     let list = ORGS.filter(o => {
@@ -154,8 +219,15 @@ description: Every nonprofit Things 4 Good has supported since 2021 — who pick
         ? `<span class="ebadge">${o.eventName}</span>`
         : "";
       const whyLabel = collective ? "Why we supported it" : `Why ${o.who} picked it`;
-      const why = o.reason
-        ? `<details class="why"><summary>${whyLabel}</summary><blockquote>&ldquo;${o.reason}&rdquo;<cite>&mdash; ${whoLabel}</cite></blockquote></details>`
+      const reason = o.reason || "";
+      const safeReason = escapeHTML(reason);
+      const safeExcerpt = escapeHTML(excerpt(reason));
+      const why = reason
+        ? `<div class="why-note">
+            <div class="why-k">${whyLabel}</div>
+            <blockquote>&ldquo;${safeExcerpt}&rdquo;<cite>&mdash; ${whoLabel}</cite></blockquote>
+            ${reason.length > 230 ? `<details class="why-full"><summary>Read full note</summary><blockquote>&ldquo;${safeReason}&rdquo;</blockquote></details>` : ""}
+          </div>`
         : "";
       return `
       <article class="icard">
@@ -169,10 +241,10 @@ description: Every nonprofit Things 4 Good has supported since 2021 — who pick
         </div>
         <a class="iname" href="${o.url}" target="_blank" rel="noopener">${o.name}</a>
         <p class="iblurb">${o.blurb}</p>
+        ${why}
         <div class="imeta">
           <div class="iamt"><b>${fmt(o.amount)}</b><span>raised</span></div>
         </div>
-        ${why}
         <a class="go" href="${o.url}" target="_blank" rel="noopener">Visit <span class="arr">&rarr;</span></a>
       </article>`;
     }).join('');
@@ -188,6 +260,7 @@ description: Every nonprofit Things 4 Good has supported since 2021 — who pick
     emptyEl.style.display = n ? 'none' : 'block';
     grid.style.display = n ? 'grid' : 'none';
     grid.style.animation = 'none'; void grid.offsetWidth; grid.style.animation = 'fadeUp .4s ease';
+    updateFilterStory(list);
   }
 
   // ---- shareable filters: each control <-> a URL query param ----
