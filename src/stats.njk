@@ -55,19 +55,19 @@ description: The spreadsheet behind Things 4 Good — dollars raised, candles so
       <p class="lead">The fundraiser keeps getting bigger, but each metric tells a slightly different story: dollars raised, candles sold, and the number of checkout moments.</p>
     </div>
 
-    <div class="growth-lab reveal">
-      <div class="growth-head">
-        <span>Year</span>
-        <span>Dollars raised</span>
-        <span>Candles sold</span>
-        <span>Transactions</span>
-      </div>
+    <div class="year-grid reveal">
       {% for y in ops.years %}
-      <a class="growth-row" href="/impact/?event=candle-sale-{{ y.year }}">
-        <div class="gyear"><b>{{ y.year }}</b><span>{{ y.growthDisplay }}</span></div>
-        <div class="gmetric"><span class="glabel">${{ y.raisedDisplay }}</span><i style="width:{{ y.raisedBarPct }}%"></i></div>
-        <div class="gmetric alt"><span class="glabel">{{ y.candlesSold }}</span><i style="width:{{ y.candleBarPct }}%"></i></div>
-        <div class="gmetric third"><span class="glabel">{{ y.transactions }}</span><i style="width:{{ y.transactionBarPct }}%"></i></div>
+      <a class="year-card" href="/impact/?event=candle-sale-{{ y.year }}">
+        <div class="year-card-top">
+          <span class="year-num">{{ y.year }}</span>
+          <span class="year-chip">{{ y.growthDisplay }}</span>
+        </div>
+        <div class="year-card-metrics">
+          <div><b>${{ y.raisedDisplay }}</b><span>raised</span></div>
+          <div><b>{{ y.candlesSold }}</b><span>candles</span></div>
+          <div><b>{{ y.transactions }}</b><span>transactions</span></div>
+        </div>
+        <p>{{ y.note }}</p>
       </a>
       {% endfor %}
     </div>
@@ -140,7 +140,7 @@ description: The spreadsheet behind Things 4 Good — dollars raised, candles so
     <div class="sec-head reveal">
       <p class="eyebrow">Inventory</p>
       <h2 class="t">Scents are the hardest forecast.</h2>
-      <p class="lead">{{ ops.latest.year }} added more products: Charcoal Rose, T4G Labs, Rekindled, XL candles, and lids. The inventory chart is where the sale starts to look like a tiny retailer.</p>
+      <p class="lead">{{ ops.latest.year }} added more products: Charcoal Rose, T4G Labs, Rekindled, XL candles, and lids. The inventory board is where the sale starts to look like a tiny retailer.</p>
     </div>
 
     <div class="inventory-layout">
@@ -149,14 +149,21 @@ description: The spreadsheet behind Things 4 Good — dollars raised, candles so
           <h3>{{ ops.latest.year }} scent sell-through</h3>
           <span>{{ ops.latest.candlesSold }} sold &middot; {{ ops.latest.candlesMade }} prepared</span>
         </div>
+        <div class="scent-grid">
         {% for scent in ops.latest.scents %}
-        <div class="scent-row">
-          <div class="scent-name"><b>{{ scent.name }}</b><span>{{ scent.type }}</span></div>
-          <div class="scent-bar"><i style="width:{{ scent.barPct }}%"></i></div>
-          <div class="scent-count">{{ scent.sold }} sold</div>
-          <div class="scent-left">{{ scent.leftDisplay }}</div>
+        <div class="scent-card{% if scent.left == 0 %} sold-out{% endif %}{% if scent.left < 0 %} over-sold{% endif %}">
+          <div class="scent-card-top">
+            <h4>{{ scent.name }}</h4>
+            <span>{{ scent.type }}</span>
+          </div>
+          <div class="scent-card-stats">
+            <div><b>{{ scent.sold }}</b><span>sold</span></div>
+            <div><b>{{ scent.made }}</b><span>made</span></div>
+          </div>
+          <p>{{ scent.leftDisplay }}</p>
         </div>
         {% endfor %}
+        </div>
       </div>
 
       <div class="learn-card reveal">
