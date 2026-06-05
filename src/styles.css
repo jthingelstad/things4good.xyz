@@ -127,15 +127,6 @@ em.it { font-style: italic; }
 .btn .arr { transition: transform .14s ease; }
 .btn:hover .arr { transform: translateX(3px); }
 
-/* ---------- pills / tags ---------- */
-.pill {
-  display: inline-flex; align-items: center; gap: .5em;
-  font-weight: 600; font-size: .8rem; letter-spacing: .02em;
-  padding: 7px 14px; border-radius: 999px;
-  background: var(--paper-3); border: 1px solid var(--line); color: var(--ink-soft);
-}
-.pill .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--pine); }
-
 /* ---------- nav ---------- */
 .nav {
   position: sticky; top: 0; z-index: 50;
@@ -190,7 +181,8 @@ em.it { font-style: italic; }
 .hero h1 .pine { color: var(--pine-d); }
 .hero .lead { margin-top: 22px; font-size: clamp(1.1rem, 1.7vw, 1.34rem); }
 .hero-cta { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 32px; align-items: center; }
-.hero-meta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
+.hero-note { margin: 22px 0 0; color: var(--ink-soft); font-size: .96rem; font-weight: 700; }
+.section--ink .hero-note { color: rgba(255,255,255,.66); }
 
 .hero-art { position: relative; }
 .hero-art .ph { aspect-ratio: 4/5; border-radius: 22px; }
