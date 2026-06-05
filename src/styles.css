@@ -293,6 +293,65 @@ em.it { font-style: italic; }
 .impact-link a { color: var(--marigold-d); font-weight: 700; text-decoration: none; }
 .impact-link a:hover { text-decoration: underline; }
 
+/* ---------- journal / blog story cards ---------- */
+.journal-callout { margin-top: clamp(38px, 6vw, 68px); }
+.journal-head {
+  display: flex; justify-content: space-between; align-items: flex-end; gap: 24px;
+  margin-bottom: clamp(18px, 3vw, 28px);
+}
+.journal-head .eyebrow { margin-bottom: 10px; }
+.journal-head h3 { font-size: clamp(1.7rem, 3vw, 2.35rem); }
+.journal-all {
+  flex: none; font-weight: 800; color: var(--marigold-d); text-decoration: none;
+  display: inline-flex; align-items: center; gap: .4em;
+}
+.journal-all:hover { text-decoration: underline; }
+.journal-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(14px, 2vw, 22px); }
+.journal-card {
+  background: var(--paper-3); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: clamp(22px, 3vw, 30px); box-shadow: var(--shadow-sm); text-decoration: none;
+  color: var(--ink); display: flex; flex-direction: column; min-height: 240px;
+  transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+}
+.journal-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: var(--marigold); }
+.journal-card .jtype {
+  font-size: .72rem; font-weight: 800; letter-spacing: .13em; text-transform: uppercase;
+  color: var(--pine-d); margin-bottom: 14px;
+}
+.journal-card h4 { font-family: var(--serif); font-weight: 500; font-size: clamp(1.25rem, 2vw, 1.55rem); line-height: 1.12; margin: 0; }
+.journal-card p { margin: 12px 0 0; color: var(--ink-soft); font-size: .94rem; line-height: 1.52; }
+.journal-card .go {
+  margin-top: auto; padding-top: 18px; font-weight: 800; color: var(--marigold-d);
+  display: inline-flex; align-items: center; gap: .4em;
+}
+.journal-card:hover .go .arr, .journal-all:hover .arr { transform: translateX(3px); }
+.journal-card .arr, .journal-all .arr { transition: transform .14s ease; }
+
+.annual-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: clamp(12px, 2vw, 20px); }
+.annual-card {
+  background: var(--paper-3); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: clamp(20px, 2.5vw, 26px); box-shadow: var(--shadow-sm);
+}
+.annual-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 16px; }
+.jyear {
+  font-family: var(--serif); font-size: 1.65rem; line-height: 1; color: var(--marigold-d);
+}
+.jraised {
+  font-size: .74rem; font-weight: 800; letter-spacing: .05em; color: var(--pine-d);
+  background: var(--pine-t); border: 1px solid #BFDDD0; border-radius: 999px; padding: 5px 10px;
+}
+.annual-card h3 { font-size: 1.28rem; line-height: 1.15; }
+.annual-card p { margin: 8px 0 16px; color: var(--ink-soft); font-size: .9rem; line-height: 1.45; }
+.post-list { display: flex; flex-direction: column; gap: 9px; }
+.post-list a {
+  color: var(--ink); text-decoration: none; font-weight: 700; font-size: .88rem; line-height: 1.35;
+  display: grid; grid-template-columns: auto 1fr auto; gap: 8px; align-items: baseline;
+}
+.post-list a span { color: var(--marigold-d); font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; }
+.post-list a i { font-style: normal; color: var(--marigold-d); transition: transform .14s ease; }
+.post-list a:hover { color: var(--marigold-d); }
+.post-list a:hover i { transform: translateX(3px); }
+
 /* ---------- featured causes (with personal quotes) ---------- */
 .causes { display: grid; grid-template-columns: repeat(2, 1fr); gap: clamp(16px, 2.4vw, 26px); margin-bottom: clamp(40px, 6vw, 64px); }
 .cause {
@@ -511,7 +570,8 @@ em.it { font-style: italic; }
 @media (max-width: 920px) {
   .hero-grid, .sale-grid, .split { grid-template-columns: 1fr; }
   .hero-art { max-width: 420px; }
-  .steps, .charities { grid-template-columns: repeat(2, 1fr); }
+  .steps, .charities, .journal-grid { grid-template-columns: repeat(2, 1fr); }
+  .annual-grid { grid-template-columns: repeat(2, 1fr); }
   .causes, .impact-foot { grid-template-columns: 1fr; }
   .makers { grid-template-columns: repeat(2, 1fr); }
   .statrow { grid-template-columns: repeat(2, 1fr); gap: 28px 20px; }
@@ -525,7 +585,9 @@ em.it { font-style: italic; }
 }
 @media (max-width: 560px) {
   body { font-size: 17px; }
-  .steps, .charities, .makers, .gifts, .path-grid { grid-template-columns: 1fr; }
+  .steps, .charities, .makers, .gifts, .path-grid, .journal-grid, .annual-grid { grid-template-columns: 1fr; }
+  .journal-head { display: block; }
+  .journal-all { margin-top: 12px; }
   .hero-cta .btn { flex: 1; justify-content: center; }
   .nav-cta { display: none; }
 }

@@ -78,7 +78,25 @@ description: Since 2021 the Thingelstad family has hand-poured wooden-wick candl
       {% endfor %}
     </div>
 
-    <p class="impact-link reveal">We share full results &mdash; and the math behind them &mdash; on the blog after every sale. <a href="{{ site.blogUrl }}" target="_blank" rel="noopener">Read the write-ups &rarr;</a></p>
+    <div class="journal-callout reveal">
+      <div class="journal-head">
+        <div>
+          <p class="eyebrow">From the journal</p>
+          <h3>The story behind the numbers.</h3>
+        </div>
+        <a class="journal-all" href="{{ site.blogUrl }}" target="_blank" rel="noopener">All Things 4 Good posts <span class="arr">&rarr;</span></a>
+      </div>
+      <div class="journal-grid">
+        {% for post in metrics.journalPosts %}
+        <a class="journal-card" href="{{ post.url }}" target="_blank" rel="noopener">
+          <span class="jtype">{{ post.type }} &middot; {{ post.year }}</span>
+          <h4>{{ post.title }}</h4>
+          <p>{{ post.description }}</p>
+          <span class="go">Read post <span class="arr">&rarr;</span></span>
+        </a>
+        {% endfor %}
+      </div>
+    </div>
   </div>
 </section>
 

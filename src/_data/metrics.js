@@ -18,6 +18,15 @@ module.exports = (() => {
     .filter((e) => e.kind === "candle-sale")
     .sort((a, b) => a.year - b.year);
   const specialEvents = events.filter((e) => e.kind === "special-event");
+  const postsForEvent = (e) =>
+    (e.posts || []).map((p, index) => ({
+      ...p,
+      index,
+      year: e.year,
+      event: e.slug,
+      eventKind: e.kind,
+      eventName: e.name,
+    }));
 
   // Money raised at a special event in a given candle-sale year (for the stacked bars).
   const specialRaisedInYear = (year) =>
@@ -67,6 +76,7 @@ module.exports = (() => {
       isLatest: e.year === latestYear,
       candles: e.candles,
       participants: e.participants,
+      posts: postsForEvent(e),
     };
     prevRaised = e.raised;
     return row;
@@ -97,6 +107,30 @@ module.exports = (() => {
   const eventList = [...events]
     .sort((a, b) => b.year - a.year || (a.kind === "candle-sale" ? -1 : 1))
     .map((e) => ({ slug: e.slug, name: e.name, year: e.year, kind: e.kind }));
+
+  // ---- curated blog archive ----
+  // Blog posts stay manually curated in events.json so this site can highlight the
+  // best context without trying to mirror the whole Things 4 Good category feed.
+  const allPosts = candleSaleEvents
+    .flatMap(postsForEvent)
+    .sort((a, b) => b.year - a.year || a.index - b.index);
+  const featuredPosts = allPosts.filter((p) => p.featured).slice(0, 3);
+  const journalPosts = featuredPosts.length ? featuredPosts : allPosts.slice(0, 3);
+  const annualStories = [...candleSaleEvents]
+    .reverse()
+    .map((e) => {
+      const row = perYear.find((y) => y.slug === e.slug);
+      return {
+        slug: e.slug,
+        year: e.year,
+        name: e.name,
+        raisedDisplay: row ? row.raisedDisplay : fmt(e.raised),
+        candles: e.candles,
+        participants: e.participants,
+        posts: postsForEvent(e),
+      };
+    })
+    .filter((e) => e.posts.length);
 
   // ---- records ----
   const biggestYearRow = perYear.reduce((a, b) => (b.raised > a.raised ? b : a));
@@ -168,6 +202,9 @@ module.exports = (() => {
     pricePerCandle: site.pricePerCandle,
     nonprofits,
     eventList,
+    allPosts,
+    journalPosts,
+    annualStories,
     records,
     candleMath,
     raisedStats,

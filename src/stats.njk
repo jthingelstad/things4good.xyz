@@ -115,6 +115,29 @@ description: Five years of Things 4 Good by the numbers — dollars raised, cand
   </div>
 </section>
 
+<!-- ============================ JOURNAL ============================ -->
+<section class="section" id="journal">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">Behind the numbers</p>
+      <h2 class="t">The charts have a backstory.</h2>
+      <p class="lead">After each sale we write up the results, the surprises, and the lessons hiding in the data. These are the best companion reads for the stats above.</p>
+    </div>
+
+    <div class="journal-grid">
+      {% for post in metrics.journalPosts %}
+      <a class="journal-card reveal" href="{{ post.url }}" target="_blank" rel="noopener">
+        <span class="jtype">{{ post.type }} &middot; {{ post.year }}</span>
+        <h4>{{ post.title }}</h4>
+        <p>{{ post.description }}</p>
+        <span class="go">Read post <span class="arr">&rarr;</span></span>
+      </a>
+      {% endfor %}
+    </div>
+    <p class="impact-link reveal"><a href="{{ site.blogUrl }}" target="_blank" rel="noopener">Browse the full Things 4 Good blog category &rarr;</a></p>
+  </div>
+</section>
+
 <!-- ============================ CTA ============================ -->
 <section class="section section--pine subscribe" id="cta">
   <div class="wrap">

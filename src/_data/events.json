@@ -9,6 +9,14 @@
       "raised": 4757,
       "candles": 180,
       "participants": 85,
+      "posts": [
+        {
+          "type": "Results",
+          "title": "Things 4 Good Fall Fundraiser",
+          "url": "https://www.thingelstad.com/2021/11/09/things-good-fall.html",
+          "description": "The first fundraiser recap: a weekend of candles, puzzles, honey, cookies, and more than 100 people stopping by."
+        }
+      ],
       "supported": [
         {
           "slug": "constellation-fund",
@@ -60,6 +68,20 @@
       "raised": 5217,
       "candles": 198,
       "participants": 84,
+      "posts": [
+        {
+          "type": "Results",
+          "title": "Things 4 Good Fall Fundraiser Distributed",
+          "url": "https://www.thingelstad.com/2022/11/27/things-good-fall.html",
+          "description": "The donation recap for the second sale, including the four causes supported and how the proceeds were distributed."
+        },
+        {
+          "type": "Notes",
+          "title": "Things 4 Good Fall Fundraiser Notes",
+          "url": "https://www.thingelstad.com/2022/11/27/101105.html",
+          "description": "A behind-the-scenes look at what sold, which scents moved fastest, and what we learned for the next year."
+        }
+      ],
       "supported": [
         {
           "slug": "united-help-ukraine",
@@ -111,6 +133,20 @@
       "raised": 5755,
       "candles": 218,
       "participants": 82,
+      "posts": [
+        {
+          "type": "Results",
+          "title": "Things 4 Good 2023 Fall Fundraiser Results",
+          "url": "https://www.thingelstad.com/2023/11/12/things-good-fall.html",
+          "description": "The 2023 results post with the amount raised, the four supported organizations, and the family notes behind each choice."
+        },
+        {
+          "type": "Insights",
+          "title": "Things 4 Good 2023 Fall Fundraiser Insights",
+          "url": "https://www.thingelstad.com/2023/11/26/things-good-fall.html",
+          "description": "A deeper look at transaction counts, scent inventory, payment methods, and what the data suggested for the next sale."
+        }
+      ],
       "supported": [
         {
           "slug": "oceanites",
@@ -162,6 +198,26 @@
       "raised": 7010,
       "candles": 268,
       "participants": 76,
+      "posts": [
+        {
+          "type": "Results",
+          "title": "Things 4 Good 2024 Fall Fundraiser Results",
+          "url": "https://www.thingelstad.com/2024/11/10/things-good-fall.html",
+          "description": "The 2024 results post, including the first public market year and the organizations supported by the sale."
+        },
+        {
+          "type": "Insights",
+          "title": "Things 4 Good 2024 Fall Fundraiser Insights",
+          "url": "https://www.thingelstad.com/2024/11/10/213429.html",
+          "description": "Charts and notes on sales patterns, scent inventory, sellouts, and Venmo becoming the clear favorite payment method."
+        },
+        {
+          "type": "Impact",
+          "title": "Things 4 Good Four Year Impact",
+          "url": "https://www.thingelstad.com/2024/11/10/things-good-four.html",
+          "description": "A four-year impact recap with charts and a look at the growing community behind the fundraiser."
+        }
+      ],
       "supported": [
         {
           "slug": "syngap-research-fund",
@@ -223,6 +279,29 @@
       "raised": 9048,
       "candles": 321,
       "participants": 73,
+      "posts": [
+        {
+          "type": "Results",
+          "title": "Things 4 Good 2025 Candle Fundraiser Results",
+          "url": "https://www.thingelstad.com/2025/11/16/things-good-candle-fundraiser-results.html",
+          "description": "The 2025 results post with the final allocation, the four supported organizations, and the tightest distribution yet.",
+          "featured": true
+        },
+        {
+          "type": "Insights",
+          "title": "Things 4 Good 2025 Candle Fundraiser Insights",
+          "url": "https://www.thingelstad.com/2025/11/16/things-good-candle-fundraiser-insights.html",
+          "description": "Inventory, transaction, product, and payment notes from the biggest sale yet, including XL candles and lids.",
+          "featured": true
+        },
+        {
+          "type": "Impact",
+          "title": "Things 4 Good Five Year Impact",
+          "url": "https://www.thingelstad.com/2025/11/16/things-good-five-year-impact.html",
+          "description": "The five-year view of the fundraiser: charts, cumulative impact, and the community tradition taking shape.",
+          "featured": true
+        }
+      ],
       "supported": [
         {
           "slug": "sandy-hook-promise",

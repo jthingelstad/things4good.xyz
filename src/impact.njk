@@ -33,6 +33,35 @@ description: Every nonprofit Things 4 Good has supported since 2021 — who pick
   </div>
 </section>
 
+<!-- ============================ STORIES ============================ -->
+<section class="section section--paper2" id="stories" style="padding-block:clamp(48px,7vw,84px)">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">Year by year</p>
+      <h2 class="t">Read the sale stories.</h2>
+      <p class="lead">The ledger shows where the dollars went. The journal posts add the texture: what sold, what surprised us, what the charts revealed, and what we learned for next year.</p>
+    </div>
+
+    <div class="annual-grid">
+      {% for ev in metrics.annualStories %}
+      <article class="annual-card reveal">
+        <div class="annual-top">
+          <span class="jyear">{{ ev.year }}</span>
+          <span class="jraised">${{ ev.raisedDisplay }}</span>
+        </div>
+        <h3>{{ ev.name }}</h3>
+        <p>{{ ev.candles }} candles &middot; {{ ev.participants }} neighbors &middot; {{ ev.posts.length }} {% if ev.posts.length == 1 %}post{% else %}posts{% endif %}</p>
+        <div class="post-list">
+          {% for post in ev.posts %}
+          <a href="{{ post.url }}" target="_blank" rel="noopener"><span>{{ post.type }}</span>{{ post.title }} <i aria-hidden="true">&rarr;</i></a>
+          {% endfor %}
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
 <!-- ============================ LIST ============================ -->
 <section class="section" id="list" style="padding-top:clamp(20px,3vw,32px)">
   <div class="wrap">
