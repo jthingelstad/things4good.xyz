@@ -19,13 +19,11 @@
     <b>Things&nbsp;<span class="four">4</span>&nbsp;Good</b>
   </a>
   <nav class="nav-links">
-    {% block navLinks %}
-    <a href="/#sale">The Sale</a>
-    <a href="/maker-night/">Maker Night</a>
-    <a href="/impact/">Impact</a>
-    <a href="/stats/">Stats</a>
-    <a href="/faq/">FAQ</a>
-    {% endblock %}
+    <a href="/#sale"{% if page.url == "/" %} aria-current="page"{% endif %}>Fundraiser</a>
+    <a href="/impact/"{% if page.url == "/impact/" %} aria-current="page"{% endif %}>Impact</a>
+    <a href="/stats/"{% if page.url == "/stats/" %} aria-current="page"{% endif %}>Numbers</a>
+    <a href="/maker-night/"{% if page.url == "/maker-night/" %} aria-current="page"{% endif %}>Maker Night</a>
+    <a href="/faq/"{% if page.url == "/faq/" %} aria-current="page"{% endif %}>FAQ</a>
   </nav>
   <span class="nav-date">{% block navDate %}{{ site.saleDates }}{% endblock %}</span>
   {% block navCta %}<a class="btn btn--primary nav-cta" href="{{ site.updatesUrl }}" target="_blank" rel="noopener">Get updates</a>{% endblock %}
@@ -46,10 +44,10 @@
         <div class="fcol">
           <h4>Explore</h4>
           {% block footerExplore %}
-          <a href="/#sale">The Sale</a>
-          <a href="/maker-night/">Maker Night</a>
+          <a href="/#sale">Fundraiser</a>
           <a href="/impact/">Impact</a>
-          <a href="/stats/">Stats</a>
+          <a href="/stats/">Numbers</a>
+          <a href="/maker-night/">Maker Night</a>
           <a href="/preorder/">Preorder &amp; Pickup</a>
           <a href="/faq/">FAQ</a>
           {% endblock %}
