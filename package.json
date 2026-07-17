@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Things 4 Good — handmade candle fundraiser. Built with Eleventy.",
   "license": "MIT",
+  "engines": {
+    "node": ">=24 <25"
+  },
   "scripts": {
     "start": "eleventy --serve",
     "build": "eleventy",
