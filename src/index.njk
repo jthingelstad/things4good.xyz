@@ -152,6 +152,7 @@ description: Since 2021 the Thingelstad family has hand-poured wooden-wick candl
 </section>
 
 <!-- ===================== MAKER NIGHT TEASER ===================== -->
+{% if site.makerNight %}
 <section class="section" id="maker-night" style="padding-top:0">
   <div class="wrap">
     <div class="mn-band reveal">
@@ -168,6 +169,7 @@ description: Since 2021 the Thingelstad family has hand-poured wooden-wick candl
     </div>
   </div>
 </section>
+{% endif %}
 
 <!-- ======================= HOW IT WORKS ======================= -->
 <section class="section section--paper2" id="how">
@@ -279,7 +281,7 @@ description: Since 2021 the Thingelstad family has hand-poured wooden-wick candl
       <a class="path-card reveal" href="/faq/">
         <span class="kicker">FAQ</span>
         <h3>Get answers.</h3>
-        <p>How the sale works, where the money goes, what Maker Night is, and what to expect this year.</p>
+        <p>How the sale works, where the money goes, {% if site.makerNight %}what Maker Night is, {% endif %}and what to expect this year.</p>
         <span class="go">Read the FAQ <span class="arr">&rarr;</span></span>
       </a>
     </div>
