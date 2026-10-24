@@ -10,6 +10,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Hanken+Grotesk:wght@400;500;600;700;800&family=Caveat:wght@500;600;700&display=swap" rel="stylesheet" />
 <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 <link rel="stylesheet" href="/styles.css" />
+{% block head %}{% endblock %}
 </head>
 <body>
 
@@ -22,7 +23,7 @@
     <a href="/#sale"{% if page.url == "/" %} aria-current="page"{% endif %}>Fundraiser</a>
     <a href="/impact/"{% if page.url == "/impact/" %} aria-current="page"{% endif %}>Impact</a>
     <a href="/stats/"{% if page.url == "/stats/" %} aria-current="page"{% endif %}>Numbers</a>
-    <a href="/maker-night/"{% if page.url == "/maker-night/" %} aria-current="page"{% endif %}>Maker Night</a>
+    {% if site.makerNight %}<a href="/maker-night/"{% if page.url == "/maker-night/" %} aria-current="page"{% endif %}>Maker Night</a>{% endif %}
     <a href="/faq/"{% if page.url == "/faq/" %} aria-current="page"{% endif %}>FAQ</a>
   </nav>
   <span class="nav-date">{% block navDate %}{{ site.saleDates }}{% endblock %}</span>
@@ -46,7 +47,7 @@
           <a href="/#sale">Fundraiser</a>
           <a href="/impact/">Impact</a>
           <a href="/stats/">Numbers</a>
-          <a href="/maker-night/">Maker Night</a>
+          {% if site.makerNight %}<a href="/maker-night/">Maker Night</a>{% endif %}
           <a href="/preorder/">Preorder &amp; Pickup</a>
           <a href="/faq/">FAQ</a>
         </div>

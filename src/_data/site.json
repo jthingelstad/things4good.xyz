@@ -6,6 +6,7 @@
   "preorderSheet": "",
   "updatesUrl": "https://buttondown.com/things4good",
   "tinylyticsEmbed": "",
+  "makerNight": false,
   "blogUrl": "https://www.thingelstad.com/categories/things-4-good/",
   "pricePerCandle": 25,
   "candleConstants": { "waxLbsPerCandle": 0.75, "wickFtPerCandle": 0.25, "burnHrsPerCandle": 40 },
