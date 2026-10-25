@@ -1,0 +1,41 @@
+---
+permalink: /llms.txt
+eleventyExcludeFromCollections: true
+---
+{#- The site for agents and LLMs (https://llmstxt.org). Plain text, so every
+    value goes out with | safe; the numbers come from metrics.js like the
+    pages' do. -#}
+# Things 4 Good
+
+> Things 4 Good is the Thingelstad family's annual handmade-candle fundraiser in Minneapolis. Since {{ metrics.perYear[0].year }} the family has hand-poured wooden-wick candles for a fall sale; every candle is a ${{ site.pricePerCandle }} donation, and 100% goes to the nonprofits the four family members pick each year. That has added up to ${{ metrics.grandTotalDisplay | safe }} for {{ metrics.orgCount }} organizations.
+
+The {{ site.saleYear }} sale is {{ site.saleDates | safe }} in Minneapolis. Buyers split their donation across that year's four causes; the family covers the materials. Orders of six or more can be preordered for Sunday pickup. Per-nonprofit amounts on the site are estimates; each sale's total is exact.
+
+## Pages
+
+- [Home](https://things4good.xyz/): the fundraiser, this year's causes, the makers and the sale dates
+- [Impact](https://things4good.xyz/impact/): every nonprofit supported, filterable by who picked it and by event
+- [Numbers](https://things4good.xyz/stats/): dollars raised, candles sold, growth by year and candle math
+- [Preorder](https://things4good.xyz/preorder/): preorder steps, pickup and payment methods
+- [FAQ](https://things4good.xyz/faq/): how it works, what it costs and where the money goes
+{%- if site.makerNight %}
+- [Maker Night](https://things4good.xyz/maker-night/): an evening to hand-pour your own candles, for a donation
+{%- endif %}
+
+## Sales
+
+{% for event in metrics.eventList -%}
+- {{ event.name | safe }}{% if (event.year | string) not in event.name %} ({{ event.year }}){% endif %}: ${{ event.raisedDisplay }}{% if event.candles %} from {{ event.candles }} candles and {{ event.participants }} participants{% endif %}, for {{ event.orgCount }} {{ "nonprofit" if event.orgCount == 1 else "nonprofits" }}. {{ event.takeaway | safe }}
+{% endfor %}
+## Nonprofits supported
+
+Newest first, with the family member who picked each one ("Everyone" for a shared pick).
+
+{% for org in metrics.nonprofits | reverse -%}
+- [{{ org.name | safe }}]({{ org.url }}) ({{ org.eventName | safe }}, picked by {{ org.who }}): {{ org.blurb | safe }}
+{% endfor %}
+## Optional
+
+- [Updates](https://buttondown.com/things4good): the email list for sale announcements and preorders
+- [Blog posts](https://www.thingelstad.com/categories/things-4-good/): each year's story on thingelstad.com
+- [Sitemap](https://things4good.xyz/sitemap.xml)
