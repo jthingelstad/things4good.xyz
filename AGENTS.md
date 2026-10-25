@@ -34,7 +34,7 @@ Eleventy config lives in `.eleventy.js`. Key conventions it sets:
 
 ### Templating
 
-`src/_includes/base.njk` is the single layout. Every page does `{% extends "base.njk" %}` and fills named blocks rather than passing a `layout:` in front matter. The blocks the base exposes: `head` (extra `<head>` tags), `brandHref`, `navLinks`, `navDate`, `navCta`, `content`, `footerExplore`, `subscribeHref`, `scripts`. Page front matter sets only `title` and `description` (both consumed by `<head>`); the canonical link is built from `page.url`, so a page never sets it.
+`src/_includes/base.njk` is the single layout. Every page does `{% extends "base.njk" %}` and fills named blocks rather than passing a `layout:` in front matter. The blocks the base exposes: `head` (extra `<head>` tags), `brandHref`, `navLinks`, `navDate`, `navCta`, `content`, `footerExplore`, `subscribeHref`, `scripts`. Page front matter sets only `title` and `description` (both consumed by `<head>`); the canonical link and the share tags (Open Graph, a large Twitter card with the home page's candle photo) are built from those and `page.url`, so a page never sets them.
 
 **The nav and footer are canonical defaults in `base.njk`** — `navLinks` (Fundraiser · Impact · Numbers · Maker Night when `site.makerNight` · FAQ), `navDate` (`site.saleDates`), `navCta` (the Preorder button), and `footerExplore` (6-item list) all have real default content. Pages inherit them automatically; a page overrides a block only to deviate — typically `navLinks` to add `aria-current="page"` on its own item, or `brandHref`/`navCta` for page-specific behavior. Subpages set `brandHref` to `/`; the home page keeps the default `#top`. When changing site-wide nav/footer, edit the defaults in `base.njk`, not each page.
 
