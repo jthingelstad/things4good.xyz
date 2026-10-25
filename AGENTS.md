@@ -13,6 +13,7 @@ Pages, each a `src/*.njk` that extends `base.njk` (Eleventy emits `<name>/index.
 - `stats.njk` — cumulative "by the numbers" page
 - `preorder.njk` — preorder steps + payment methods
 - `faq.njk` — standalone FAQ
+- `llms.txt.njk` — `/llms.txt`, the site for agents and LLMs: the fundraiser, the pages, every sale and every nonprofit, all from `metrics` (plain text, so values go out with `| safe`). `base.njk` links it from every page; it stays out of `collections.all` and the sitemap. No feed, by Jamie's call.
 
 ## Commands
 
