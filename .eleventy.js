@@ -1,4 +1,25 @@
+const { createHash } = require("node:crypto");
+
 module.exports = function (eleventyConfig) {
+  // A page's share card (cards.thingelstad.com/t4g/...): what the card shows,
+  // from the page's `card` front matter and the site's sale facts, and the
+  // `v` that names that drawing, the first 10 hex of the SHA-256 of those
+  // fields as JSON. base.njk publishes the fields as the page's h-entry.
+  eleventyConfig.addFilter("cardFields", (card, site) => ({
+    kicker: card.kicker,
+    name: card.name,
+    accent: card.accent || "",
+    summary: card.summary || "",
+    photo: `https://things4good.xyz/images/cards/${card.photo}.jpg`,
+    facts: card.saleFacts ? [site.saleDates, "Minneapolis", `$${site.pricePerCandle} a candle`] : [],
+  }));
+  eleventyConfig.addFilter("cardVersion", (f) =>
+    createHash("sha256")
+      .update(JSON.stringify([f.kicker, f.name, f.accent, f.summary, f.photo, ...f.facts]))
+      .digest("hex")
+      .slice(0, 10),
+  );
+
   // Copy the stylesheet straight through to the site root.
   eleventyConfig.addPassthroughCopy({ "src/styles.css": "styles.css" });
 

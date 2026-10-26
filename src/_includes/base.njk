@@ -11,8 +11,15 @@
 <meta property="og:title" content="{{ title }}" />
 <meta property="og:description" content="{{ description }}" />
 <meta property="og:url" content="https://things4good.xyz{{ page.url }}" />
+{% if card %}{% set cardInfo = card | cardFields(site) %}
+<meta property="og:image" content="https://cards.thingelstad.com/t4g/{{ 'index' if page.url == '/' else page.url | replace('/', '') }}.png?v={{ cardInfo | cardVersion }}" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="{{ cardInfo.name }}{% if cardInfo.summary %} {{ cardInfo.summary }}{% endif %}" />
+{% else %}
 <meta property="og:image" content="https://things4good.xyz/images/candles.jpg" />
 <meta property="og:image:alt" content="Hand-poured wooden-wick candles" />
+{% endif %}
 <meta name="twitter:card" content="summary_large_image" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -43,6 +50,17 @@
 
 <main id="top">
 {% block content %}{% endblock %}
+{% if card %}
+<!-- The page's share card reads this h-entry (cards.thingelstad.com). -->
+<div class="h-entry">
+  <data class="p-kicker" value="{{ cardInfo.kicker }}"></data>
+  <data class="p-name" value="{{ cardInfo.name }}"></data>
+  {% if cardInfo.accent %}<data class="p-accent" value="{{ cardInfo.accent }}"></data>{% endif %}
+  {% if cardInfo.summary %}<data class="p-summary" value="{{ cardInfo.summary }}"></data>{% endif %}
+  <data class="u-featured" value="{{ cardInfo.photo }}"></data>
+  {% for fact in cardInfo.facts %}<data class="p-fact" value="{{ fact }}"></data>{% endfor %}
+</div>
+{% endif %}
 </main>
 
 <!-- ========================== FOOTER ========================== -->
