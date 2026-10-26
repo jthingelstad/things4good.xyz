@@ -131,7 +131,7 @@ em.it { font-style: italic; }
 .nav {
   position: sticky; top: 0; z-index: 50;
   display: flex; align-items: center; justify-content: space-between;
-  gap: 24px; padding: 14px var(--gutter);
+  gap: 24px; padding: 14px max(var(--gutter), calc((100% - var(--maxw)) / 2 + var(--gutter)));
   background: rgba(251,243,229,.72); backdrop-filter: blur(12px);
   border-bottom: 1px solid transparent;
   transition: border-color .2s ease, background .2s ease, box-shadow .2s ease;
@@ -522,6 +522,8 @@ em.it { font-style: italic; }
 .footer .fcols { display: flex; gap: clamp(36px, 7vw, 90px); flex-wrap: wrap; }
 .footer-bottom { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-top: 44px; padding-top: 22px; border-top: 1px solid rgba(255,255,255,.12); font-size: .85rem; color: rgba(255,255,255,.5); }
 .footer-bottom .heart { color: var(--berry); }
+.footer-bottom a { color: inherit; text-underline-offset: 2px; }
+.footer-bottom a:hover { color: #fff; }
 
 /* ---------- reveal animation ---------- */
 .reveal { opacity: 0; transform: translateY(22px); transition: opacity .7s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1); }
