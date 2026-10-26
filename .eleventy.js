@@ -20,6 +20,13 @@ module.exports = function (eleventyConfig) {
       .slice(0, 10),
   );
 
+  // `?v=` for a passthrough asset: the first 10 hex of its SHA-256, so a
+  // browser holding last deploy's copy fetches the new one (GitHub Pages
+  // serves everything with a 10-minute max-age).
+  eleventyConfig.addFilter("assetVersion", (file) =>
+    createHash("sha256").update(require("node:fs").readFileSync(`src/${file}`)).digest("hex").slice(0, 10),
+  );
+
   // Copy the stylesheet straight through to the site root.
   eleventyConfig.addPassthroughCopy({ "src/styles.css": "styles.css" });
 

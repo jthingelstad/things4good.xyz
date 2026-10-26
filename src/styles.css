@@ -739,34 +739,31 @@ em.it { font-style: italic; }
 .icard .go:hover .arr { transform: translateX(3px); }
 .icard .arr { transition: transform .14s ease; }
 
-/* Light a candle: a Tinylytics kudos per nonprofit (the embed's ?kudos=custom).
-   The embed writes only the count into the button, so the candle is drawn here;
-   it adds .did_select (and disables the button) once this browser has lit it. */
+/* Light a candle: a Tinylytics kudos per nonprofit (the embed's ?kudos=custom),
+   a plain pill of a flame and a count. The embed replaces the button's text with
+   the count, so the flame is drawn here. Once this browser has lit it, the embed
+   adds .did_select and disables the button. */
 .icard[hidden] { display: none; }
-.icard .ikudos { margin-left: auto; display: inline-flex; align-items: center; gap: 8px; }
 .candle-kudos {
-  position: relative; display: inline-flex; align-items: center; gap: 6px; min-width: 40px; height: 40px;
-  padding: 0 12px 0 34px; border-radius: 999px; border: 1px solid var(--line); background: var(--paper);
-  font: 800 .82rem/1 var(--sans); color: var(--marigold-d); cursor: pointer;
-  transition: border-color .15s ease, background .15s ease;
+  margin-left: auto; align-self: center; display: inline-flex; align-items: center; gap: 7px;
+  height: 34px; padding: 0 14px 0 12px; border-radius: 999px;
+  border: 1px solid var(--line); background: var(--paper); color: var(--ink);
+  font: 800 .88rem/1 var(--sans); font-variant-numeric: tabular-nums; cursor: pointer;
+  transition: border-color .15s ease, background .15s ease, color .15s ease;
 }
-.candle-kudos::before, .candle-kudos::after {
-  content: ""; position: absolute; left: 10px; top: 5px; width: 20px; height: 25px;
-  background: no-repeat center / contain;
+.candle-kudos::before {
+  content: ""; width: 16px; height: 16px; flex: none; background: var(--ink-soft);
+  -webkit-mask: var(--flame) center / contain no-repeat; mask: var(--flame) center / contain no-repeat;
+  transition: background .15s ease;
 }
-.candle-kudos::before { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 30'%3E%3Cpath d='M12 9.5v4' stroke='%236A5A4A' stroke-width='1.6' stroke-linecap='round'/%3E%3Crect x='4.5' y='13.5' width='15' height='15' rx='3.5' fill='%23FBE3C2' stroke='%23C9701A' stroke-width='1.4'/%3E%3Cpath d='M4.5 19.5h15' stroke='%23C9701A' stroke-width='1.1'/%3E%3C/svg%3E"); }
-.candle-kudos::after { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 30'%3E%3Cpath d='M12 .8c3.4 3.3 4.6 5.6 4.6 7.6a4.6 4.6 0 0 1-9.2 0c0-2 1.2-4.3 4.6-7.6Z' fill='%23EE8B26'/%3E%3Cpath d='M12 4.6c1.6 1.7 2.2 2.9 2.2 3.9a2.2 2.2 0 0 1-4.4 0c0-1 .6-2.2 2.2-3.9Z' fill='%23FBE3C2'/%3E%3C/svg%3E"); opacity: 0; transform-origin: 50% 35%; transition: opacity .2s ease; }
-.candle-kudos:not([data-count]):not(.did_select), .candle-kudos[data-count="0"]:not(.did_select) { padding-right: 0; font-size: 0; }
+/* The flame is Lucide's "flame" icon (ISC): an outline until lit, filled after. */
+.candle-kudos { --flame: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z'/%3E%3C/svg%3E"); }
+.candle-kudos.did_select { --flame: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23000' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z'/%3E%3C/svg%3E"); }
 .candle-kudos:hover:not(:disabled), .candle-kudos:focus-visible { border-color: var(--marigold); background: var(--marigold-t); }
-.candle-kudos:hover:not(:disabled)::after { opacity: .35; }
-.candle-kudos.did_select { cursor: default; border-color: #EFCD9A; background: var(--marigold-t); }
-.candle-kudos.did_select::after { opacity: 1; animation: candle-flicker 2.4s ease-in-out infinite; }
-@keyframes candle-flicker { 0%, 100% { transform: scale(1) rotate(0); } 30% { transform: scale(1.06, .96) rotate(-2deg); } 60% { transform: scale(.97, 1.04) rotate(2deg); } }
-@media (prefers-reduced-motion: reduce) { .candle-kudos.did_select::after { animation: none; } }
-.kudos-label { white-space: nowrap; font-size: .74rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-soft); cursor: pointer; }
-.kudos-label .on, .candle-kudos.did_select + .kudos-label .off { display: none; }
-.candle-kudos.did_select + .kudos-label .on { display: inline; }
-.candle-kudos.did_select + .kudos-label { cursor: default; color: var(--marigold-d); }
+.candle-kudos:hover:not(:disabled)::before, .candle-kudos:focus-visible::before { background: var(--marigold); }
+.candle-kudos:focus-visible { outline: 2px solid var(--marigold); outline-offset: 2px; }
+.candle-kudos.did_select { cursor: default; border-color: #EFCD9A; background: var(--marigold-t); color: var(--marigold-d); }
+.candle-kudos.did_select::before { background: var(--marigold); }
 .est { font-style: italic; }
 .empty { text-align: center; padding: 60px 20px; color: var(--ink-soft); }
 .empty b { font-family: var(--serif); font-size: 1.4rem; color: var(--ink); display: block; margin-bottom: 6px; }
