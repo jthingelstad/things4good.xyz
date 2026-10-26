@@ -1,0 +1,28 @@
+---
+title: Not found — Things 4 Good
+description: That page isn't here. The Things 4 Good candle fundraiser is a click away.
+permalink: /404.html
+eleventyExcludeFromCollections: true
+---
+{% extends "base.njk" %}
+
+{# GitHub Pages serves /404.html for any path it doesn't have. Kept out of the sitemap and search. #}
+{% block head %}<meta name="robots" content="noindex" />{% endblock %}
+
+{% block content %}
+
+<!-- ============================ HEADER ============================ -->
+<section class="section page-head" id="head">
+  <div class="hero-glow" aria-hidden="true"></div>
+  <div class="wrap" style="text-align:center">
+    <p class="eyebrow" style="justify-content:center">Page not found</p>
+    <h1 style="font-family:var(--serif);font-weight:500;font-size:clamp(2.4rem,5.4vw,4rem);letter-spacing:-.02em;line-height:1.02">This wick didn&rsquo;t catch.</h1>
+    <p class="lead" style="margin:18px auto 0;text-align:center">The page you were after isn&rsquo;t here. The candles, the causes and the {{ site.saleDates | safe }} sale are all a click away.</p>
+    <div class="hero-cta" style="justify-content:center;margin-top:28px">
+      <a class="btn btn--primary" href="/">Things 4 Good home <span class="arr">&rarr;</span></a>
+      <a class="btn btn--ghost" href="/faq/">Read the FAQ</a>
+    </div>
+  </div>
+</section>
+
+{% endblock %}
