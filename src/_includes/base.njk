@@ -45,7 +45,7 @@
     <a href="/faq/"{% if page.url == "/faq/" %} aria-current="page"{% endif %}>FAQ</a>
   </nav>
   <span class="nav-date">{% block navDate %}{{ site.saleDates }}{% endblock %}</span>
-  {% block navCta %}<a class="btn btn--primary nav-cta" href="{{ site.updatesUrl }}" target="_blank" rel="noopener">Get updates</a>{% endblock %}
+  {% block navCta %}<a class="btn btn--primary nav-cta" href="{{ site.updatesUrl }}" data-tinylytics-event="updates.click" data-tinylytics-event-value="nav" target="_blank" rel="noopener">Get updates</a>{% endblock %}
 </header>
 
 <main id="top">
@@ -90,7 +90,7 @@
         <div class="fcol">
           <h4>Get in touch</h4>
           <a href="mailto:{{ site.email }}">{{ site.email }}</a>
-          <a href="{{ site.updatesUrl }}" target="_blank" rel="noopener">Get updates</a>
+          <a href="{{ site.updatesUrl }}" data-tinylytics-event="updates.click" data-tinylytics-event-value="footer" target="_blank" rel="noopener">Get updates</a>
         </div>
       </div>
     </div>

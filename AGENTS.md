@@ -43,6 +43,19 @@ Eleventy config lives in `.eleventy.js`. Key conventions it sets:
 
 `base.njk` also contains the only JavaScript on the site, inline near the bottom: an animated number counter (driven by `data-target` on `#counter`) and an `IntersectionObserver` that adds visibility to elements with the `.reveal` class on scroll. Tinylytics analytics loads only if `site.tinylyticsEmbed` is set.
 
+**Tinylytics kudos and events** (2026-10-25, Jamie's go). The embed URL in `site.json` carries `?events&auto&kudos=custom&kudos_effect=sparkle`.
+- *Kudos:* every card on `/impact/` has a "Light a candle" button. It is a Tinylytics kudos with `data-path="/impact/<slug>/"`, the path the designed-for per-org pages would take, so each nonprofit keeps one count across years.
+  - The embed writes only the count into the button. The candle is drawn by CSS (`.candle-kudos`), and the count stays hidden while it is 0.
+  - The embed wires kudos buttons once, when the page loads. That is why the Impact script draws every card once and filters by hiding and reordering them. Never go back to rebuilding the grid's HTML, or the candles go dead after the first filter change.
+- *Events:* auto mode counts outbound links (`link.outbound`, value = host). Hand-tagged events, via `data-tinylytics-event` + `data-tinylytics-event-value`:
+  - `updates.click`: every Get updates link. The value names the spot (`nav`, `footer`, `home-hero`, `home-when`, `home-lineup`, `home-subscribe`, `impact-close`, `faq-when`, `faq-ask`, `preorder-steps`, `preorder-close`).
+  - `nonprofit.visit`: the value is the org slug.
+  - `preorder.sheet`: the value is where the link sits.
+  - `chart.year`: the home and Numbers year links. The value is the year.
+  - `faq.open`: the value is a question key. A small script in `faq.njk` keeps the event on closed questions only, so closing one is not counted.
+  - A new subscribe link gets an `updates.click` tag with a new spot name. A tagged link is not also counted as `link.outbound`.
+  - Everything is anonymous and counted per click, never per person.
+
 ### Content is data-driven — events → supported nonprofits, everything else computed
 
 The model is **sale events, each allocating its exact total to a set of nonprofits**. There is one hand-edited dataset of events plus a small config file; every total, count, growth rate, chart height, grand total, and candle-math figure is *derived* in `metrics.js`. **Never hardcode a derived number in a template, and never duplicate event/org facts** — that's the mistake this layer was built to prevent (the home and stats charts had already drifted apart).

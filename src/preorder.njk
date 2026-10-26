@@ -58,9 +58,9 @@ card:
       </div>
       <div class="mn-act">
         {% if site.preorderSheet %}
-        <a class="btn btn--primary" href="{{ site.preorderSheet }}" target="_blank" rel="noopener">Open the preorder sheet <span class="arr">&rarr;</span></a>
+        <a class="btn btn--primary" href="{{ site.preorderSheet }}" data-tinylytics-event="preorder.sheet" data-tinylytics-event-value="preorder-steps" target="_blank" rel="noopener">Open the preorder sheet <span class="arr">&rarr;</span></a>
         {% else %}
-        <a class="btn btn--primary" href="{{ site.updatesUrl }}" target="_blank" rel="noopener">Get preorder updates <span class="arr">&rarr;</span></a>
+        <a class="btn btn--primary" href="{{ site.updatesUrl }}" data-tinylytics-event="updates.click" data-tinylytics-event-value="preorder-steps" target="_blank" rel="noopener">Get preorder updates <span class="arr">&rarr;</span></a>
         {% endif %}
         <span class="small">Or email <a href="mailto:{{ site.email }}" style="color:var(--marigold);font-weight:700">{{ site.email }}</a></span>
       </div>
@@ -121,7 +121,7 @@ card:
     <h2 class="t" style="max-width:20ch;margin-inline:auto">We&rsquo;re happy to help.</h2>
     <p class="lead" style="margin:18px auto 0;text-align:center">Get the fall announcement, read the common questions, or just reach out &mdash; a real Thing will answer.</p>
     <div class="sub-form" style="max-width:none;gap:12px">
-      <a class="btn btn--primary" href="{{ site.updatesUrl }}" target="_blank" rel="noopener">Get sale updates <span class="arr">&rarr;</span></a>
+      <a class="btn btn--primary" href="{{ site.updatesUrl }}" data-tinylytics-event="updates.click" data-tinylytics-event-value="preorder-close" target="_blank" rel="noopener">Get sale updates <span class="arr">&rarr;</span></a>
       <a class="btn btn--ghost" href="/faq/">Read the FAQ</a>
       <a class="btn btn--ghost" href="mailto:{{ site.email }}">Email us</a>
     </div>
