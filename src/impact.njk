@@ -232,10 +232,7 @@ card:
       ${why}
       <div class="imeta">
         <div class="iamt"><b>${fmt(o.amount)}</b><span>raised</span></div>
-        <div class="ikudos">
-          <button type="button" class="tinylytics_kudos candle-kudos" data-path="/impact/${o.slug}/" aria-label="Light a candle for ${escapeHTML(o.name)}"></button>
-          <span class="kudos-label" aria-hidden="true"><span class="off">Light a candle</span><span class="on">Candle lit</span></span>
-        </div>
+        <button type="button" class="tinylytics_kudos candle-kudos" data-path="/impact/${o.slug}/" title="Light a candle for ${escapeHTML(o.name)}" aria-label="Light a candle for ${escapeHTML(o.name)}">0</button>
       </div>
       <a class="go" href="${o.url}" target="_blank" rel="noopener" data-tinylytics-event="nonprofit.visit" data-tinylytics-event-value="${o.slug}">Visit <span class="arr">&rarr;</span></a>
     </article>`;
@@ -247,12 +244,6 @@ card:
     return [o, tpl.content.firstElementChild];
   }));
   grid.append(...CARDS.values());
-
-  // The candle's words light it too.
-  grid.addEventListener('click', (e) => {
-    const label = e.target.closest('.kudos-label');
-    if (label) label.parentElement.querySelector('.candle-kudos').click();
-  });
 
   function apply() {
     let list = ORGS.filter(o => {

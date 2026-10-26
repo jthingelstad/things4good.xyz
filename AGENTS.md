@@ -31,6 +31,7 @@ There is no linter or test suite. Verification is visual — run `npm start` and
 Eleventy config lives in `.eleventy.js`. Key conventions it sets:
 - Input is `src/`, output is `_site/` (git-ignored). Includes in `src/_includes`, data in `src/_data`.
 - Both HTML and Markdown render through **Nunjucks** (`htmlTemplateEngine` / `markdownTemplateEngine` are `njk`).
+- `base.njk` links `/styles.css?v=<hash>` (the `assetVersion` filter), because GitHub Pages serves it with a 10-minute max-age. Without the hash, a fresh page arrived with last deploy's stylesheet and the candles drew as bare grey buttons (10-25).
 - `src/styles.css`, `src/favicon.svg`, `src/CNAME`, and anything under `src/images/` are passthrough-copied to the site root unchanged. `src/images/README.md` is explicitly ignored from the build.
 
 ### Templating
@@ -43,9 +44,10 @@ Eleventy config lives in `.eleventy.js`. Key conventions it sets:
 
 `base.njk` also contains the only JavaScript on the site, inline near the bottom: an animated number counter (driven by `data-target` on `#counter`) and an `IntersectionObserver` that adds visibility to elements with the `.reveal` class on scroll. Tinylytics analytics loads only if `site.tinylyticsEmbed` is set.
 
-**Tinylytics kudos and events** (2026-10-25, Jamie's go). The embed URL in `site.json` carries `?events&auto&kudos=custom&kudos_effect=sparkle`.
-- *Kudos:* every card on `/impact/` has a "Light a candle" button. It is a Tinylytics kudos with `data-path="/impact/<slug>/"`, the path the designed-for per-org pages would take, so each nonprofit keeps one count across years.
-  - The embed writes only the count into the button. The candle is drawn by CSS (`.candle-kudos`), and the count stays hidden while it is 0.
+**Tinylytics kudos and events** (2026-10-25, Jamie's go). The embed URL in `site.json` carries `?events&auto&kudos=custom`.
+- *Kudos:* every card on `/impact/` has a candle button, a plain pill of a flame and a count (Jamie, 10-25: "keep the design to a simple button with a counter"). Its title and aria-label say "Light a candle for <name>". It is a Tinylytics kudos with `data-path="/impact/<slug>/"`, the path the designed-for per-org pages would take, so each nonprofit keeps one count across years.
+  - The embed writes only the count into the button, so the flame is drawn by CSS (`.candle-kudos::before`, Lucide's flame as a mask): an outline until this browser lights it (`.did_select`), then filled.
+  - The button starts with the text `0`. The count endpoint answers only for paths that already have a kudo, and the embed leaves the button's text alone otherwise.
   - The embed wires kudos buttons once, when the page loads. That is why the Impact script draws every card once and filters by hiding and reordering them. Never go back to rebuilding the grid's HTML, or the candles go dead after the first filter change.
 - *Events:* auto mode counts outbound links (`link.outbound`, value = host). Hand-tagged events, via `data-tinylytics-event` + `data-tinylytics-event-value`:
   - `updates.click`: every Get updates link. The value names the spot (`nav`, `footer`, `home-hero`, `home-when`, `home-lineup`, `home-subscribe`, `impact-close`, `faq-when`, `faq-ask`, `preorder-steps`, `preorder-close`).
