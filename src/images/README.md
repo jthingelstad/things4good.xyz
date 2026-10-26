@@ -3,6 +3,13 @@
 Drop image files in this folder. Eleventy copies it straight through, so a file
 saved here as `candle-hero.jpg` is served at `/images/candle-hero.jpg`.
 
+## Share-card photos
+
+`cards/` holds one photo per page card, already cut to 1200 x 562 (the photo
+area above the card's band), served from `/images/cards/` and fetched only by
+cards.thingelstad.com. A page names its photo in its `card` front matter
+(AGENTS.md, "Share cards").
+
 ## Photos the site is waiting for
 
 The site currently uses labeled placeholders (the striped `.ph` boxes). Each one
