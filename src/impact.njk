@@ -127,7 +127,7 @@ card:
         <p>The latest impact stories live on the blog, and the 2026 sale details go first to Candle Fundraiser subscribers.</p>
       </div>
       <div class="impact-close-actions">
-        <a class="btn btn--primary" href="{{ site.updatesUrl }}" target="_blank" rel="noopener">Get sale updates <span class="arr">&rarr;</span></a>
+        <a class="btn btn--primary" href="{{ site.updatesUrl }}" data-tinylytics-event="updates.click" data-tinylytics-event-value="impact-close" target="_blank" rel="noopener">Get sale updates <span class="arr">&rarr;</span></a>
         <a class="btn btn--ghost" href="{{ site.blogUrl }}" target="_blank" rel="noopener">Read the blog</a>
       </div>
     </div>
@@ -194,6 +194,66 @@ card:
     filterStoryEl.textContent = text;
   }
 
+  // Each card is drawn once and then only hidden, shown and reordered.
+  // Tinylytics wires up its kudos buttons when the page loads, so a card
+  // drawn after that would carry a candle that does nothing.
+  function cardHTML(o) {
+    const collective = o.who === "Everyone";
+    const whoLabel = o.who;
+    const glyph = o.logo
+      ? `<div class="glyph haslogo"><img src="/images/logos/${o.logo}" alt="${o.name} logo" /></div>`
+      : "";
+    const eventTag = o.eventKind === "special-event"
+      ? `<span class="ebadge">${o.eventName}</span>`
+      : "";
+    const whyLabel = collective ? "Why we supported it" : `Why ${o.who} picked it`;
+    const reason = o.reason || "";
+    const safeReason = escapeHTML(reason);
+    const safeExcerpt = escapeHTML(excerpt(reason));
+    const why = reason
+      ? `<div class="why-note">
+          <div class="why-k">${whyLabel}</div>
+          <blockquote>&ldquo;${safeExcerpt}&rdquo;<cite>&mdash; ${whoLabel}</cite></blockquote>
+          ${reason.length > 230 ? `<details class="why-full"><summary>Read full note</summary><blockquote>&ldquo;${safeReason}&rdquo;</blockquote></details>` : ""}
+        </div>`
+      : "";
+    return `
+    <article class="icard">
+      <div class="itop">
+        ${glyph}
+        <div class="cardtags">
+          <span class="who-pill" data-who="${o.who}">${whoLabel}</span>
+          <span class="ybadge">${o.year}</span>
+          ${eventTag}
+        </div>
+      </div>
+      <a class="iname" href="${o.url}" target="_blank" rel="noopener" data-tinylytics-event="nonprofit.visit" data-tinylytics-event-value="${o.slug}">${o.name}</a>
+      <p class="iblurb">${o.blurb}</p>
+      ${why}
+      <div class="imeta">
+        <div class="iamt"><b>${fmt(o.amount)}</b><span>raised</span></div>
+        <div class="ikudos">
+          <button type="button" class="tinylytics_kudos candle-kudos" data-path="/impact/${o.slug}/" aria-label="Light a candle for ${escapeHTML(o.name)}"></button>
+          <span class="kudos-label" aria-hidden="true"><span class="off">Light a candle</span><span class="on">Candle lit</span></span>
+        </div>
+      </div>
+      <a class="go" href="${o.url}" target="_blank" rel="noopener" data-tinylytics-event="nonprofit.visit" data-tinylytics-event-value="${o.slug}">Visit <span class="arr">&rarr;</span></a>
+    </article>`;
+  }
+
+  const CARDS = new Map(ORGS.map(o => {
+    const tpl = document.createElement('template');
+    tpl.innerHTML = cardHTML(o).trim();
+    return [o, tpl.content.firstElementChild];
+  }));
+  grid.append(...CARDS.values());
+
+  // The candle's words light it too.
+  grid.addEventListener('click', (e) => {
+    const label = e.target.closest('.kudos-label');
+    if (label) label.parentElement.querySelector('.candle-kudos').click();
+  });
+
   function apply() {
     let list = ORGS.filter(o => {
       if (state.who !== "all" && o.who !== state.who) return false;
@@ -210,45 +270,9 @@ card:
       return 0;
     });
 
-    grid.innerHTML = list.map(o => {
-      const collective = o.who === "Everyone";
-      const whoLabel = o.who;
-      const glyph = o.logo
-        ? `<div class="glyph haslogo"><img src="/images/logos/${o.logo}" alt="${o.name} logo" /></div>`
-        : "";
-      const eventTag = o.eventKind === "special-event"
-        ? `<span class="ebadge">${o.eventName}</span>`
-        : "";
-      const whyLabel = collective ? "Why we supported it" : `Why ${o.who} picked it`;
-      const reason = o.reason || "";
-      const safeReason = escapeHTML(reason);
-      const safeExcerpt = escapeHTML(excerpt(reason));
-      const why = reason
-        ? `<div class="why-note">
-            <div class="why-k">${whyLabel}</div>
-            <blockquote>&ldquo;${safeExcerpt}&rdquo;<cite>&mdash; ${whoLabel}</cite></blockquote>
-            ${reason.length > 230 ? `<details class="why-full"><summary>Read full note</summary><blockquote>&ldquo;${safeReason}&rdquo;</blockquote></details>` : ""}
-          </div>`
-        : "";
-      return `
-      <article class="icard">
-        <div class="itop">
-          ${glyph}
-          <div class="cardtags">
-            <span class="who-pill" data-who="${o.who}">${whoLabel}</span>
-            <span class="ybadge">${o.year}</span>
-            ${eventTag}
-          </div>
-        </div>
-        <a class="iname" href="${o.url}" target="_blank" rel="noopener">${o.name}</a>
-        <p class="iblurb">${o.blurb}</p>
-        ${why}
-        <div class="imeta">
-          <div class="iamt"><b>${fmt(o.amount)}</b><span>raised</span></div>
-        </div>
-        <a class="go" href="${o.url}" target="_blank" rel="noopener">Visit <span class="arr">&rarr;</span></a>
-      </article>`;
-    }).join('');
+    grid.append(...list.map(o => CARDS.get(o)));
+    const shown = new Set(list);
+    CARDS.forEach((card, o) => { card.hidden = !shown.has(o); });
 
     const n = list.length;
     const raised = list.reduce((s, o) => s + o.amount, 0);

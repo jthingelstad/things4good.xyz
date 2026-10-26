@@ -62,7 +62,7 @@ card:
 
     <div class="year-grid reveal">
       {% for y in ops.years %}
-      <a class="year-card" href="/impact/?event=candle-sale-{{ y.year }}">
+      <a class="year-card" href="/impact/?event=candle-sale-{{ y.year }}" data-tinylytics-event="chart.year" data-tinylytics-event-value="{{ y.year }}">
         <div class="year-card-top">
           <span class="year-num">{{ y.year }}</span>
           <span class="year-chip">{{ y.growthDisplay }}</span>
