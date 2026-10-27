@@ -1,0 +1,22 @@
+{
+  "account": "999153317627",
+  "region": "us-east-1",
+  "domain": "things4good.xyz",
+  "stacks": {
+    "certificate": "things4good-certificate",
+    "site": "things4good-site",
+    "delivery": "things4good-delivery"
+  },
+  "stackTags": {
+    "Application": "Thingelstad",
+    "Project": "things4good",
+    "Repository": "jthingelstad/things4good.xyz",
+    "ManagedBy": "cloudformation",
+    "Environment": "production"
+  },
+  "siteBucket": "things4good-site-sitebucket-kgapd5zlxvuw",
+  "distributionId": "E2JXK2XX23KJDB",
+  "cloudfrontDomain": "d2eanpst6detk1.cloudfront.net",
+  "deploymentRoleArn": "arn:aws:iam::999153317627:role/things4good-delivery-DeploymentRole-J1Ov3XbFJjSu",
+  "certificateArn": "arn:aws:acm:us-east-1:999153317627:certificate/1b07ecfc-ae87-438b-b7ae-623602756271"
+}

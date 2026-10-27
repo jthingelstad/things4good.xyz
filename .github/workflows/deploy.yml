@@ -1,16 +1,17 @@
-name: Build and deploy to GitHub Pages
+name: Build and deploy (GitHub Pages, S3 and CloudFront)
 
 on:
   push:
     branches: [main]
+  pull_request:
   workflow_dispatch:
 
 permissions:
   contents: read
 
-# Allow one concurrent deployment, cancel in-progress runs.
+# One run per branch at a time, cancelling an older one. A pull request runs the tests and the build only.
 concurrency:
-  group: pages
+  group: pages-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -25,13 +26,16 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm audit --audit-level=high
+      - run: npm test
       - run: npm run build
+      - run: npm run test:e2e
       - uses: actions/upload-pages-artifact@v5
         with:
           path: _site
 
   deploy:
     needs: build
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -43,3 +47,43 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v5
+
+  # S3 and CloudFront (infra/, scripts/deploy-aws.mjs), beside Pages until things4good.xyz's DNS moves to
+  # the distribution. A separate job, so a failure here never holds up Pages; it publishes the same
+  # tested build the Pages job does.
+  deploy-aws:
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    concurrency:
+      group: aws
+      cancel-in-progress: false
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - uses: actions/download-artifact@v7
+        with:
+          name: github-pages
+          path: .pages
+
+      - name: Unpack the build
+        run: mkdir _site && tar -xf .pages/artifact.tar -C _site
+
+      - uses: aws-actions/configure-aws-credentials@v5
+        with:
+          role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: us-east-1
+
+      - name: Publish to S3 and CloudFront
+        run: npm run deploy:aws
