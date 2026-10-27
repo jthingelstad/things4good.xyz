@@ -21,8 +21,8 @@ module.exports = function (eleventyConfig) {
   );
 
   // `?v=` for a passthrough asset: the first 10 hex of its SHA-256, so a
-  // browser holding last deploy's copy fetches the new one (GitHub Pages
-  // serves everything with a 10-minute max-age).
+  // browser holding last deploy's copy fetches the new one (browsers keep
+  // files ten minutes on GitHub Pages, five on CloudFront).
   eleventyConfig.addFilter("assetVersion", (file) =>
     createHash("sha256").update(require("node:fs").readFileSync(`src/${file}`)).digest("hex").slice(0, 10),
   );
@@ -30,7 +30,7 @@ module.exports = function (eleventyConfig) {
   // Copy the stylesheet straight through to the site root.
   eleventyConfig.addPassthroughCopy({ "src/styles.css": "styles.css" });
 
-  // Copy the custom-domain file (GitHub Pages) if present.
+  // Copy the custom-domain file (GitHub Pages) if present. The S3 deploy skips it.
   eleventyConfig.addPassthroughCopy("src/CNAME");
 
   // Copy the browser favicon to the site root.
