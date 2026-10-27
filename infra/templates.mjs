@@ -115,7 +115,7 @@ export const site = template(
         FunctionCode: viewerRequestCode
       }
     },
-    // GitHub Pages, the host until the DNS cutover, answered every file with Access-Control-Allow-Origin: *,
+    // GitHub Pages, the host until 2026-10-27, answered every file with Access-Control-Allow-Origin: *,
     // so this keeps that for llms.txt and anything else a tool may fetch from another site, and adds the
     // security headers.
     Headers: {

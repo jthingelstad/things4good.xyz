@@ -4,8 +4,7 @@
 // query string as the viewer sent it. S3 behind Origin Access Control serves no directory indexes, so
 // "/impact/" is rewritten to its index.html and "/impact" is sent to the slash form. A path whose last
 // segment has a dot is a file and passes through, and so do the extensionless files the deploy publishes
-// (FILES, which a test keeps equal to the publish plan; there are none: CNAME is for Pages and never
-// published).
+// (FILES, which a test keeps equal to the publish plan; there are none).
 export const APEX = 'things4good.xyz';
 export const FILES = [];
 
