@@ -4,7 +4,7 @@ This file provides guidance to coding agents (Claude Code, Codex) when working w
 
 ## What this is
 
-Marketing site for **Things 4 Good** — the Thingelstad family's annual handmade-candle fundraiser. It is a static [Eleventy](https://www.11ty.dev/) v3 build on `things4good.xyz`, moving from GitHub Pages to S3 and CloudFront (see "Deploy"; both publish every push until the DNS cutover). There is no backend, no client framework, and no build step beyond Eleventy itself.
+Marketing site for **Things 4 Good** — the Thingelstad family's annual handmade-candle fundraiser. It is a static [Eleventy](https://www.11ty.dev/) v3 build on `things4good.xyz`, hosted on S3 and CloudFront (see "Deploy"). There is no backend, no client framework, and no build step beyond Eleventy itself.
 
 Pages, each a `src/*.njk` that extends `base.njk` (Eleventy emits `<name>/index.html`, served at `/<name>/`):
 - `index.njk` — long-scroll home page (the only one at `/`)
@@ -13,7 +13,7 @@ Pages, each a `src/*.njk` that extends `base.njk` (Eleventy emits `<name>/index.
 - `stats.njk` — cumulative "by the numbers" page
 - `preorder.njk` — preorder steps + payment methods
 - `faq.njk` — standalone FAQ
-- `404.njk` — `/404.html`, which CloudFront (and GitHub Pages, until the cutover) serves with a 404 for any path the site lacks; `noindex` and out of the sitemap.
+- `404.njk` — `/404.html`, which CloudFront serves with a 404 for any path the site lacks; `noindex` and out of the sitemap.
 - `llms.txt.njk` — `/llms.txt`, the site for agents and LLMs: the fundraiser, the pages, every sale and every nonprofit, all from `metrics` (plain text, so values go out with `| safe`). `base.njk` links it from every page; it stays out of `collections.all` and the sitemap. No feed, by Jamie's call.
 
 ## Commands
@@ -36,8 +36,8 @@ There is no linter, and nothing tests the pages themselves. Verification is visu
 Eleventy config lives in `.eleventy.js`. Key conventions it sets:
 - Input is `src/`, output is `_site/` (git-ignored). Includes in `src/_includes`, data in `src/_data`.
 - Both HTML and Markdown render through **Nunjucks** (`htmlTemplateEngine` / `markdownTemplateEngine` are `njk`).
-- `base.njk` links `/styles.css?v=<hash>` (the `assetVersion` filter), because browsers keep the stylesheet a while (ten minutes on GitHub Pages, five on CloudFront, `scripts/publish-plan.mjs`). Without the hash, a fresh page arrived with last deploy's stylesheet and the candles drew as bare grey buttons (10-25). CloudFront's cache key ignores the query, so the hash only steers browsers; each deploy clears CloudFront.
-- `src/styles.css`, `src/favicon.svg`, `src/CNAME`, and anything under `src/images/` are passthrough-copied to the site root unchanged (`CNAME` is for GitHub Pages; the S3 deploy leaves it out). `src/images/README.md` is explicitly ignored from the build.
+- `base.njk` links `/styles.css?v=<hash>` (the `assetVersion` filter), because browsers keep the stylesheet a while (five minutes, `scripts/publish-plan.mjs`; GitHub Pages, the host until 2026-10-27, gave it ten). Without the hash, a fresh page arrived with last deploy's stylesheet and the candles drew as bare grey buttons (10-25). CloudFront's cache key ignores the query, so the hash only steers browsers; each deploy clears CloudFront.
+- `src/styles.css`, `src/favicon.svg`, `src/robots.txt`, and anything under `src/images/` are passthrough-copied to the site root unchanged. `src/images/README.md` is explicitly ignored from the build.
 
 ### Templating
 
@@ -81,16 +81,16 @@ A single hand-written `src/styles.css` (~480 lines), no preprocessor or utility 
 
 ## Deploy
 
-`.github/workflows/deploy.yml` tests and builds with Node 24 on every pull request and push. A push to `main` publishes the same build twice, to GitHub Pages (pinned to the domain by `src/CNAME`) and, in the `deploy-aws` job, to S3 and CloudFront. There is no staging environment — `main` is production.
+`.github/workflows/deploy.yml` tests and builds with Node 24 on every pull request and push. A push to `main` publishes the tested build to S3 and CloudFront in the `deploy-aws` job. There is no staging environment — `main` is production.
 
 ### S3 and CloudFront
 
-The site is moving from GitHub Pages to S3 and CloudFront (Jamie, 2026-10-27: "Approved: move things4good.xyz, poapkings.com and rwbookclub.com from GitHub Pages to S3 + CloudFront"), copying the shape escape.thingelstad.com took on 2026-10-26. Pages keeps deploying until Jamie moves the DNS; retiring it (the Pages job, `src/CNAME`, the Pages setting) is a follow-up after the cutover.
+The site moved from GitHub Pages to S3 and CloudFront on 2026-10-27 (Jamie: "Approved: move things4good.xyz, poapkings.com and rwbookclub.com from GitHub Pages to S3 + CloudFront"), copying the shape escape.thingelstad.com took on 2026-10-26. `things4good.xyz` and `www` point at the distribution; GitHub Pages, `src/CNAME` and the Pages setting are gone.
 
 Three stacks, generated by `infra/templates.mjs` into `infra/generated/` (`npm run infra:generate`; a unit test fails when the committed JSON is stale) and deployed **from this Mac as the cloud-engineer identity** with `npm run infra -- certificate|site|delivery` (`--plan` prints the change set and stops). `infra/deployment.json` records their names, tags (`Project=things4good`) and outputs.
 
-- `things4good-certificate`: one ACM certificate for `things4good.xyz` and `www.things4good.xyz`, validated by two CNAMEs at Namecheap (`npm run infra -- certificate` prints both, and again on a rerun). DNS is Jamie's to edit. Keep both records: renewal needs them. ACM checks CAA along each name's CNAME chain, and GitHub's CAA refuses Amazon, so `www` cannot validate while it is a CNAME to `jthingelstad.github.io`; the apex (A records, no CAA) can.
-- `things4good-site`: a private, versioned bucket (old versions kept 90 days) behind CloudFront with origin access control; AWS's CachingOptimized policy (no query string in the key, so `?ref=` and `?v=` share one copy); security headers plus `Access-Control-Allow-Origin: *` as Pages sent; 403/404 serve `/404.html`; access logs to CloudWatch Logs (`/things4good/web-access`, 14 days, JSON, no viewer IP and no query string); a 5xx alarm to `weekly-thing-librarian-alarms`. The aliases (apex and www) and the certificate attach only once the certificate is ISSUED (rerun `npm run infra -- site`).
+- `things4good-certificate`: one ACM certificate for `things4good.xyz` and `www.things4good.xyz`, validated by two CNAMEs at Namecheap (`npm run infra -- certificate` prints both, and again on a rerun). DNS is Jamie's to edit. Keep both records: renewal needs them. ACM checks CAA along each name's CNAME chain, and GitHub's CAA refuses Amazon, so a name cannot validate while it is a CNAME to `jthingelstad.github.io` (for the first issue, Jamie gave `www` A records during validation).
+- `things4good-site`: a private, versioned bucket (old versions kept 90 days) behind CloudFront with origin access control; AWS's CachingOptimized policy (no query string in the key, so `?ref=` and `?v=` share one copy); security headers plus `Access-Control-Allow-Origin: *` as GitHub Pages sent; 403/404 serve `/404.html`; access logs to CloudWatch Logs (`/things4good/web-access`, 14 days, JSON, no viewer IP and no query string); a 5xx alarm to `weekly-thing-librarian-alarms`. The aliases (apex and www) and the certificate attach only when the certificate is ISSUED (`npm run infra -- site` checks).
 - `things4good-delivery`: the role GitHub Actions assumes (`vars.AWS_DEPLOY_ROLE_ARN`), `main` only. It can publish into the bucket and clear the cache; it cannot change the stacks.
 
 The viewer-request function (`infra/viewer-request.mjs`) sends any `www.` host to the apex with one 301 that keeps the path (in its slash form) and the query string, sends a bare path to its slash form, and serves `index.html` for directory URLs. There is no redirect map.

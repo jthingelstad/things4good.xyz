@@ -1,12 +1,9 @@
 // What a deploy to S3 publishes, and how each file is served: its content type and Cache-Control.
-// This is the control GitHub Pages, the host until the DNS cutover, never gave the site (it typed files by
+// This is the control GitHub Pages, the host until 2026-10-27, never gave the site (it typed files by
 // extension and cached everything ten minutes). An e2e test (tests/e2e/) fails when the build writes a
 // file this table does not type, so a new kind of file is a decision, not octet-stream by default.
 import { readdirSync, readFileSync } from 'node:fs';
 import { extname, join, relative, sep } from 'node:path';
-
-// CNAME pins the custom domain for GitHub Pages; CloudFront has no use for it.
-export const NOT_PUBLISHED = new Set(['CNAME']);
 
 const TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -51,7 +48,7 @@ function walk(root, dir = root) {
 export function publishPlan(root) {
   const rank = (key) => (key === 'index.html' ? 2 : key.endsWith('.html') ? 1 : 0);
   return walk(root)
-    .filter((key) => !NOT_PUBLISHED.has(key) && !key.split('/').pop().startsWith('.'))
+    .filter((key) => !key.split('/').pop().startsWith('.'))
     .sort((a, b) => rank(a) - rank(b) || a.localeCompare(b))
     .map((key) => ({ key, path: join(root, key), contentType: contentTypeFor(key), cacheControl: cacheControlFor(key) }));
 }

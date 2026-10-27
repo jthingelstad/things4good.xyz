@@ -1,4 +1,8 @@
-name: Build and deploy (GitHub Pages, S3 and CloudFront)
+name: Build and deploy to S3 and CloudFront
+
+# Tests and builds the site on every pull request and push; a push to main publishes the build to S3
+# behind CloudFront (infra/, scripts/deploy-aws.mjs). GitHub Pages served the site until the DNS moved
+# to CloudFront on 2026-10-27.
 
 on:
   push:
@@ -9,10 +13,10 @@ on:
 permissions:
   contents: read
 
-# One run per branch at a time, cancelling an older one. A pull request runs the tests and the build only.
+# One run per branch at a time, cancelling an older one. A deploy in flight is never cancelled.
 concurrency:
-  group: pages-${{ github.ref }}
-  cancel-in-progress: true
+  group: build-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
   build:
@@ -29,28 +33,15 @@ jobs:
       - run: npm test
       - run: npm run build
       - run: npm run test:e2e
-      - uses: actions/upload-pages-artifact@v5
+      - uses: actions/upload-artifact@v7
         with:
+          name: site
           path: _site
+          include-hidden-files: true
+          retention-days: 7
 
-  deploy:
-    needs: build
-    if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    permissions:
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v5
-
-  # S3 and CloudFront (infra/, scripts/deploy-aws.mjs), beside Pages until things4good.xyz's DNS moves to
-  # the distribution. A separate job, so a failure here never holds up Pages; it publishes the same
-  # tested build the Pages job does.
+  # Publishes the tested build: the files that changed, the cache cleared, then the result read back
+  # through the distribution.
   deploy-aws:
     needs: build
     if: github.ref == 'refs/heads/main'
@@ -74,11 +65,8 @@ jobs:
 
       - uses: actions/download-artifact@v7
         with:
-          name: github-pages
-          path: .pages
-
-      - name: Unpack the build
-        run: mkdir _site && tar -xf .pages/artifact.tar -C _site
+          name: site
+          path: _site
 
       - uses: aws-actions/configure-aws-credentials@v5
         with:

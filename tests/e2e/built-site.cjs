@@ -10,7 +10,6 @@ test('the function knows every extensionless file, and every file is typed', asy
   const plan = publishPlan('_site');
   const keys = plan.map((file) => file.key);
   assert.ok(keys.includes('index.html') && keys.includes('404.html'));
-  assert.ok(!keys.includes('CNAME'));
   const bare = keys.filter((key) => !key.split('/').pop().includes('.')).map((key) => '/' + key);
   assert.deepEqual(bare.sort(), [...FILES].sort());
   const untyped = plan.filter((file) => file.contentType === 'application/octet-stream');
