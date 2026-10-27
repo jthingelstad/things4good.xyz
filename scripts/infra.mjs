@@ -69,39 +69,45 @@ const found = await describe(StackName);
 if (found?.StackStatus === 'ROLLBACK_COMPLETE')
   throw new Error(`${StackName} is ROLLBACK_COMPLETE from a failed first create. Delete the stack, then rerun.`);
 const existing = found?.StackStatus === 'REVIEW_IN_PROGRESS' ? undefined : found;
-const ChangeSetName = `cloud-engineer-${Date.now()}`;
-await cfn.send(
-  new CreateChangeSetCommand({
-    StackName,
-    ChangeSetName,
-    ChangeSetType: existing ? 'UPDATE' : 'CREATE',
-    TemplateBody: readFileSync(`infra/generated/${name}.json`, 'utf8'),
-    Parameters: parameters,
-    Capabilities: name === 'delivery' ? ['CAPABILITY_IAM'] : [],
-    Tags: Object.entries(config.stackTags).map(([Key, Value]) => ({ Key, Value }))
-  })
-);
-try {
-  await waitUntilChangeSetCreateComplete({ client: cfn, maxWaitTime: 300 }, { StackName, ChangeSetName });
-} catch {
-  const failed = await cfn.send(new DescribeChangeSetCommand({ StackName, ChangeSetName }));
-  if (/didn't contain changes|No updates/.test(failed.StatusReason ?? '')) {
-    await cfn.send(new DeleteChangeSetCommand({ StackName, ChangeSetName }));
-    console.log(`${StackName}: no changes`);
-  } else throw new Error(`${StackName}: ${failed.StatusReason}`);
-}
-const set = await cfn.send(new DescribeChangeSetCommand({ StackName, ChangeSetName })).catch(() => null);
-if (set) {
-  for (const { ResourceChange: c } of set.Changes ?? [])
-    console.log(`${c.Action} ${c.LogicalResourceId} (${c.ResourceType})${c.Replacement === 'True' ? ' REPLACEMENT' : ''}`);
-  if (planOnly) {
-    await cfn.send(new DeleteChangeSetCommand({ StackName, ChangeSetName }));
-    process.exit(0);
+// A certificate stack stays CREATE_IN_PROGRESS until its DNS validation records are in place, and no
+// change set can be made against it then; a rerun only reads the records back.
+const pending = name === 'certificate' && found?.StackStatus === 'CREATE_IN_PROGRESS';
+if (pending) console.log(`${StackName} is waiting on DNS validation; reading its records.`);
+if (!pending) {
+  const ChangeSetName = `cloud-engineer-${Date.now()}`;
+  await cfn.send(
+    new CreateChangeSetCommand({
+      StackName,
+      ChangeSetName,
+      ChangeSetType: existing ? 'UPDATE' : 'CREATE',
+      TemplateBody: readFileSync(`infra/generated/${name}.json`, 'utf8'),
+      Parameters: parameters,
+      Capabilities: name === 'delivery' ? ['CAPABILITY_IAM'] : [],
+      Tags: Object.entries(config.stackTags).map(([Key, Value]) => ({ Key, Value }))
+    })
+  );
+  try {
+    await waitUntilChangeSetCreateComplete({ client: cfn, maxWaitTime: 300 }, { StackName, ChangeSetName });
+  } catch {
+    const failed = await cfn.send(new DescribeChangeSetCommand({ StackName, ChangeSetName }));
+    if (/didn't contain changes|No updates/.test(failed.StatusReason ?? '')) {
+      await cfn.send(new DeleteChangeSetCommand({ StackName, ChangeSetName }));
+      console.log(`${StackName}: no changes`);
+    } else throw new Error(`${StackName}: ${failed.StatusReason}`);
   }
-  await cfn.send(new ExecuteChangeSetCommand({ StackName, ChangeSetName }));
-  // A new certificate waits on its validation record, so its stack is not waited on.
-  if (name !== 'certificate')
-    await (existing ? waitUntilStackUpdateComplete : waitUntilStackCreateComplete)({ client: cfn, maxWaitTime: 1800 }, { StackName });
+  const set = await cfn.send(new DescribeChangeSetCommand({ StackName, ChangeSetName })).catch(() => null);
+  if (set) {
+    for (const { ResourceChange: c } of set.Changes ?? [])
+      console.log(`${c.Action} ${c.LogicalResourceId} (${c.ResourceType})${c.Replacement === 'True' ? ' REPLACEMENT' : ''}`);
+    if (planOnly) {
+      await cfn.send(new DeleteChangeSetCommand({ StackName, ChangeSetName }));
+      process.exit(0);
+    }
+    await cfn.send(new ExecuteChangeSetCommand({ StackName, ChangeSetName }));
+    // A new certificate waits on its validation record, so its stack is not waited on.
+    if (name !== 'certificate')
+      await (existing ? waitUntilStackUpdateComplete : waitUntilStackCreateComplete)({ client: cfn, maxWaitTime: 1800 }, { StackName });
+  }
 }
 
 if (name === 'certificate') {
