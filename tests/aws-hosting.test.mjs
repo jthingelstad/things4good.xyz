@@ -69,7 +69,7 @@ test("access logs carry no viewer IP and no query string", () => {
   const fields = site.Resources.AccessLogDelivery.Properties.RecordFields;
   assert.ok(!fields.includes("c-ip") && !fields.includes("cs-uri-query"));
   assert.equal(site.Resources.AccessLogGroup.Properties.LogGroupName, "/things4good/web-access");
-  assert.equal(site.Resources.AccessLogGroup.Properties.RetentionInDays, 14);
+  assert.equal(site.Resources.AccessLogGroup.Properties.RetentionInDays, 731);
 });
 
 test("the committed templates are what infra/templates.mjs writes", () => {

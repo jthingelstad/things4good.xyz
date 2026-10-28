@@ -181,11 +181,11 @@ export const site = template(
       }
     },
     // Access logs, the same shape as the other sites' (/weekly/web-access, /thingelstad-xyz/web-access):
-    // CloudFront's vended delivery into CloudWatch Logs as JSON, kept 14 days, with no viewer IP and no
+    // CloudFront's vended delivery into CloudWatch Logs as JSON, kept 24 months (731 days), with no viewer IP and no
     // query string.
     AccessLogGroup: {
       Type: 'AWS::Logs::LogGroup',
-      Properties: { LogGroupName: '/things4good/web-access', RetentionInDays: 14 }
+      Properties: { LogGroupName: '/things4good/web-access', RetentionInDays: 731 }
     },
     AccessLogSource: {
       Type: 'AWS::Logs::DeliverySource',
