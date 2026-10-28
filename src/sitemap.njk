@@ -8,6 +8,7 @@ eleventyExcludeFromCollections: true
 {%- if site.makerNight or page.url != "/maker-night/" %}
   <url>
     <loc>https://things4good.xyz{{ page.url }}</loc>
+    <lastmod>{{ page.inputPath | lastmod }}</lastmod>
   </url>
 {%- endif %}
 {%- endfor %}
