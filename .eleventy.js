@@ -1,6 +1,12 @@
 const { createHash } = require("node:crypto");
 
+const { lastmod } = require("./scripts/lastmod.cjs");
+
 module.exports = function (eleventyConfig) {
+  // A page's sitemap <lastmod>: the last commit touching its template or the
+  // data it prints (scripts/lastmod.cjs).
+  eleventyConfig.addFilter("lastmod", (inputPath) => lastmod(inputPath));
+
   // A page's share card (cards.thingelstad.com/t4g/...): what the card shows,
   // from the page's `card` front matter and the site's sale facts, and the
   // `v` that names that drawing, the first 10 hex of the SHA-256 of those
