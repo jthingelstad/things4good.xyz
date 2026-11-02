@@ -148,6 +148,8 @@ export const site = template(
           PriceClass: 'PriceClass_100',
           IPV6Enabled: true,
           HttpVersion: 'http2and3',
+          // The shared web ACL from projects-sysadmin's edge-waf stack, counting only until tuned.
+          WebACLId: { 'Fn::ImportValue': 'edge-waf-WebAclArn' },
           DefaultRootObject: 'index.html',
           Aliases: custom([DOMAIN, WWW], ref('AWS::NoValue')),
           ViewerCertificate: custom(
