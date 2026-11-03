@@ -1,0 +1,6 @@
+{
+  "_note": "This year's four causes, one per Thing, in this order. Jamie announces them Thursday before the sale; until `list` has entries the home page, FAQ and llms.txt show a placeholder naming `announce`. Each entry: who (Jamie|Tammy|Mazie|Tyler), name, url, blurb (one line). After the sale the year's picks move into events.json with amounts.",
+  "year": 2026,
+  "announce": "Thursday, November 5",
+  "list": []
+}

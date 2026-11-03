@@ -127,7 +127,7 @@ card:
             <div class="mo">November 2026</div>
           </div>
         </div>
-        <p class="when-note">Pre-orders are picked up on <b style="color:#fff">Sunday</b>. Exact hours and location go to the Candle Fundraiser list before the weekend.</p>
+        <p class="when-note">Pick up preorders anytime during the sale. Hours and the address come by email: join the Candle Fundraiser list, or <a href="mailto:{{ site.email }}" style="color:var(--marigold);font-weight:700;text-decoration:none">email Jamie</a>.</p>
         <a class="btn btn--primary" style="margin-top:20px" href="{{ site.updatesUrl }}" data-tinylytics-event="updates.click" data-tinylytics-event-value="home-when" target="_blank" rel="noopener">Get updates <span class="arr">&rarr;</span></a>
       </div>
 
@@ -147,7 +147,7 @@ card:
         </div>
         <div class="info-row">
           <div class="k">Pre-orders</div>
-          <div class="v">Ordering <b>six or more</b>? {% if site.preorderSheet %}Add your candles and scents to our <a href="{{ site.preorderSheet }}" data-tinylytics-event="preorder.sheet" data-tinylytics-event-value="home-next" target="_blank" rel="noopener" style="color:var(--marigold-d);font-weight:600;text-decoration:none">pre-order sheet</a> and we&rsquo;ll have them ready for Sunday pickup.{% else %}The pre-order sheet opens closer to the sale and goes to subscribers first. <a href="/preorder/" style="color:var(--marigold-d);font-weight:600;text-decoration:none">See preorder &amp; pickup notes</a>.{% endif %}</div>
+          <div class="v">Ordering <b>six or more</b>? {% if site.preorderSheet %}Add your candles and scents to our <a href="{{ site.preorderSheet }}" data-tinylytics-event="preorder.sheet" data-tinylytics-event-value="home-next" target="_blank" rel="noopener" style="color:var(--marigold-d);font-weight:600;text-decoration:none">pre-order sheet</a> and we&rsquo;ll have them ready to pick up anytime at the sale.{% else %}The pre-order sheet opens closer to the sale and goes to subscribers first. <a href="/preorder/" style="color:var(--marigold-d);font-weight:600;text-decoration:none">See preorder &amp; pickup notes</a>.{% endif %}</div>
         </div>
         <div class="info-row">
           <div class="k">Scents</div>
@@ -249,6 +249,23 @@ card:
       <p class="eyebrow">The good</p>
       <h2 class="t">Where the money goes.</h2>
       <p class="lead">Every candle&rsquo;s full $25 goes to a nonprofit &mdash; and you decide which. Each year the four of us each pick a cause we care about. Here&rsquo;s where it&rsquo;s gone.</p>
+    </div>
+
+    <h3 class="causes-head reveal" id="this-year">This year&rsquo;s four{% if not causes.list.length %} <span>announced {{ causes.announce }}</span>{% endif %}</h3>
+    <div class="charities charities--four reveal">
+      {% if causes.list.length %}{% for c in causes.list %}
+      <a class="charity" href="{{ c.url }}" target="_blank" rel="noopener">
+        <div class="ctop"><span class="glyph">{{ c.who | first }}</span><span class="yr">{{ c.who }}&rsquo;s pick</span></div>
+        <h3>{{ c.name }}</h3>
+        <p>{{ c.blurb }}</p>
+        <span class="go">Visit <span class="arr">&rarr;</span></span>
+      </a>{% endfor %}
+      {% else %}{% for who in ["Jamie", "Tammy", "Mazie", "Tyler"] %}
+      <div class="charity charity--soon">
+        <div class="ctop"><span class="glyph">{{ who | first }}</span><span class="yr">{{ causes.year }}</span></div>
+        <h3>{{ who }}&rsquo;s pick</h3>
+        <p>Coming {{ causes.announce.split(",")[0] }}.</p>
+      </div>{% endfor %}{% endif %}
     </div>
 
     <div class="logo-wall reveal">

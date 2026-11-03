@@ -466,6 +466,11 @@ em.it { font-style: italic; }
 .path-card:nth-child(3) .kicker { color: var(--sky-d); }
 
 .charities { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(14px, 2vw, 22px); }
+.charities--four { grid-template-columns: repeat(4, minmax(0, 1fr)); margin-bottom: clamp(28px, 4vw, 40px); }
+.causes-head { font-size: 1.4rem; margin: 0 0 16px; }
+.causes-head span { font-family: var(--hand); font-size: 1.3rem; font-weight: 400; color: var(--pine-d); margin-left: .3em; }
+.charity--soon { border-style: dashed; box-shadow: none; }
+.charity--soon:hover { transform: none; box-shadow: none; border-color: var(--line); }
 .charity {
   background: var(--paper-3); border: 1px solid var(--line); border-radius: 14px;
   padding: 22px 22px 20px; box-shadow: var(--shadow-sm); text-decoration: none; color: var(--ink);
@@ -1087,3 +1092,4 @@ em.it { font-style: italic; }
 .lineup-art--secret span { font-size: clamp(5rem, 9vw, 7rem); font-weight: 700; line-height: 1; }
 @media (max-width: 920px) { .lineup { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 560px) { .lineup { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 560px) { .charities--four { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; } .charities--four .charity { padding: 16px; } }

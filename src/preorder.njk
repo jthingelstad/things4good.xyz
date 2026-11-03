@@ -1,10 +1,10 @@
 ---
 title: Preorder & Pickup — Things 4 Good
-description: Preorder six or more Things 4 Good candles for Sunday pickup. Fill out the form and Jamie emails you a payment link.
+description: Preorder six or more Things 4 Good candles and pick them up anytime at the sale. Fill out the form and Jamie emails you a payment link.
 card:
   kicker: "Sale logistics"
   name: "Preorder, pickup, and payment."
-  summary: "Ordering six or more? Reserve them for Sunday pickup, and pay however is easiest."
+  summary: "Ordering six or more? Reserve them, pick them up at the sale, and pay however is easiest."
   photo: preorder
 ---
 {% extends "base.njk" %}
@@ -46,8 +46,8 @@ card:
       </div>
       <div class="step reveal">
         <div class="num">3</div>
-        <h3>Pick up Sunday</h3>
-        <p>Collect your preorder on <b>Sunday, November 8</b>. Preorder donations are divided evenly across the four causes. {% if site.preorderSheet %}Jamie emails you a payment link once your order is confirmed.{% else %}Payment options are confirmed with the sale details.{% endif %}</p>
+        <h3>Pick up at the sale</h3>
+        <p>Collect your preorder anytime during the sale, <b>{{ site.saleDates | safe }}</b>. The form stays open until the sale ends. Preorder donations are divided evenly across the four causes. {% if site.preorderSheet %}Jamie emails you a payment link once your order is confirmed.{% else %}Payment options are confirmed with the sale details.{% endif %}</p>
       </div>
     </div>
 
@@ -56,7 +56,7 @@ card:
       <div class="mn-copy">
         <span class="tag">{% if site.preorderSheet %}Preorder form &middot; open now{% else %}Preorder sheet{% endif %}</span>
         <h3>Ready to reserve your batch?</h3>
-        <p>{% if site.preorderSheet %}Pick your scents, and we&rsquo;ll email a payment link.{% else %}The sheet opens closer to the sale and goes out to Candle Fundraiser subscribers first.{% endif %} Best for six or more, picked up Sunday.</p>
+        <p>{% if site.preorderSheet %}Pick your scents, and we&rsquo;ll email a payment link.{% else %}The sheet opens closer to the sale and goes out to Candle Fundraiser subscribers first.{% endif %} Best for six or more, picked up anytime at the sale.</p>
       </div>
       <div class="mn-act">
         {% if site.preorderSheet %}
