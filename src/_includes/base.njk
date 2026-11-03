@@ -120,8 +120,8 @@
 </script>
 {% block scripts %}{% endblock %}
 
-{% if site.tinylyticsEmbed %}
-<script src="{{ site.tinylyticsEmbed }}" defer></script>
+{% if site.tinylyticsSite %}
+<script defer src="https://tinylytics.app/js/script.js" data-site="{{ site.tinylyticsSite }}"></script>
 {% endif %}
 </body>
 </html>
