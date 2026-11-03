@@ -8,7 +8,7 @@ Marketing site for **Things 4 Good** — the Thingelstad family's annual handmad
 
 Pages, each a `src/*.njk` that extends `base.njk` (Eleventy emits `<name>/index.html`, served at `/<name>/`):
 - `index.njk` — long-scroll home page (the only one at `/`)
-- `maker-night.njk` — Maker Night event page. Gated by `site.makerNight`: when `false` (2026, no Maker Night this year) the page still builds at `/maker-night/` but every link to it (nav, footer, home teaser, FAQ question) is hidden, it carries `noindex`, and it is left out of `sitemap.xml`. Flip the toggle to `true` to bring it all back (and refresh the "New for 2026" copy).
+- `maker-night.njk` — Maker Night event page. Gated by `site.makerNight`, on since 2026-11-02 for the first one, Thursday, January 21, 2027 (`site.makerNightDate`, with `makerNightDateShort` in the nav; every page reads the date from there). When `false` the page still builds at `/maker-night/` but every link to it (nav, footer, home teaser, FAQ question) is hidden, it carries `noindex`, and it is left out of `sitemap.xml`. Flip the toggle to `true` to bring it all back, and update the dates.
 - `impact.njk` — filterable/sortable list of every nonprofit supported (client-side, from `metrics.nonprofits`; filters by picker + event)
 - `stats.njk` — cumulative "by the numbers" page
 - `preorder.njk` — preorder steps + payment methods
