@@ -1,0 +1,57 @@
+---
+title: Candle Care — Things 4 Good
+description: How to burn a Things 4 Good wooden-wick candle for a long, clean, crackling burn. The same tips that come home with every candle.
+---
+{% extends "base.njk" %}
+
+{# Mirrors the Burn Instructions card that goes home with every candle (Jamie, 2026-11-02). Keep the two in step. #}
+
+{% block content %}
+
+<section class="section page-head" id="head">
+  <div class="hero-glow" aria-hidden="true"></div>
+  <div class="wrap">
+    <a class="back-link" href="/candles/">&larr; The candles</a>
+    <p class="eyebrow">Candle care</p>
+    <h1 style="font-family:var(--serif);font-weight:500;font-size:clamp(2.4rem,5.4vw,4rem);letter-spacing:-.02em;line-height:1.02;max-width:18ch">Burn it well.</h1>
+    <p class="lead" style="margin-top:18px">To enjoy a long, clean burn and the cozy crackle of your wooden-wick candle, follow these simple steps. They&rsquo;re the same tips on the card that comes home with every candle.</p>
+  </div>
+</section>
+
+<section class="section" id="tips" style="padding-top:clamp(20px,3vw,32px)">
+  <div class="wrap">
+    <div class="steps steps--four">
+      <div class="step reveal" id="first-burn">
+        <div class="num">1</div>
+        <h3>First burn matters</h3>
+        <p>Let the wax <b>melt all the way to the edges</b> during the first burn, about 1&ndash;2 hours. Let the wick be a little longer on this first burn as the wax settles.</p>
+      </div>
+      <div class="step alt reveal" id="before-you-light">
+        <div class="num">2</div>
+        <h3>Before you light</h3>
+        <p>Trim your wick to about <b>&frac14; inch</b> before each burn, and remove any loose trimmings from the wax. The easiest way: wait for the wick to be cold, then use a tissue to break off the burnt part and throw it away. Place your candle on a heat-resistant surface, away from drafts, vents or fans.</p>
+      </div>
+      <div class="step alt reveal" id="while-burning">
+        <div class="num">3</div>
+        <h3>While burning</h3>
+        <p>Burn for <b>no more than 4 hours</b> at a time. If the flame gets too large or flickers a lot, put it out, trim the wick and relight. Never leave a burning candle unattended or within reach of children or pets.</p>
+      </div>
+      <div class="step reveal" id="after-you-burn">
+        <div class="num">4</div>
+        <h3>After you burn</h3>
+        <p>Let the wax cool and harden before moving the candle or trimming the wick again. Stop when about <b>&frac12; inch</b> of wax remains in the bottom of the vessel.</p>
+      </div>
+    </div>
+
+    <div class="good-note reveal" style="margin-top:clamp(28px,4vw,40px)">
+      <span class="hand" style="font-size:1.7rem">Thank you for supporting Things 4 Good!</span>
+      <span style="font-weight:500;color:var(--pine-d)">Every candle you use helps support the nonprofits our family chose for this year&rsquo;s fundraiser. Your generosity makes a difference. Thank you for lighting the way for good things!</span>
+    </div>
+    <div class="sub-form" style="max-width:none;gap:12px;justify-content:flex-start;margin-top:22px">
+      <a class="btn btn--primary" href="/impact/">See the causes you&rsquo;ve supported <span class="arr">&rarr;</span></a>
+      <a class="btn btn--ghost" href="{{ site.updatesUrl }}" data-tinylytics-event="updates.click" data-tinylytics-event-value="care" target="_blank" rel="noopener">Hear about next fall&rsquo;s sale</a>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

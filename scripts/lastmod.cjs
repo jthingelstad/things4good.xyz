@@ -25,6 +25,7 @@ const DATA_SOURCES = {
   "src/maker-night.njk": [...SITE, ...SEATS],
   "src/preorder.njk": PAYMENT,
   "src/pay.njk": PAYMENT,
+  "src/care.njk": SITE,
   "src/candles.njk": [...CANDLES, ...SITE],
 };
 

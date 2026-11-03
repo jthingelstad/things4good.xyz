@@ -407,6 +407,7 @@ em.it { font-style: italic; }
 
 /* ---------- how it works ---------- */
 .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(18px, 2.5vw, 30px); margin-top: 8px; }
+.steps--four { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .step {
   background: var(--paper-3); border: 1px solid var(--line); border-radius: var(--radius);
   padding: 30px 28px; box-shadow: var(--shadow-sm); position: relative;
