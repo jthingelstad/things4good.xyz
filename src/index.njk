@@ -164,7 +164,7 @@ card:
     <div class="mn-band reveal">
       <div class="glow" aria-hidden="true"></div>
       <div class="mn-copy">
-        <span class="tag">New &middot; only 6 spots</span>
+        {% set seatsLeft = makerNightSeats.total - makerNightSeats.sold %}<span class="tag">New &middot; {% if seatsLeft > 0 %}{{ seatsLeft }} of {{ makerNightSeats.total }} seats left{% else %}Sold out{% endif %}</span>
         <h3>Pour your own at Maker Night.</h3>
         <p>Six gold Maker Night candles go on the counter at the sale, each a ${{ site.makerNightDonation }} donation and a seat at an evening of pouring four candles of your own, in any scents from our library. 100% to good.</p>
       </div>

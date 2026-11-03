@@ -1,0 +1,5 @@
+{
+  "_note": "Maker Night seats sold so far. Set it with the 'Maker Night seats sold' workflow (Actions tab, Run workflow), which commits this file and redeploys. Seats left = total - sold; 0 left shows Sold out.",
+  "total": 6,
+  "sold": 0
+}
