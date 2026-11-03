@@ -59,7 +59,7 @@ Eleventy config lives in `.eleventy.js`. Key conventions it sets:
 - *Events:* auto mode counts outbound links (`link.outbound`, value = host). Hand-tagged events, via `data-tinylytics-event` + `data-tinylytics-event-value`:
   - `updates.click`: every Get updates link. The value names the spot (`nav`, `footer`, `home-hero`, `home-when`, `home-subscribe`, `impact-close`, `faq-when`, `faq-ask`, `preorder-steps`, `preorder-close`).
   - `nonprofit.visit`: the value is the org slug.
-  - `preorder.sheet`: the value is where the link sits (`home-next`, `preorder-head`, `preorder-steps`, `faq`, `maker-night-details`, `maker-night-reserve`).
+  - `preorder.sheet`: the value is where the link sits (`nav`, `home-hero`, `home-next`, `preorder-head`, `preorder-steps`, `faq`, `maker-night-details`, `maker-night-reserve`). While `site.preorderSheet` is set the header button is Preorder and the home hero's primary button is Preorder candles, both to the form (Jamie, 2026-11-02, for the preorder email); empty, they go back to Get updates, which then owns the `nav` and `home-hero` spots of `updates.click`.
   - `chart.year`: the home and Numbers year links. The value is the year.
   - `faq.open`: the value is a question key. A small script in `faq.njk` keeps the event on closed questions only, so closing one is not counted.
   - A new subscribe link gets an `updates.click` tag with a new spot name. A tagged link is not also counted as `link.outbound`.
