@@ -4,6 +4,13 @@
   "saleDates": "Nov 7–8, 2026",
   "saleYear": "2026",
   "preorderSheet": "https://forms.gle/ojUBX58sVNTwvLKh8",
+  "payment": {
+    "venmo": "jthingelstad",
+    "cashApp": "JThingelstad",
+    "phone": "612-810-3699",
+    "zelleName": "Jamie J Thingelstad",
+    "checkPayee": "Jamie Thingelstad"
+  },
   "updatesUrl": "https://buttondown.com/things4good",
   "tinylyticsEmbed": "https://tinylytics.app/embed/CUwdahtFfyC-SP5xKdLp.js?events&auto&kudos=custom",
   "makerNight": true,

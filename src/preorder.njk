@@ -76,31 +76,10 @@ card:
     <div class="sec-head reveal">
       <p class="eyebrow">How to pay</p>
       <h2 class="t">Send your donation.</h2>
-      <p class="lead">Each candle is a <b style="color:var(--ink)">$25 donation</b>. Venmo is the most popular way people give, and final payment details are shared with sale information.</p>
+      <p class="lead">Each candle is a <b style="color:var(--ink)">$25 donation</b>. Pay however&rsquo;s easiest; Venmo is the most popular. On a phone, tap to open the app; on a computer, scan a code. Preorders pay once Jamie confirms the order.</p>
     </div>
 
-    <div class="paygrid">
-      <div class="paycard reveal">
-        <div class="pname"><span class="picon">V</span>Venmo</div>
-        <p class="pdesc">The easiest option for most people. Send ahead of pickup or scan our code at the sale, and add a note with the causes you&rsquo;d like to support.</p>
-        <div class="handle">Handle shared with sale announcement</div>
-      </div>
-      <div class="paycard reveal">
-        <div class="pname"><span class="picon">$</span>Cash</div>
-        <p class="pdesc">The classic. Bring it to the sale and we&rsquo;ll take it from there &mdash; exact change appreciated but never required.</p>
-        <div class="handle">Pay in person at the sale</div>
-      </div>
-      <div class="paycard alt reveal">
-        <div class="pname"><span class="picon">A</span>Apple Pay</div>
-        <p class="pdesc">Tap at pickup or send from your iPhone once the sale number is shared with subscribers.</p>
-        <div class="handle">Details with sale announcement</div>
-      </div>
-      <div class="paycard alt reveal">
-        <div class="pname"><span class="picon">Z</span>Zelle</div>
-        <p class="pdesc">Send straight from your bank&rsquo;s app to our email or number &mdash; no fees, no app to download.</p>
-        <div class="handle">Details with sale announcement</div>
-      </div>
-    </div>
+    {% include "payment-methods.njk" %}
 
     <div class="good-note reveal" style="margin-top:clamp(28px,4vw,40px)">
       <span class="hand" style="font-size:1.7rem">100% &mdash; for real.</span>

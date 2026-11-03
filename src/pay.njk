@@ -1,0 +1,33 @@
+---
+title: Pay — Things 4 Good
+description: Send your Things 4 Good candle donation by Venmo, Cash App, Zelle or Apple Pay, or bring cash or a check. 100% goes to good.
+---
+{% extends "base.njk" %}
+
+{# The link Jamie sends buyers to settle up: things4good.xyz/pay/ (or /pay/#venmo and the other card ids). Same cards as /preorder/#payment. #}
+
+{% block content %}
+
+<section class="section page-head" id="head">
+  <div class="hero-glow" aria-hidden="true"></div>
+  <div class="wrap">
+    <a class="back-link" href="/">&larr; Things 4 Good</a>
+    <p class="eyebrow">How to pay</p>
+    <h1 style="font-family:var(--serif);font-weight:500;font-size:clamp(2.4rem,5.4vw,4rem);letter-spacing:-.02em;line-height:1.02;max-width:18ch">Send your donation.</h1>
+    <p class="lead" style="margin-top:18px">Each candle is a <b style="color:var(--ink)">${{ site.pricePerCandle }} donation</b>. Pick whichever way is easiest. On a phone, tap a button to open the app; on a computer, scan a code with your phone.</p>
+  </div>
+</section>
+
+<section class="section" id="payment" style="padding-top:clamp(20px,3vw,32px)">
+  <div class="wrap">
+    {% include "payment-methods.njk" %}
+
+    <div class="good-note reveal" style="margin-top:clamp(28px,4vw,40px)">
+      <span class="hand" style="font-size:1.7rem">100% &mdash; for real.</span>
+      <span style="font-weight:500;color:var(--pine-d)">We cover every cost of making the candles, so everything you send becomes a donation. Preorders are divided evenly across this year&rsquo;s four causes; at the sale, add a note to choose your own split.</span>
+    </div>
+    <p style="margin-top:22px;color:var(--ink-soft)">Questions? Email <a href="mailto:{{ site.email }}" style="color:var(--marigold-d);font-weight:600;text-decoration:none">{{ site.email }}</a>.</p>
+  </div>
+</section>
+
+{% endblock %}

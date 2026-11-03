@@ -1015,13 +1015,28 @@ em.it { font-style: italic; }
 .record .rd { font-size: .9rem; color: var(--ink-soft); }
 
 /* ---------- payment cards ---------- */
-.paygrid { display: grid; grid-template-columns: repeat(2, 1fr); gap: clamp(14px, 2vw, 22px); }
+.paygrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(14px, 2vw, 22px); }
 .paycard { background: var(--paper-3); border: 1px solid var(--line); border-radius: 16px; padding: clamp(22px, 3vw, 30px); box-shadow: var(--shadow-sm); display: flex; flex-direction: column; }
 .paycard .pname { display: flex; align-items: center; gap: 11px; font-family: var(--serif); font-size: 1.5rem; }
 .paycard .picon { width: 40px; height: 40px; border-radius: 11px; flex: none; display: grid; place-content: center; font-family: var(--sans); font-weight: 800; font-size: 1.1rem; color: var(--marigold-d); background: var(--marigold-t); }
 .paycard.alt .picon { color: var(--pine-d); background: var(--pine-t); }
-.paycard .handle { margin-top: 16px; font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 1.02rem; font-weight: 600; color: var(--ink); background: var(--paper-2); border: 1px dashed var(--line); border-radius: 10px; padding: 12px 14px; word-break: break-all; }
+.paycard .handle { margin-top: 16px; font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 1.02rem; font-weight: 600; color: var(--ink); background: var(--paper-2); border: 1px dashed var(--line); border-radius: 10px; padding: 12px 14px; overflow-wrap: anywhere; }
 .paycard .pdesc { margin: 14px 0 0; font-size: .92rem; color: var(--ink-soft); }
+.paycard .pdesc + .handle { margin-top: 16px; }
+/* Brand marks (Simple Icons, CC0) in each service's colour; the wordmarks stand in for the name. */
+.paycard .plogo { height: 36px; width: 36px; flex: none; fill: var(--brand); }
+.paycard .plogo--word { width: auto; height: 26px; aspect-ratio: 5; margin-block: 5px; }
+.paycard .plogo--mark { width: auto; height: 36px; aspect-ratio: 24 / 15.6; }
+/* The pay buttons open each app (Venmo, Cash App, Messages) or copy the Zelle number. */
+.paybtn { margin-top: 12px; display: flex; align-items: center; justify-content: center; gap: .5em; width: 100%; padding: 13px 18px; border: 0; border-radius: 999px; background: var(--btn); color: var(--btn-ink, #fff); font: inherit; font-weight: 700; font-size: 1rem; text-decoration: none; cursor: pointer; box-shadow: var(--shadow-sm); transition: transform .14s ease, box-shadow .14s ease, filter .14s ease; }
+.paybtn:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); filter: brightness(1.06); }
+.paybtn:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+.paybtn[hidden] { display: none; }
+.paybtn:hover .arr { transform: translateX(3px); }
+.payqr { margin: 18px 0 0; padding-top: 16px; border-top: 1px dashed var(--line); text-align: center; margin-top: auto; }
+.paycard--app .paybtn + .payqr, .paycard--app .handle + .payqr { margin-top: 18px; }
+.payqr img { display: block; width: 168px; height: auto; margin: 0 auto; border-radius: 12px; background: #fff; padding: 8px; border: 1px solid var(--line); }
+.payqr figcaption { margin-top: 8px; font-size: .82rem; color: var(--ink-soft); }
 
 @media (max-width: 920px) {
   .impact-grid, .tilegrid, .records, .sumstrip { grid-template-columns: repeat(2, 1fr); }
@@ -1030,12 +1045,13 @@ em.it { font-style: italic; }
   .cost-note { align-items: flex-start; flex-direction: column; }
   .impact-principle { grid-template-columns: 1fr; }
   .tile.span2 { grid-column: span 2; }
-  .paygrid { grid-template-columns: 1fr; }
+  .paygrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .timeline { grid-template-columns: repeat(5, 1fr); gap: 8px; }
   .controls { top: 0; }
   .impact-close { align-items: flex-start; flex-direction: column; }
   .impact-close-actions { justify-content: flex-start; }
 }
+@media (max-width: 560px) { .paygrid { grid-template-columns: 1fr; } }
 @media (max-width: 560px) {
   .impact-grid, .tilegrid, .records, .sumstrip, .ops-grid, .math-grid, .insight-row { grid-template-columns: 1fr; }
   .tile.span2 { grid-column: span 1; }
