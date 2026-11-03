@@ -14,12 +14,13 @@ const { execFileSync } = require("node:child_process");
 const SITE = ["src/_data/site.json"];
 const METRICS = ["src/_data/metrics.js", "src/_data/events.json", "src/_data/saleStats.json", ...SITE];
 const CANDLES = ["src/_data/candles.json"];
+const SEATS = ["src/_data/makerNightSeats.json"];
 const DATA_SOURCES = {
-  "src/index.njk": [...METRICS, ...CANDLES],
+  "src/index.njk": [...METRICS, ...CANDLES, ...SEATS],
   "src/faq.njk": METRICS,
   "src/impact.njk": METRICS,
   "src/stats.njk": METRICS,
-  "src/maker-night.njk": SITE,
+  "src/maker-night.njk": [...SITE, ...SEATS],
   "src/preorder.njk": SITE,
   "src/candles.njk": [...CANDLES, ...SITE],
 };

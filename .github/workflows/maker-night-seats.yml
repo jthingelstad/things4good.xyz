@@ -1,0 +1,64 @@
+name: Maker Night seats sold
+
+# Jamie runs this from the GitHub app or github.com whenever a Maker Night candle sells: pick the
+# number sold so far, and it updates src/_data/makerNightSeats.json on main and redeploys the site.
+# A push made with GITHUB_TOKEN does not start other workflows, so this one starts the deploy itself.
+
+on:
+  workflow_dispatch:
+    inputs:
+      sold:
+        description: "Maker Night seats sold so far"
+        required: true
+        type: choice
+        options: ["0", "1", "2", "3", "4", "5", "6"]
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: maker-night-seats
+  cancel-in-progress: false
+
+jobs:
+  set-seats:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: main
+      - name: Write the count
+        env:
+          SOLD: ${{ inputs.sold }}
+        run: |
+          node -e '
+            const fs = require("node:fs");
+            const file = "src/_data/makerNightSeats.json";
+            const data = JSON.parse(fs.readFileSync(file, "utf8"));
+            const sold = Number(process.env.SOLD);
+            if (!Number.isInteger(sold) || sold < 0 || sold > data.total) throw new Error(`sold must be 0 to ${data.total}, got ${process.env.SOLD}`);
+            data.sold = sold;
+            fs.writeFileSync(file, JSON.stringify(data, null, 2) + "\n");
+            console.log(`Maker Night: ${sold} of ${data.total} sold, ${data.total - sold} left`);
+          '
+      - name: Commit and push
+        id: push
+        run: |
+          if git diff --quiet; then
+            echo "Already at ${{ inputs.sold }} sold; nothing to change."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -am "Maker Night: ${{ inputs.sold }} seats sold"
+          git pull --rebase origin main
+          git push origin HEAD:main
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+      - name: Deploy
+        if: steps.push.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run deploy.yml --ref main --repo "${{ github.repository }}"

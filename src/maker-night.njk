@@ -7,10 +7,12 @@ description: An evening for six. Buy one of six gold Maker Night candles at the 
 {# Off years (site.makerNight false): the page stays up but is unlinked and kept out of search. #}
 {% block head %}{% if not site.makerNight %}<meta name="robots" content="noindex" />{% endif %}{% endblock %}
 
-{% block navDate %}{{ site.makerNightDateShort }} &middot; 6 spots{% endblock %}
-{% block navCta %}<a class="btn btn--primary nav-cta" href="#reserve">Get a seat</a>{% endblock %}
+{% block navDate %}{% set seatsLeft = makerNightSeats.total - makerNightSeats.sold %}{{ site.makerNightDateShort }} &middot; {% if seatsLeft > 0 %}{{ seatsLeft }} {{ "seat" if seatsLeft == 1 else "seats" }} left{% else %}Sold out{% endif %}{% endblock %}
+{% block navCta %}{% if makerNightSeats.sold < makerNightSeats.total %}<a class="btn btn--primary nav-cta" href="#reserve">Get a seat</a>{% else %}<a class="btn btn--primary nav-cta" href="#evening">See the evening</a>{% endif %}{% endblock %}
 
 {% block content %}
+{% set seatsLeft = makerNightSeats.total - makerNightSeats.sold %}
+{% set seatsWord = "seat" if seatsLeft == 1 else "seats" %}
 
 <!-- ============================ HERO ============================ -->
 <section class="section section--ink hero" id="hero">
@@ -21,13 +23,13 @@ description: An evening for six. Buy one of six gold Maker Night candles at the 
       <p class="eyebrow">{{ site.makerNightDate }} &middot; {{ site.makerNightTime }}</p>
       <h1 style="margin-top:18px">Maker <span class="pine" style="color:var(--marigold)">Night.</span></h1>
       <p class="lead">An evening for six. At the fall sale, six gold Maker Night candles go on the counter, each in a scent made only for them. Buy one and you have a seat: come pour four candles of your own, in any scents from our library.</p>
-      <div class="spots" role="img" aria-label="Six spots available">
-        <span class="flames"><span class="flame"></span><span class="flame"></span><span class="flame"></span><span class="flame"></span><span class="flame"></span><span class="flame"></span></span>
-        <span class="stxt">Only 6 spots</span>
+      <div class="spots" role="img" aria-label="{% if seatsLeft > 0 %}{{ seatsLeft }} of {{ makerNightSeats.total }} seats left{% else %}Sold out{% endif %}">
+        <span class="flames">{% for i in range(0, makerNightSeats.total) %}<span class="flame{% if i >= seatsLeft %} out{% endif %}"></span>{% endfor %}</span>
+        <span class="stxt">{% if seatsLeft > 0 %}{{ seatsLeft }} of {{ makerNightSeats.total }} seats left{% else %}Sold out{% endif %}</span>
       </div>
       <div class="hero-cta">
-        <a class="btn btn--primary" href="#reserve">How to get a seat <span class="arr">&rarr;</span></a>
-        <a class="btn btn--ghost" href="#evening">How it works</a>
+        {% if seatsLeft > 0 %}<a class="btn btn--primary" href="#reserve">How to get a seat <span class="arr">&rarr;</span></a>
+        <a class="btn btn--ghost" href="#evening">How it works</a>{% else %}<a class="btn btn--primary" href="#evening">How it works <span class="arr">&rarr;</span></a>{% endif %}
       </div>
       <p class="hero-note">${{ site.makerNightDonation }} gold Maker Night candle at the sale, {{ site.saleDates | safe }} &middot; 100% to good</p>
     </div>
@@ -39,7 +41,7 @@ description: An evening for six. Buy one of six gold Maker Night candles at the 
       </div>
       <img class="ph" src="/images/maker-night.jpg" alt="A tray of lit wooden-wick candles glowing in the dark" style="object-fit:cover" />
       <div class="badge" style="background:var(--marigold);color:#2B2017" aria-hidden="true">
-        <b>6</b><span>seats only</span>
+        {% if seatsLeft > 0 %}<b>{{ seatsLeft }}</b><span>{{ seatsWord }} left</span>{% else %}<b>0</b><span>sold out</span>{% endif %}
       </div>
     </div>
   </div>
@@ -113,7 +115,7 @@ description: An evening for six. Buy one of six gold Maker Night candles at the 
         <p class="eyebrow">When</p>
         <div style="font-family:var(--serif);font-size:clamp(1.8rem,4vw,2.6rem);line-height:1.05;margin:14px 0 6px;position:relative;z-index:1">{{ site.makerNightDate | replace(", ", ",<br />", 1) | safe }}</div>
         <p class="when-note">{{ site.makerNightTime }}, one night only. The date is set, so check your calendar before you buy.</p>
-        <a class="btn btn--primary" style="margin-top:22px" href="#reserve">How to get a seat <span class="arr">&rarr;</span></a>
+        {% if seatsLeft > 0 %}<a class="btn btn--primary" style="margin-top:22px" href="#reserve">How to get a seat <span class="arr">&rarr;</span></a>{% endif %}
       </div>
 
       <div class="info-card reveal">
@@ -123,7 +125,7 @@ description: An evening for six. Buy one of six gold Maker Night candles at the 
         </div>
         <div class="info-row">
           <div class="k">Spots</div>
-          <div class="v"><b>Six only.</b> We keep the night small and hands-on, so everyone gets real time at the pouring station.</div>
+          <div class="v"><b>Six only{% if seatsLeft == 0 %}, all taken{% elif seatsLeft < makerNightSeats.total %}, {{ seatsLeft }} left{% endif %}.</b> We keep the night small and hands-on, so everyone gets real time at the pouring station.</div>
         </div>
         <div class="info-row">
           <div class="k">Bring a friend</div>
@@ -133,10 +135,12 @@ description: An evening for six. Buy one of six gold Maker Night candles at the 
           <div class="k">Where</div>
           <div class="v">Hosted by the Thingelstad family in Minneapolis. When you buy, we take your name, email and phone, and send the address before the night.</div>
         </div>
+        {% if seatsLeft > 0 %}
         <div class="info-row">
           <div class="k">Can&rsquo;t make the sale?</div>
           <div class="v">{% if site.preorderSheet %}Preorder one on our <a href="{{ site.preorderSheet }}" data-tinylytics-event="preorder.sheet" data-tinylytics-event-value="maker-night-details" target="_blank" rel="noopener" style="color:var(--marigold-d);font-weight:600;text-decoration:none">preorder form</a>; Maker Night is at the bottom. Jamie emails a payment link once it&rsquo;s confirmed.{% else %}Preorder one. Email <a href="mailto:{{ site.email }}" style="color:var(--marigold-d);font-weight:600;text-decoration:none">{{ site.email }}</a> and we&rsquo;ll set a gold candle aside for you.{% endif %}</div>
         </div>
+        {% endif %}
       </div>
     </div>
   </div>
@@ -146,12 +150,17 @@ description: An evening for six. Buy one of six gold Maker Night candles at the 
 <section class="section section--pine subscribe" id="reserve">
   <div class="wrap">
     <p class="eyebrow" style="justify-content:center">Seats</p>
-    <h2 class="t" style="max-width:20ch;margin-inline:auto">Six gold candles. Six seats.</h2>
+    {% if seatsLeft > 0 %}
+    <h2 class="t" style="max-width:20ch;margin-inline:auto">{% if seatsLeft == makerNightSeats.total %}Six gold candles. Six seats.{% else %}{{ seatsLeft }} {{ seatsWord }} left.{% endif %}</h2>
     <p class="lead" style="margin:18px auto 0;text-align:center">Look for the gold Maker Night candles at the Things 4 Good sale, {{ site.saleDates | safe }}. Each is a ${{ site.makerNightDonation }} donation and a seat at Maker Night, {{ site.makerNightTime }} on {{ site.makerNightDate }}. First come, first served.</p>
     <div class="sub-form" style="max-width:none;gap:12px">
       <a class="btn btn--primary" href="/#sale">See the sale details</a>
       {% if site.preorderSheet %}<a class="btn btn--ghost" href="{{ site.preorderSheet }}" data-tinylytics-event="preorder.sheet" data-tinylytics-event-value="maker-night-reserve" target="_blank" rel="noopener">Preorder online</a>{% else %}<a class="btn btn--ghost" href="mailto:{{ site.email }}?subject=Maker%20Night%20preorder">Preorder by email</a>{% endif %}
     </div>
+    {% else %}
+    <h2 class="t" style="max-width:20ch;margin-inline:auto">All six seats are taken.</h2>
+    <p class="lead" style="margin:18px auto 0;text-align:center">Thank you to our six makers. See you {{ site.makerNightDate }}, {{ site.makerNightTime }}.</p>
+    {% endif %}
     <p class="sub-note">Questions? Email <a href="mailto:{{ site.email }}" style="color:#fff;font-weight:600">{{ site.email }}</a>.</p>
   </div>
 </section>
