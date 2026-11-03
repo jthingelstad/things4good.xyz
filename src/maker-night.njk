@@ -127,7 +127,7 @@ description: An evening for six. Buy one of six gold Maker Night candles at the 
         </div>
         <div class="info-row">
           <div class="k">Bring a friend</div>
-          <div class="v">Buy two gold candles and come together.</div>
+          <div class="v">Buy two gold candles and come together. Two is the most one person can buy.</div>
         </div>
         <div class="info-row">
           <div class="k">Where</div>
@@ -135,7 +135,7 @@ description: An evening for six. Buy one of six gold Maker Night candles at the 
         </div>
         <div class="info-row">
           <div class="k">Can&rsquo;t make the sale?</div>
-          <div class="v">Preorder one. Email <a href="mailto:{{ site.email }}" style="color:var(--marigold-d);font-weight:600;text-decoration:none">{{ site.email }}</a> and we&rsquo;ll set a gold candle aside for you.</div>
+          <div class="v">{% if site.preorderSheet %}Preorder one on our <a href="{{ site.preorderSheet }}" data-tinylytics-event="preorder.sheet" data-tinylytics-event-value="maker-night-details" target="_blank" rel="noopener" style="color:var(--marigold-d);font-weight:600;text-decoration:none">preorder form</a>; Maker Night is at the bottom. Jamie emails a payment link once it&rsquo;s confirmed.{% else %}Preorder one. Email <a href="mailto:{{ site.email }}" style="color:var(--marigold-d);font-weight:600;text-decoration:none">{{ site.email }}</a> and we&rsquo;ll set a gold candle aside for you.{% endif %}</div>
         </div>
       </div>
     </div>
@@ -150,7 +150,7 @@ description: An evening for six. Buy one of six gold Maker Night candles at the 
     <p class="lead" style="margin:18px auto 0;text-align:center">Look for the gold Maker Night candles at the Things 4 Good sale, {{ site.saleDates | safe }}. Each is a ${{ site.makerNightDonation }} donation and a seat at Maker Night, {{ site.makerNightTime }} on {{ site.makerNightDate }}. First come, first served.</p>
     <div class="sub-form" style="max-width:none;gap:12px">
       <a class="btn btn--primary" href="/#sale">See the sale details</a>
-      <a class="btn btn--ghost" href="mailto:{{ site.email }}?subject=Maker%20Night%20preorder">Preorder by email</a>
+      {% if site.preorderSheet %}<a class="btn btn--ghost" href="{{ site.preorderSheet }}" data-tinylytics-event="preorder.sheet" data-tinylytics-event-value="maker-night-reserve" target="_blank" rel="noopener">Preorder online</a>{% else %}<a class="btn btn--ghost" href="mailto:{{ site.email }}?subject=Maker%20Night%20preorder">Preorder by email</a>{% endif %}
     </div>
     <p class="sub-note">Questions? Email <a href="mailto:{{ site.email }}" style="color:#fff;font-weight:600">{{ site.email }}</a>.</p>
   </div>
