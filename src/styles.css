@@ -164,6 +164,8 @@ em.it { font-style: italic; }
   background: var(--marigold); transition: width .18s ease; border-radius: 2px;
 }
 .nav-links a:hover::after { width: 100%; }
+.nav-links a[aria-current="page"] { color: var(--ink); }
+.nav-links a[aria-current="page"]::after { width: 100%; }
 .nav-date { font-family: var(--sans); font-weight: 700; font-size: .82rem; color: var(--pine-d); }
 .nav-cta { display: inline-flex; }
 
@@ -589,6 +591,8 @@ em.it { font-style: italic; }
   .journal-all { margin-top: 12px; }
   .hero-cta .btn { flex: 1; justify-content: center; }
   .nav-cta { display: none; }
+  /* Six links no longer fit one phone-width row; wrap them rather than clip Maker Night and FAQ. */
+  .nav-links { flex-wrap: wrap; overflow: visible; gap: 10px 18px; padding-bottom: 6px; }
 }
 
 /* ============================================================
