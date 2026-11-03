@@ -7,7 +7,7 @@ description: An exclusive Things 4 Good Maker Night. Six guests, a $250 donation
 {# Off years (site.makerNight false): the page stays up but is unlinked and kept out of search. #}
 {% block head %}{% if not site.makerNight %}<meta name="robots" content="noindex" />{% endif %}{% endblock %}
 
-{% block navDate %}$250 &middot; 6 spots{% endblock %}
+{% block navDate %}{{ site.makerNightDateShort }} &middot; 6 spots{% endblock %}
 {% block navCta %}<a class="btn btn--primary nav-cta" href="#reserve">Request a spot</a>{% endblock %}
 
 {% block content %}
@@ -18,7 +18,7 @@ description: An exclusive Things 4 Good Maker Night. Six guests, a $250 donation
   <div class="wrap hero-grid">
     <div class="hero-copy reveal">
       <a href="/" style="display:inline-flex;align-items:center;gap:.4em;color:var(--marigold);font-weight:700;font-size:.9rem;text-decoration:none;margin-bottom:8px">&larr; Things 4 Good</a>
-      <p class="eyebrow">New for 2026 &middot; by reservation</p>
+      <p class="eyebrow">{{ site.makerNightDate }} &middot; by reservation</p>
       <h1 style="margin-top:18px">Maker <span class="pine" style="color:var(--marigold)">Night.</span></h1>
       <p class="lead">An intimate evening for six. Pour five Things 4 Good candles with your own hands from scents we&rsquo;ve curated &mdash; and take home a one-of-a-kind Maker Night candle that exists nowhere else.</p>
       <div class="spots" role="img" aria-label="Six spots available">
@@ -29,7 +29,7 @@ description: An exclusive Things 4 Good Maker Night. Six guests, a $250 donation
         <a class="btn btn--primary" href="#reserve">Request your spot <span class="arr">&rarr;</span></a>
         <a class="btn btn--ghost" href="#evening">See the evening</a>
       </div>
-      <p class="hero-note">$250 donation &middot; about two weeks before the sale &middot; 100% to good</p>
+      <p class="hero-note">$250 donation &middot; {{ site.makerNightDate }} &middot; 100% to good</p>
     </div>
 
     <div class="hero-art reveal">
@@ -113,8 +113,8 @@ description: An exclusive Things 4 Good Maker Night. Six guests, a $250 donation
       <div class="when-card reveal">
         <div class="glow" aria-hidden="true"></div>
         <p class="eyebrow">When</p>
-        <div style="font-family:var(--serif);font-size:clamp(1.8rem,4vw,2.6rem);line-height:1.05;margin:14px 0 6px;position:relative;z-index:1">A weeknight evening,<br />about two weeks before the sale.</div>
-        <p class="when-note">Exact date is still being finalized &mdash; we&rsquo;ll lock it in with the six guests directly. The fall sale itself is <b style="color:#fff">November 7&ndash;8, 2026</b>.</p>
+        <div style="font-family:var(--serif);font-size:clamp(1.8rem,4vw,2.6rem);line-height:1.05;margin:14px 0 6px;position:relative;z-index:1">{{ site.makerNightDate | replace(", ", ",<br />", 1) | safe }}</div>
+        <p class="when-note">An evening for six guests. We&rsquo;ll confirm the time and the address with each guest directly.</p>
         <a class="btn btn--primary" style="margin-top:22px" href="#reserve">Request your spot <span class="arr">&rarr;</span></a>
       </div>
 
@@ -145,7 +145,7 @@ description: An exclusive Things 4 Good Maker Night. Six guests, a $250 donation
   <div class="wrap">
     <p class="eyebrow" style="justify-content:center">Reserve</p>
     <h2 class="t" style="max-width:20ch;margin-inline:auto">Six seats. Want one of them?</h2>
-    <p class="lead" style="margin:18px auto 0;text-align:center">Tell us you&rsquo;re interested and we&rsquo;ll be in touch with the date and how to confirm your spot. Spots are first come, first served.</p>
+    <p class="lead" style="margin:18px auto 0;text-align:center">Tell us you&rsquo;re interested and we&rsquo;ll be in touch about how to confirm your spot. Spots are first come, first served.</p>
     <div class="sub-form" style="max-width:none">
       <a class="btn btn--primary" href="mailto:{{ site.email }}?subject=Maker%20Night%20spot">Request a spot</a>
     </div>
