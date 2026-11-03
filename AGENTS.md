@@ -12,7 +12,7 @@ Pages, each a `src/*.njk` that extends `base.njk` (Eleventy emits `<name>/index.
 - `candles.njk` — this year's lineup (`/candles/`): one card per scent with Mazie's label drawing, the XL size and the extras (the candle lid), all from `candles.json` (see "Content is data-driven").
 - `impact.njk` — filterable/sortable list of every nonprofit supported (client-side, from `metrics.nonprofits`; filters by picker + event)
 - `stats.njk` — cumulative "by the numbers" page
-- `preorder.njk` — preorder steps + payment methods
+- `preorder.njk` — preorder steps + payment methods. "Six or more" is a nudge, not a rule (Jamie, 2026-11-02: "the site should say 6 for preorders but I'm fine if they are less"), so the copy asks "Ordering six or more?" and never says minimum; the form takes any amount.
 - `faq.njk` — standalone FAQ
 - `404.njk` — `/404.html`, which CloudFront serves with a 404 for any path the site lacks; `noindex` and out of the sitemap.
 - `sitemap.njk` — `/sitemap.xml`, every page in `collections.all`, each with a `<lastmod>`: the last commit touching the page's template or the data it prints (`scripts/lastmod.cjs`, which lists those data files per page; a new page needs its entry there, `tests/sitemap.test.mjs` fails until it has one). Never the build time. The dates come from git history, so CI checks out with `fetch-depth: 0` and a shallow clone fails the build. `base.njk` chrome is not counted.
