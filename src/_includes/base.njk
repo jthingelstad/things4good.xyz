@@ -23,7 +23,7 @@
 <meta name="twitter:card" content="summary_large_image" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Hanken+Grotesk:wght@400;500;600;700;800&family=Caveat:wght@500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Hanken+Grotesk:wght@400;500;600;700;800&family=Caveat:wght@500;600;700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet" />
 <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 <link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" />
 <link rel="alternate" type="text/markdown" title="LLM-friendly site index" href="/llms.txt" />
@@ -39,6 +39,7 @@
   </a>
   <nav class="nav-links">
     <a href="/#sale"{% if page.url == "/" %} aria-current="page"{% endif %}>Fundraiser</a>
+    <a href="/candles/"{% if page.url == "/candles/" %} aria-current="page"{% endif %}>Candles</a>
     <a href="/impact/"{% if page.url == "/impact/" %} aria-current="page"{% endif %}>Impact</a>
     <a href="/stats/"{% if page.url == "/stats/" %} aria-current="page"{% endif %}>Numbers</a>
     {% if site.makerNight %}<a href="/maker-night/"{% if page.url == "/maker-night/" %} aria-current="page"{% endif %}>Maker Night</a>{% endif %}
@@ -74,6 +75,7 @@
         <div class="fcol">
           <h4>Explore</h4>
           <a href="/#sale">Fundraiser</a>
+          <a href="/candles/">Candles</a>
           <a href="/impact/">Impact</a>
           <a href="/stats/">Numbers</a>
           {% if site.makerNight %}<a href="/maker-night/">Maker Night</a>{% endif %}
