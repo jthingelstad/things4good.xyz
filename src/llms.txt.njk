@@ -9,7 +9,7 @@ eleventyExcludeFromCollections: true
 
 > Things 4 Good is the Thingelstad family's annual handmade-candle fundraiser in Minneapolis. Since {{ metrics.perYear[0].year }} the family has hand-poured wooden-wick candles for a fall sale; every candle is a ${{ site.pricePerCandle }} donation, and 100% goes to the nonprofits the four family members pick each year. That has added up to ${{ metrics.grandTotalDisplay | safe }} for {{ metrics.orgCount }} organizations.
 
-The {{ site.saleYear }} sale is {{ site.saleDates | safe }} in Minneapolis. Buyers at the sale split their donation across that year's four causes (preorders are divided evenly); the family covers the materials. Preorders, meant for orders of six or more, are picked up Sunday. Per-nonprofit amounts on the site are estimates; each sale's total is exact.
+The {{ site.saleYear }} sale is {{ site.saleDates | safe }} in Minneapolis. Buyers at the sale split their donation across that year's four causes (preorders are divided evenly); the family covers the materials. Preorders, meant for orders of six or more, stay open until the sale ends and are picked up anytime during it. Hours and the address are sent by email, never posted. {% if causes.list.length %}This year's four causes: {% for c in causes.list %}{{ c.name | safe }} ({{ c.who }}){% if not loop.last %}, {% endif %}{% endfor %}.{% else %}This year's four causes are announced {{ causes.announce }}.{% endif %} Per-nonprofit amounts on the site are estimates; each sale's total is exact.
 
 ## Pages
 
