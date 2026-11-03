@@ -1,0 +1,79 @@
+---
+title: The Candles — Things 4 Good
+description: This year’s Things 4 Good scents, from Just Crackle to Old Fashioned. Every hand-poured, wooden-wick candle is a donation, and 100% goes to good.
+---
+{% extends "base.njk" %}
+
+{% block content %}
+
+<!-- ============================ HEADER ============================ -->
+<section class="section page-head" id="head">
+  <div class="hero-glow" aria-hidden="true"></div>
+  <div class="wrap">
+    <a class="back-link" href="/">&larr; Things 4 Good</a>
+    <p class="eyebrow">The {{ site.saleYear }} lineup</p>
+    <h1 style="font-family:var(--serif);font-weight:500;font-size:clamp(2.4rem,5.4vw,4rem);letter-spacing:-.02em;line-height:1.02;max-width:18ch">Pick your scents.</h1>
+    <p class="lead" style="margin-top:18px">{{ candles.scents | length }} scents this year, each hand-poured with a wooden wick and wearing a label Mazie drew. Every candle is a <b style="color:var(--ink)">${{ site.pricePerCandle }} donation</b>, and 100% goes to good.</p>
+  </div>
+</section>
+
+<!-- ============================ SCENTS ============================ -->
+<section class="section" id="scents" style="padding-top:clamp(20px,3vw,32px)">
+  <div class="wrap">
+    <div class="lineup">
+      {% for scent in candles.scents %}
+      <article class="lineup-card reveal" id="{{ scent.slug }}">
+        <div class="lineup-art"><img src="{{ scent.art }}" alt="Mazie’s hand-drawn {{ scent.name }} label" loading="lazy" decoding="async" /></div>
+        <h2>{{ scent.name }}</h2>
+        <p>{{ scent.description }}</p>
+        <div class="lineup-foot">
+          <span class="lineup-price">${{ site.pricePerCandle }} donation</span>
+          {% if scent.xl %}<span class="lineup-xl">Also in XL &middot; ${{ candles.xlDonation }}</span>{% endif %}
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ============================ EXTRAS ============================ -->
+<section class="section section--paper2" id="extras">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">Sizes &amp; extras</p>
+      <h2 class="t">Go bigger, or top it off.</h2>
+    </div>
+    <div class="info-card reveal">
+      <div class="info-row">
+        <div class="k">XL candles</div>
+        <div class="v"><b>${{ candles.xlDonation }} donation.</b> {% for scent in candles.scents | selectattr("xl") %}{% if not loop.first %}{% if loop.last %} and {% else %}, {% endif %}{% endif %}<a href="#{{ scent.slug }}" style="color:var(--marigold-d);font-weight:600;text-decoration:none">{{ scent.name }}</a>{% endfor %} also come in an XL size.</div>
+      </div>
+      {% for extra in candles.extras %}
+      <div class="info-row">
+        <div class="k">{{ extra.name }}</div>
+        <div class="v"><b>${{ extra.donation }} donation.</b> {{ extra.description }}</div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ============================ CLOSE ============================ -->
+<section class="section" id="close">
+  <div class="wrap">
+    <div class="mn-band reveal">
+      <div class="glow" aria-hidden="true"></div>
+      <div class="mn-copy">
+        <span class="tag">{{ site.saleDates | safe }} &middot; Minneapolis</span>
+        <h3>Come smell them in person.</h3>
+        <p>Pick your scents at the sale and choose where your donation goes. Ordering six or more? Preorder for Sunday pickup.</p>
+      </div>
+      <div class="mn-act">
+        <a class="btn btn--primary" href="/preorder/">Preorder &amp; pickup <span class="arr">&rarr;</span></a>
+        <span class="small">Or email <a href="mailto:{{ site.email }}" style="color:var(--marigold);font-weight:700">{{ site.email }}</a></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

@@ -14,6 +14,7 @@ The {{ site.saleYear }} sale is {{ site.saleDates | safe }} in Minneapolis. Buye
 ## Pages
 
 - [Home](https://things4good.xyz/): the fundraiser, how it works, the makers and the sale dates
+- [Candles](https://things4good.xyz/candles/): this year's scents, the XL size and the candle lid
 - [Impact](https://things4good.xyz/impact/): every nonprofit supported, filterable by who picked it and by event
 - [Numbers](https://things4good.xyz/stats/): dollars raised, candles sold, growth by year and candle math
 - [Preorder](https://things4good.xyz/preorder/): preorder steps, pickup and payment methods
@@ -22,6 +23,16 @@ The {{ site.saleYear }} sale is {{ site.saleDates | safe }} in Minneapolis. Buye
 - [Maker Night](https://things4good.xyz/maker-night/): an evening for six to hand-pour four candles of their own, on {{ site.makerNightDate }}; the ticket is a one-of-a-kind Maker Night candle, a $250 donation at the sale
 {%- endif %}
 
+## The {{ site.saleYear }} candles
+
+Each scent is a ${{ site.pricePerCandle }} donation.
+
+{% for scent in candles.scents -%}
+- {{ scent.name | safe }}{% if scent.xl %} (also XL, ${{ candles.xlDonation }}){% endif %}: {{ scent.description | safe }}
+{% endfor %}
+{%- for extra in candles.extras -%}
+- {{ extra.name | safe }} (${{ extra.donation }}): {{ extra.description | safe }}
+{% endfor %}
 ## Sales
 
 {% for event in metrics.eventList -%}

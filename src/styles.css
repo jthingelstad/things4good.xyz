@@ -1039,3 +1039,20 @@ em.it { font-style: italic; }
   .chart-title { display: block; }
   .chart-title span { display: block; margin-top: 6px; }
 }
+
+/* ---------- candles: the lineup ---------- */
+.lineup { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(14px, 2vw, 22px); }
+.lineup-card {
+  background: var(--paper-3); border: 1px solid var(--line); border-radius: 14px;
+  padding: 22px 22px 20px; box-shadow: var(--shadow-sm); display: flex; flex-direction: column;
+  scroll-margin-top: 100px;
+}
+.lineup-art { position: relative; aspect-ratio: 4 / 3; margin-bottom: 16px; }
+.lineup-art img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; display: block; }
+.lineup-card h2 { font-family: var(--serif); font-weight: 500; font-size: 1.5rem; line-height: 1.1; letter-spacing: -.01em; }
+.lineup-card p { margin: 8px 0 0; font-size: .95rem; color: var(--ink-soft); line-height: 1.5; }
+.lineup-foot { margin-top: auto; padding-top: 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+.lineup-price { font-weight: 700; font-size: .88rem; color: var(--pine-d); }
+.lineup-xl { font-size: .74rem; font-weight: 700; letter-spacing: .03em; color: var(--marigold-d); background: var(--marigold-t); padding: 3px 10px; border-radius: 999px; }
+@media (max-width: 920px) { .lineup { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) { .lineup { grid-template-columns: 1fr; } }

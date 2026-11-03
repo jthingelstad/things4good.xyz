@@ -1,0 +1,32 @@
+{
+  "_note": "This year's lineup for /candles/, in the order of the scent markers at the sale. Each scent is site.pricePerCandle; xl: true adds the XL size at xlDonation. art is the label drawing in src/images/scents/.",
+  "xlDonation": 50,
+  "scents": [
+    { "slug": "just-crackle", "name": "Just Crackle", "art": "/images/scents/just-crackle.png",
+      "description": "For when you’re wick-ed tired of scents and just want to burn it straight." },
+    { "slug": "charcoal-rose", "name": "Charcoal Rose", "art": "/images/scents/charcoal-rose.png",
+      "description": "Where beauty burns slow — petals kissed by smoke, grounded in sandalwood and secrets. A scent that smolders rather than blooms." },
+    { "slug": "apple-of-my-eye", "name": "Apple Of My Eye", "art": "/images/scents/apple-of-my-eye.png",
+      "description": "An orchard stroll in candle form, with cinnamon as your tour guide and vanilla as the afterparty." },
+    { "slug": "true-north", "name": "True North", "art": "/images/scents/true-north.png", "xl": true,
+      "description": "A scent that makes even Santa consider relocating his workshop to the Alps." },
+    { "slug": "oh-my-darling", "name": "Oh My Darling", "art": "/images/scents/oh-my-darling.png",
+      "description": "It’s like a fruit salad went on vacation and came back with a tan and a tropical accent." },
+    { "slug": "t4g-labs", "name": "T4G Labs", "art": "/images/scents/t4g-labs.png",
+      "description": "A playground for our wilder ideas — unexpected blends, bold mistakes, and happy accidents, all poured just for fun." },
+    { "slug": "winter-wonderland", "name": "Winter Wonderland", "art": "/images/scents/winter-wonderland.png", "xl": true,
+      "description": "It’s like hugging a pine tree without the sap — pure holiday forest air, no axe required." },
+    { "slug": "rekindled", "name": "Rekindled", "art": "/images/scents/rekindled.png",
+      "description": "Because good things deserve a second spark — and you’re too classy to toss glass." },
+    { "slug": "pumpkin-pie", "name": "Pumpkin Pie", "art": "/images/scents/pumpkin-pie.png",
+      "description": "It’s Thanksgiving at your in-laws, but without the awkward questions — just the sweet and spicy aroma of pumpkin pie." },
+    { "slug": "tea-time", "name": "Tea Time", "art": "/images/scents/tea-time.png",
+      "description": "Spice up your life (and your living room) with a scent that’s less holiday tea party, more seasonal soirée." },
+    { "slug": "old-fashioned", "name": "Old Fashioned", "art": "/images/scents/old-fashioned.png",
+      "description": "Smells like your favorite speakeasy decided to moonlight as a candlemaker — sweet, rich, and socially refined." }
+  ],
+  "extras": [
+    { "slug": "candle-lid", "name": "Candle Lid", "donation": 10,
+      "description": "Enhance your candles with beautiful thick wood candle lids. Helps preserve fragrance for longer." }
+  ]
+}

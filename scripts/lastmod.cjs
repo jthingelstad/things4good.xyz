@@ -13,13 +13,15 @@ const { execFileSync } = require("node:child_process");
 // page's entry never bumps that page's own date.
 const SITE = ["src/_data/site.json"];
 const METRICS = ["src/_data/metrics.js", "src/_data/events.json", "src/_data/saleStats.json", ...SITE];
+const CANDLES = ["src/_data/candles.json"];
 const DATA_SOURCES = {
-  "src/index.njk": METRICS,
+  "src/index.njk": [...METRICS, ...CANDLES],
   "src/faq.njk": METRICS,
   "src/impact.njk": METRICS,
   "src/stats.njk": METRICS,
   "src/maker-night.njk": METRICS,
   "src/preorder.njk": SITE,
+  "src/candles.njk": [...CANDLES, ...SITE],
 };
 
 const git = (args, cwd) => execFileSync("git", args, { cwd, encoding: "utf8" }).trim();

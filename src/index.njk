@@ -150,7 +150,7 @@ card:
         </div>
         <div class="info-row">
           <div class="k">Scents</div>
-          <div class="v">This year&rsquo;s lineup is announced closer to the sale. <a href="{{ site.updatesUrl }}" data-tinylytics-event="updates.click" data-tinylytics-event-value="home-lineup" target="_blank" rel="noopener" style="color:var(--marigold-d);font-weight:600;text-decoration:none">Choose Candle Fundraiser updates</a> to be first to know.</div>
+          <div class="v">{{ candles.scents | length }} this year, from {{ candles.scents[0].name }} to {{ (candles.scents | last).name }}. <a href="/candles/" style="color:var(--marigold-d);font-weight:600;text-decoration:none">See the lineup</a>.</div>
         </div>
       </div>
     </div>
