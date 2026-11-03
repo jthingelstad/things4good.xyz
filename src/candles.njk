@@ -13,7 +13,7 @@ description: This year’s Things 4 Good scents, from Just Crackle to Old Fashio
     <a class="back-link" href="/">&larr; Things 4 Good</a>
     <p class="eyebrow">The {{ site.saleYear }} lineup</p>
     <h1 style="font-family:var(--serif);font-weight:500;font-size:clamp(2.4rem,5.4vw,4rem);letter-spacing:-.02em;line-height:1.02;max-width:18ch">Pick your scents.</h1>
-    <p class="lead" style="margin-top:18px">{{ candles.scents | length }} scents this year, each 12&nbsp;oz of 100% virgin soy wax, hand-poured with a wooden wick and wearing a label Mazie drew. Every candle is a <b style="color:var(--ink)">${{ site.pricePerCandle }} donation</b>, and 100% goes to good.</p>
+    <p class="lead" style="margin-top:18px">{{ candles.scents | length }} scents this year{% if candles.secretScents %}, plus a couple we&rsquo;re saving for the sale{% endif %}, each 12&nbsp;oz of 100% virgin soy wax, hand-poured with a wooden wick and wearing a label Mazie drew. Every candle is a <b style="color:var(--ink)">${{ site.pricePerCandle }} donation</b>, and 100% goes to good.</p>
   </div>
 </section>
 
@@ -35,6 +35,17 @@ description: This year’s Things 4 Good scents, from Just Crackle to Old Fashio
         </div>
       </article>
       {% endfor %}
+      {% if candles.secretScents %}
+      <article class="lineup-card reveal" id="under-wraps">
+        <div class="lineup-mark" aria-hidden="true"><b>Things 4 Good</b><span>Candles</span></div>
+        <div class="lineup-art lineup-art--secret" aria-hidden="true"><span>?</span></div>
+        <div class="lineup-body">
+          <h2>Still under wraps</h2>
+          <p>A couple of new scents are staying secret until the sale. Come smell them first.</p>
+          <div class="lineup-foot"><span>Revealed {{ site.saleDates | safe }}</span></div>
+        </div>
+      </article>
+      {% endif %}
     </div>
   </div>
 </section>
