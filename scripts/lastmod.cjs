@@ -19,7 +19,7 @@ const DATA_SOURCES = {
   "src/faq.njk": METRICS,
   "src/impact.njk": METRICS,
   "src/stats.njk": METRICS,
-  "src/maker-night.njk": METRICS,
+  "src/maker-night.njk": SITE,
   "src/preorder.njk": SITE,
   "src/candles.njk": [...CANDLES, ...SITE],
 };

@@ -1,6 +1,7 @@
 {
-  "_note": "This year's lineup for /candles/, in the order of the scent markers at the sale. Each scent is site.pricePerCandle; xl: true adds the XL size at xlDonation. art is the label drawing in src/images/scents/.",
+  "_note": "This year's lineup for /candles/, in the order of the scent markers at the sale. Each scent is site.pricePerCandle; xl: true adds the XL size at xlDonation. art is the label drawing in src/images/scents/. secretScents: true shows an \"under wraps\" card for the new scents held back until the sale; set it false once they are revealed (and add them to scents).",
   "xlDonation": 50,
+  "secretScents": true,
   "scents": [
     { "slug": "just-crackle", "name": "Just Crackle", "art": "/images/scents/just-crackle.png",
       "description": "For when you’re wick-ed tired of scents and just want to burn it straight." },

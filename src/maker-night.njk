@@ -1,6 +1,6 @@
 ---
 title: Maker Night — Things 4 Good
-description: An evening for six at Things 4 Good Maker Night, hand-pouring four candles of your own. Your ticket is a one-of-a-kind Maker Night candle, a $250 donation at the fall sale. 100% to good.
+description: An evening for six on Jan 21, 2027. Buy one of six gold Maker Night candles at the fall sale, a $250 donation, and come pour four candles of your own in any scents from our library. 100% to good.
 ---
 {% extends "base.njk" %}
 
@@ -8,7 +8,7 @@ description: An evening for six at Things 4 Good Maker Night, hand-pouring four 
 {% block head %}{% if not site.makerNight %}<meta name="robots" content="noindex" />{% endif %}{% endblock %}
 
 {% block navDate %}{{ site.makerNightDateShort }} &middot; 6 spots{% endblock %}
-{% block navCta %}<a class="btn btn--primary nav-cta" href="#reserve">Get a ticket</a>{% endblock %}
+{% block navCta %}<a class="btn btn--primary nav-cta" href="#reserve">Get a seat</a>{% endblock %}
 
 {% block content %}
 
@@ -18,24 +18,24 @@ description: An evening for six at Things 4 Good Maker Night, hand-pouring four 
   <div class="wrap hero-grid">
     <div class="hero-copy reveal">
       <a href="/" style="display:inline-flex;align-items:center;gap:.4em;color:var(--marigold);font-weight:700;font-size:.9rem;text-decoration:none;margin-bottom:8px">&larr; Things 4 Good</a>
-      <p class="eyebrow">{{ site.makerNightDate }} &middot; by reservation</p>
+      <p class="eyebrow">{{ site.makerNightDate }} &middot; {{ site.makerNightTime }}</p>
       <h1 style="margin-top:18px">Maker <span class="pine" style="color:var(--marigold)">Night.</span></h1>
-      <p class="lead">An intimate evening for six. Pour four Things 4 Good candles with your own hands from scents we&rsquo;ve curated. Your ticket is a one-of-a-kind Maker Night candle, sold only at the fall sale.</p>
+      <p class="lead">An evening for six. At the fall sale, six gold Maker Night candles go on the counter, each in a scent made only for them. Buy one and you have a seat: come pour four candles of your own, in any scents from our library.</p>
       <div class="spots" role="img" aria-label="Six spots available">
         <span class="flames"><span class="flame"></span><span class="flame"></span><span class="flame"></span><span class="flame"></span><span class="flame"></span><span class="flame"></span></span>
         <span class="stxt">Only 6 spots</span>
       </div>
       <div class="hero-cta">
-        <a class="btn btn--primary" href="#reserve">How to get a ticket <span class="arr">&rarr;</span></a>
-        <a class="btn btn--ghost" href="#evening">See the evening</a>
+        <a class="btn btn--primary" href="#reserve">How to get a seat <span class="arr">&rarr;</span></a>
+        <a class="btn btn--ghost" href="#evening">How it works</a>
       </div>
-      <p class="hero-note">$250 Maker Night candle at the sale, {{ site.saleDates | safe }} &middot; 100% to good</p>
+      <p class="hero-note">${{ site.makerNightDonation }} gold Maker Night candle at the sale, {{ site.saleDates | safe }} &middot; 100% to good</p>
     </div>
 
     <div class="hero-art reveal">
       <div class="tape" style="background:#1f1812;border-color:rgba(255,255,255,.16)">
-        <span class="hand" style="color:var(--marigold)">one of a kind&hellip;</span>
-        <small style="color:rgba(255,255,255,.6)">YOUR MAKER NIGHT CANDLE</small>
+        <span class="hand" style="color:var(--marigold)">one of six&hellip;</span>
+        <small style="color:rgba(255,255,255,.6)">GOLD MAKER NIGHT CANDLE</small>
       </div>
       <img class="ph" src="/images/maker-night.jpg" alt="A tray of lit wooden-wick candles glowing in the dark" style="object-fit:cover" />
       <div class="badge" style="background:var(--marigold);color:#2B2017" aria-hidden="true">
@@ -45,29 +45,29 @@ description: An evening for six at Things 4 Good Maker Night, hand-pouring four 
   </div>
 </section>
 
-<!-- ========================= THE EVENING ========================= -->
+<!-- ========================= HOW IT WORKS ========================= -->
 <section class="section" id="evening">
   <div class="wrap">
     <div class="sec-head reveal">
-      <p class="eyebrow">The evening</p>
-      <h2 class="t">Make a night of it.</h2>
+      <p class="eyebrow">How it works</p>
+      <h2 class="t">Buy the candle, keep the seat.</h2>
       <p class="lead">We provide everything &mdash; the wax, the wicks, the workspace, and the know-how. You bring the company and the creativity.</p>
     </div>
     <div class="steps">
       <div class="step reveal">
         <div class="num">1</div>
-        <h3>Get your ticket</h3>
-        <p>Buy a Maker Night candle at the fall sale &mdash; a one-of-a-kind scent and label, and only six of them. It&rsquo;s a $250 donation, and it&rsquo;s your seat.</p>
+        <h3>Buy a gold candle</h3>
+        <p>Six gold Maker Night candles sit on the counter at the fall sale, {{ site.saleDates | safe }}, in a scent we made only for them. Each is a ${{ site.makerNightDonation }} donation. Take yours home that day; it&rsquo;s your seat.</p>
       </div>
       <div class="step alt reveal">
         <div class="num">2</div>
-        <h3>Choose your scents</h3>
-        <p>On the night, sample and pick from a curated selection of scents we maintain just for Maker Night, mixing and matching across your four candles.</p>
+        <h3>Come to Maker Night</h3>
+        <p>Join us {{ site.makerNightDate }}, {{ site.makerNightTime }}, where a thank-you candle we poured for you ahead of time will be waiting.</p>
       </div>
       <div class="step reveal">
         <div class="num">3</div>
         <h3>Pour your four</h3>
-        <p>Set the wooden wicks and hand-pour four of your very own Things 4 Good candles, with us guiding every step.</p>
+        <p>Pick any scents from our library, mix and match, and hand-pour four candles of your own with us guiding every step.</p>
       </div>
     </div>
   </div>
@@ -77,24 +77,24 @@ description: An evening for six at Things 4 Good Maker Night, hand-pouring four 
 <section class="section section--paper2" id="included">
   <div class="wrap">
     <div class="sec-head reveal">
-      <p class="eyebrow">Included with your $250 donation</p>
-      <h2 class="t">What you take home.</h2>
+      <p class="eyebrow">Included with your ${{ site.makerNightDonation }} donation</p>
+      <h2 class="t">Six candles, all told.</h2>
     </div>
     <div class="gifts">
       <div class="gift reveal">
-        <div class="big">4</div>
-        <h3>Candles you poured</h3>
-        <p>Four full-size Things 4 Good wooden-wick candles, made by your own hands in the scents you choose.</p>
+        <div class="big">1</div>
+        <h3>Gold Maker Night candle</h3>
+        <p>Yours from the sale, in a scent made only for Maker Night. Only six exist.</p>
       </div>
       <div class="gift alt reveal">
         <div class="big">1</div>
-        <h3>One-of-a-kind candle</h3>
-        <p>The Maker Night candle you buy at the sale &mdash; a unique scent and label made only for Maker Night. It&rsquo;s your ticket in.</p>
+        <h3>A thank-you candle</h3>
+        <p>Made for you ahead of time and waiting when you arrive on the night.</p>
       </div>
       <div class="gift reveal">
-        <div class="big">100%</div>
-        <h3>Goes to good</h3>
-        <p>Like everything we do, the full $250 is a donation. Every dollar goes to the causes our family supports.</p>
+        <div class="big">4</div>
+        <h3>Candles you poured</h3>
+        <p>In the scents you choose. They need time to set, so pick them up whenever suits you.</p>
       </div>
     </div>
   </div>
@@ -112,26 +112,30 @@ description: An evening for six at Things 4 Good Maker Night, hand-pouring four 
         <div class="glow" aria-hidden="true"></div>
         <p class="eyebrow">When</p>
         <div style="font-family:var(--serif);font-size:clamp(1.8rem,4vw,2.6rem);line-height:1.05;margin:14px 0 6px;position:relative;z-index:1">{{ site.makerNightDate | replace(", ", ",<br />", 1) | safe }}</div>
-        <p class="when-note">An evening for six guests. We&rsquo;ll confirm the time and the address with each guest directly.</p>
-        <a class="btn btn--primary" style="margin-top:22px" href="#reserve">How to get a ticket <span class="arr">&rarr;</span></a>
+        <p class="when-note">{{ site.makerNightTime }}, one night only. The date is set, so check your calendar before you buy.</p>
+        <a class="btn btn--primary" style="margin-top:22px" href="#reserve">How to get a seat <span class="arr">&rarr;</span></a>
       </div>
 
       <div class="info-card reveal">
         <div class="info-row">
           <div class="k">Donation</div>
-          <div class="v"><b>$250</b> per guest, given at the fall sale when you buy your Maker Night candle. That candle is your ticket.</div>
+          <div class="v"><b>${{ site.makerNightDonation }}</b> per seat, given when you buy your gold candle. It&rsquo;s divided evenly across this year&rsquo;s four causes, and 100% goes to good.</div>
         </div>
         <div class="info-row">
           <div class="k">Spots</div>
           <div class="v"><b>Six only.</b> We keep the night small and hands-on, so everyone gets real time at the pouring station.</div>
         </div>
         <div class="info-row">
-          <div class="k">Where</div>
-          <div class="v">Hosted by the Thingelstad family in Minneapolis. Address shared with confirmed guests.</div>
+          <div class="k">Bring a friend</div>
+          <div class="v">Buy two gold candles and come together.</div>
         </div>
         <div class="info-row">
-          <div class="k">You leave with</div>
-          <div class="v">Four candles you poured, plus the one-of-a-kind Maker Night candle that got you in.</div>
+          <div class="k">Where</div>
+          <div class="v">Hosted by the Thingelstad family in Minneapolis. When you buy, we take your name, email and phone, and send the address before the night.</div>
+        </div>
+        <div class="info-row">
+          <div class="k">Can&rsquo;t make the sale?</div>
+          <div class="v">Preorder one. Email <a href="mailto:{{ site.email }}" style="color:var(--marigold-d);font-weight:600;text-decoration:none">{{ site.email }}</a> and we&rsquo;ll set a gold candle aside for you.</div>
         </div>
       </div>
     </div>
@@ -141,11 +145,12 @@ description: An evening for six at Things 4 Good Maker Night, hand-pouring four 
 <!-- ========================= RESERVE ========================= -->
 <section class="section section--pine subscribe" id="reserve">
   <div class="wrap">
-    <p class="eyebrow" style="justify-content:center">Tickets</p>
-    <h2 class="t" style="max-width:20ch;margin-inline:auto">Six seats. Want one of them?</h2>
-    <p class="lead" style="margin:18px auto 0;text-align:center">Buy a Maker Night candle at the Things 4 Good sale, {{ site.saleDates | safe }}. It&rsquo;s a $250 donation and your ticket to Maker Night on {{ site.makerNightDate }}. There are only six, first come, first served.</p>
-    <div class="sub-form" style="max-width:none">
+    <p class="eyebrow" style="justify-content:center">Seats</p>
+    <h2 class="t" style="max-width:20ch;margin-inline:auto">Six gold candles. Six seats.</h2>
+    <p class="lead" style="margin:18px auto 0;text-align:center">Look for the gold Maker Night candles at the Things 4 Good sale, {{ site.saleDates | safe }}. Each is a ${{ site.makerNightDonation }} donation and a seat at Maker Night, {{ site.makerNightTime }} on {{ site.makerNightDate }}. First come, first served.</p>
+    <div class="sub-form" style="max-width:none;gap:12px">
       <a class="btn btn--primary" href="/#sale">See the sale details</a>
+      <a class="btn btn--ghost" href="mailto:{{ site.email }}?subject=Maker%20Night%20preorder">Preorder by email</a>
     </div>
     <p class="sub-note">Questions? Email <a href="mailto:{{ site.email }}" style="color:#fff;font-weight:600">{{ site.email }}</a>.</p>
   </div>
