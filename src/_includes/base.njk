@@ -46,7 +46,7 @@
     <a href="/faq/"{% if page.url == "/faq/" %} aria-current="page"{% endif %}>FAQ</a>
   </nav>
   <span class="nav-date">{% block navDate %}{{ site.saleDates }}{% endblock %}</span>
-  {% block navCta %}<a class="btn btn--primary nav-cta" href="{{ site.updatesUrl }}" data-tinylytics-event="updates.click" data-tinylytics-event-value="nav" target="_blank" rel="noopener">Get updates</a>{% endblock %}
+  {% block navCta %}{% if site.preorderSheet %}<a class="btn btn--primary nav-cta" href="{{ site.preorderSheet }}" data-tinylytics-event="preorder.sheet" data-tinylytics-event-value="nav" target="_blank" rel="noopener">Preorder</a>{% else %}<a class="btn btn--primary nav-cta" href="{{ site.updatesUrl }}" data-tinylytics-event="updates.click" data-tinylytics-event-value="nav" target="_blank" rel="noopener">Get updates</a>{% endif %}{% endblock %}
 </header>
 
 <main id="top">

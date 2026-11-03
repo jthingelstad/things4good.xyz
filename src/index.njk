@@ -22,8 +22,9 @@ card:
         <br /><span class="pine">100% for good.</span></h1>
       <p class="lead">Since 2021 the Thingelstad family has hand-poured wooden-wick candles for one weekend a year. Every candle is a $25 donation &mdash; and every dollar goes straight to causes we love.</p>
       <div class="hero-cta">
-        <a class="btn btn--primary" href="{{ site.updatesUrl }}" data-tinylytics-event="updates.click" data-tinylytics-event-value="home-hero" target="_blank" rel="noopener">Get sale updates <span class="arr">&rarr;</span></a>
-        <a class="btn btn--ghost" href="#good">See the impact</a>
+        {% if site.preorderSheet %}<a class="btn btn--primary" href="{{ site.preorderSheet }}" data-tinylytics-event="preorder.sheet" data-tinylytics-event-value="home-hero" target="_blank" rel="noopener">Preorder candles <span class="arr">&rarr;</span></a>
+        <a class="btn btn--ghost" href="/candles/">See the scents</a>{% else %}<a class="btn btn--primary" href="{{ site.updatesUrl }}" data-tinylytics-event="updates.click" data-tinylytics-event-value="home-hero" target="_blank" rel="noopener">Get sale updates <span class="arr">&rarr;</span></a>
+        <a class="btn btn--ghost" href="#good">See the impact</a>{% endif %}
       </div>
     </div>
 
