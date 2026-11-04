@@ -25,7 +25,7 @@
     "@aws-sdk/client-sts": "^3.1157.0"
   },
   "overrides": {
-    "@11ty/recursive-copy": "5.0.2",
+    "@11ty/recursive-copy": "5.2.0",
     "brace-expansion": "5.0.12"
   }
 }
