@@ -1,5 +1,5 @@
 {
-  "_note": "Sale events — the single source of truth for the whole site. Each event has an EXACT `raised` total; the nested `supported[]` amounts are estimates tuned to sum to it. `kind` is exactly 'candle-sale' or 'special-event'. Candle-sale events also carry `candles` and `participants`. Every aggregate (totals, growth, chart heights, candle math, grand total) is computed in metrics.js — never hardcode it. Site config (pricePerCandle, candleConstants, tightestRace) lives in site.json. A supported org's `reason` is the picker's note in full, never trimmed (the blog's words, typos fixed); an optional `post` links the picker's own blog post about it.",
+  "_note": "Sale events — the single source of truth for the whole site. Each event has an EXACT `raised` total; the nested `supported[]` amounts come from each year's tally and sum to it: pretty exact, though reconciliation can leave small differences (Jamie, 2026-11-06). `kind` is exactly 'candle-sale' or 'special-event'. Candle-sale events also carry `candles` and `participants`. Every aggregate (totals, growth, chart heights, candle math, grand total) is computed in metrics.js — never hardcode it. Site config (pricePerCandle, candleConstants, tightestRace) lives in site.json. A supported org's `reason` is the picker's note in full, never trimmed (the blog's words, typos fixed); an optional `post` links the picker's own blog post about it.",
   "events": [
     {
       "slug": "candle-sale-2021",
@@ -159,7 +159,7 @@
           "who": "Tyler",
           "amount": 1675.00,
           "blurb": "Studies Antarctic penguins and ecosystems to track the health of a warming planet.",
-          "reason": "Oceanites is a non-profit that helps the entire Arctic peninsula, though penguins are their first priority. They are trying to help with the warming Arctic."
+          "reason": "Oceanites is a non-profit that helps the entire Antarctic peninsula, though penguins are their first priority. They are trying to help with the warming Antarctic."
         },
         {
           "slug": "food-recovery-network",

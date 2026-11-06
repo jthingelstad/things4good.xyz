@@ -4,3 +4,9 @@ tmp/
 .DS_Store
 
 .playwright-mcp/
+
+# Secrets: .env is rendered from .env.tpl (otto-ops). Backups of it are secrets too.
+.env
+.env.*
+!.env.tpl
+!.env.example

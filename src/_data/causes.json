@@ -1,20 +1,31 @@
 {
-  "_note": "This year's four causes, one per Thing. Jamie announces them Thursday before the sale, and they can land a few at a time: anyone not in `list` yet keeps a placeholder saying they are coming soon, and llms.txt says the rest are coming. Each entry: who (Jamie|Tammy|Mazie|Tyler), slug (the org key events.json will use, and the Tinylytics nonprofit.visit value), name, url, blurb (one line about the org), reason (the picker's own words, printed in full), post (optional: the picker's own blog post about it, linked beside the note). While `list` has entries they fill the home page and /<year>/. After the sale the year's picks move into events.json with amounts and logos, keeping `reason` whole, and /<year>/ carries on at the same URL.",
+  "_note": "This year's four causes, one per Thing. Jamie announces them Thursday before the sale, and they can land a few at a time: anyone not in `list` yet keeps a placeholder saying they are coming soon, and llms.txt says the rest are coming. Each entry: who (Jamie|Tammy|Mazie|Tyler), slug (the org key events.json will use, the logo's filename and the Tinylytics nonprofit.visit value), name, logo (a file in src/images/logos/), url, blurb (one line about the org), reason (the picker's own words, printed in full), post (optional: the picker's own blog post about it, linked beside the note). The home page shows the cards and links to /<year>/, which carries the full notes. After the sale the year's picks move into events.json with amounts, keeping `reason` whole, and /<year>/ carries on at the same URL.",
   "year": 2026,
   "announce": "Thursday, November 5",
   "list": [
     {
+      "who": "Jamie",
+      "slug": "cure-alzheimers-fund",
+      "name": "Cure Alzheimer’s Fund",
+      "logo": "cure-alzheimers-fund.png",
+      "url": "https://curealz.org/",
+      "blurb": "Backs bold Alzheimer’s research and shares the results openly, with its board and donors covering overhead.",
+      "reason": "Alzheimer’s has had a multi-generational impact on my family. I remember visiting my great-grandmother and her not knowing who I was. Anyone who has watched it unfold in someone they love knows how much it takes, from them and from everyone around them.\n\nFor decades, research saw little progress. That’s finally changing. We now have the first drugs that slow the disease and blood tests that catch it earlier, and there’s real hope for treatments that do much more. It cannot come soon enough.\n\nCure Alzheimer’s Fund backs bold research and shares the results openly. Their board and donors cover overhead, so 100% of donations go to science, the same way we run our candle sale."
+    },
+    {
       "who": "Tammy",
       "slug": "bridging",
       "name": "Bridging",
+      "logo": "bridging.png",
       "url": "https://bridging.org",
       "blurb": "Provides quality furniture and household goods for people moving toward housing stability.",
-      "reason": "When Tyler started first grade I wanted to start a volunteer gig that I could do each week and feel like I was giving something back to the community. I found that opportunity with Bridging and this year marks my 10th year of helping in their mission to “furnish homes with hope”. Once a week I show up, unpack boxes of donated home furnishings and curate shelves of product so that when a client shows up and shops there is plenty to choose from. People that donate feel good about where their old things are going and the clients are able to come away with everything they need to set up their household from furniture to dishes, art for the walls, small appliances and everything in between."
+      "reason": "When Tyler started first grade I wanted to start a volunteer gig that I could do each week and feel like I was giving something back to the community. I found that opportunity with Bridging and this year marks my 10th year of helping in their mission to “furnish homes with hope”. Once a week I show up, unpack boxes of donated home furnishings and curate shelves of product so that when a client shows up and shops there is plenty to choose from. People that donate feel good about where their things are going and the clients are able to come away with everything they need to set up their household from furniture to dishes, art for the walls, small appliances and everything in between."
     },
     {
       "who": "Mazie",
       "slug": "wilderness-canoe-base",
       "name": "Wilderness Canoe Base",
+      "logo": "wilderness-canoe-base.png",
       "url": "https://lakewapo.org/sites/wilderness-canoe-base/",
       "blurb": "Offers on-site experiences and Boundary Waters canoe trips that help people slow down, reflect, and find out how strong they are.",
       "reason": "You simply can’t visit Wilderness Canoe Base (WCB) and walk away unchanged. Something about experiencing the pristine yet wild Boundary Waters alongside some of the most incredible people I have ever had the privilege of knowing is nothing short of freaking MAGICAL, and I will forever thank my lucky stars for this past summer that I got to spend doing just that. Spreading this experience to students who might otherwise never step foot in the woods is the driving force of this nonprofit. At base camp, staff and campers cultivate an intentional, loving community through daily shared music, meals, and quality time together. On trail in the Boundary Waters, this community is challenged, stretched, pushed, and ultimately stitched back together stronger with laughter, with tears, and with new memories. It is not easy to pinpoint moments of change in your life, but WCB is an immediate one for me. Anytime anyone even mentions the word “Wilderness” now, I can’t help but smile."
@@ -23,6 +34,7 @@
       "who": "Tyler",
       "slug": "physicians-for-a-national-health-program",
       "name": "Physicians for a National Health Program",
+      "logo": "physicians-for-a-national-health-program.png",
       "url": "https://pnhp.org",
       "blurb": "Works toward a universal, single-payer healthcare system through research, public education, and advocacy.",
       "reason": "Physicians for a National Health Program (PNHP) works toward a universal, single-payer healthcare system through research, public education, and advocacy. Their goals connect with me through the policy debate topic this year; I’ve spent months researching the healthcare system, and single-payer seems great. With the last two resolutions, there wasn’t really a direct or obvious way to help or contribute, but this one is a very obvious and easy way to support the push for what seems to be a very promising cause. PNHP lets me take what I’ve learned from debate and actually use it toward real-life policy because healthcare shouldn’t be dependent on who won the round."

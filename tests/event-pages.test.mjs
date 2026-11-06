@@ -1,7 +1,7 @@
 // The per-event pages (src/event.njk) from metrics.eventPages. Their URLs go out
 // in email, so a sale's address must not move, and none may land on another page.
 import assert from "node:assert/strict";
-import { readdirSync } from "node:fs";
+import { existsSync, readdirSync } from "node:fs";
 import { createRequire } from "node:module";
 import test from "node:test";
 
@@ -37,4 +37,11 @@ test("this year's picks hold a page with a slot per family member until they mov
 test("past notes stay whole, not cut to fit a card", () => {
   const longest = Math.max(...events.flatMap((e) => e.supported.map((s) => s.reason.length)));
   assert.ok(longest > 230, "the Impact card's Read full note only shows past 230 characters");
+});
+
+test("every pick's logo is on disk and named for its slug", () => {
+  for (const pick of causes.list) {
+    assert.ok(existsSync(`src/images/logos/${pick.logo}`), pick.slug);
+    assert.ok(pick.logo.startsWith(pick.slug), pick.slug);
+  }
 });
