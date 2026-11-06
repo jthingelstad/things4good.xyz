@@ -22,7 +22,7 @@ description: An evening for six. Buy one of six gold Maker Night candles at the 
       <a href="/" style="display:inline-flex;align-items:center;gap:.4em;color:var(--marigold);font-weight:700;font-size:.9rem;text-decoration:none;margin-bottom:8px">&larr; Things 4 Good</a>
       <p class="eyebrow">{{ site.makerNightDate }} &middot; {{ site.makerNightTime }}</p>
       <h1 style="margin-top:18px">Maker <span class="pine" style="color:var(--marigold)">Night.</span></h1>
-      <p class="lead">An evening for six. At the fall sale, six gold Maker Night candles go on the counter, each in a scent made only for them. Buy one and you have a seat: come pour four candles of your own, in any scents from our library.</p>
+      <p class="lead">We&rsquo;re trying something new! At the fall sale we&rsquo;ll have six gold Maker Night candles, each in a scent we made only for them. Buy one and you get a seat at Maker Night, where you&rsquo;ll pour four candles of your own in any scents from our library. It&rsquo;s an evening for six.</p>
       <div class="spots" role="img" aria-label="{% if seatsLeft > 0 %}{{ seatsLeft }} of {{ makerNightSeats.total }} seats left{% else %}Sold out{% endif %}">
         <span class="flames">{% for i in range(0, makerNightSeats.total) %}<span class="flame{% if i >= seatsLeft %} out{% endif %}"></span>{% endfor %}</span>
         <span class="stxt">{% if seatsLeft > 0 %}{{ seatsLeft }} of {{ makerNightSeats.total }} seats left{% else %}Sold out{% endif %}</span>
@@ -52,14 +52,14 @@ description: An evening for six. Buy one of six gold Maker Night candles at the 
   <div class="wrap">
     <div class="sec-head reveal">
       <p class="eyebrow">How it works</p>
-      <h2 class="t">Buy the candle, keep the seat.</h2>
-      <p class="lead">We provide everything &mdash; the wax, the wicks, the workspace, and the know-how. You bring the company and the creativity.</p>
+      <h2 class="t">Buy a candle and you have a seat.</h2>
+      <p class="lead">We&rsquo;ll have the wax, the wicks and everything else. We&rsquo;ve also already made most of the mistakes, so you don&rsquo;t have to. 😄</p>
     </div>
     <div class="steps">
       <div class="step reveal">
         <div class="num">1</div>
         <h3>Buy a gold candle</h3>
-        <p>Six gold Maker Night candles sit on the counter at the fall sale, {{ site.saleDates | safe }}, in a scent we made only for them. Each is a ${{ site.makerNightDonation }} donation. Take yours home that day; it&rsquo;s your seat.</p>
+        <p>We&rsquo;ll have six gold Maker Night candles at the fall sale, {{ site.saleDates | safe }}, in a scent we made only for them. Each is a ${{ site.makerNightDonation }} donation. You take yours home that day and it&rsquo;s your seat.</p>
       </div>
       <div class="step alt reveal">
         <div class="num">2</div>

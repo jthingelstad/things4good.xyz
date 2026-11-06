@@ -20,7 +20,7 @@ card:
       <p class="eyebrow">6th annual fall fundraiser</p>
       <h1 style="margin-top:18px">Hand-poured candles,
         <br /><span class="pine">100% for good.</span></h1>
-      <p class="lead">Since 2021 the Thingelstad family has hand-poured wooden-wick candles for one weekend a year. Every candle is a $25 donation &mdash; and every dollar goes straight to causes we love.</p>
+      <p class="lead">Every fall our family pours hundreds of wooden-wick candles and sells them over one weekend to raise money for good causes. We&rsquo;ve done this since 2021. Each candle is a <b style="color:var(--ink)">$25 donation</b> and all of it goes to the non-profits!</p>
       <div class="hero-cta">
         {% if site.preorderSheet %}<a class="btn btn--primary" href="{{ site.preorderSheet }}" data-tinylytics-event="preorder.sheet" data-tinylytics-event-value="home-hero" target="_blank" rel="noopener">Preorder candles <span class="arr">&rarr;</span></a>
         <a class="btn btn--ghost" href="/candles/">See the scents</a>{% else %}<a class="btn btn--primary" href="{{ site.updatesUrl }}" data-tinylytics-event="updates.click" data-tinylytics-event-value="home-hero" target="_blank" rel="noopener">Get sale updates <span class="arr">&rarr;</span></a>
@@ -46,7 +46,7 @@ card:
   <div class="wrap">
     <p class="eyebrow" style="justify-content:center">Since 2021, together we&rsquo;ve raised</p>
     <div class="big"><span class="pre">$</span><span id="counter" data-target="{{ metrics.grandTotal }}">{{ metrics.grandTotalDisplay }}</span></div>
-    <p class="sub">&hellip;and 100% of it went to the nonprofits below.</p>
+    <p class="sub">&hellip;and 100% of it went to the non-profits below.</p>
     <div class="statrow">
       {% for stat in metrics.raisedStats %}
       <div class="stat reveal"><b>{{ stat.value | safe }}</b><span>{{ stat.label | safe }}</span></div>
@@ -61,7 +61,7 @@ card:
     <div class="sec-head reveal">
       <p class="eyebrow">Five years of impact</p>
       <h2 class="t">The good, year by year.</h2>
-      <p class="lead">Every fall the community shows up &mdash; and the candles add up. Here&rsquo;s how the fundraiser has grown since we started in 2021.</p>
+      <p class="lead">Every fall folks show up and buy candles, and it adds up. Here&rsquo;s how the fundraiser has grown since we started in 2021.</p>
     </div>
 
     <div class="impact-chart reveal">
@@ -83,7 +83,7 @@ card:
     <div class="journal-callout reveal">
       <div class="journal-head">
         <div>
-          <p class="eyebrow">From the journal</p>
+          <p class="eyebrow">From the blog</p>
           <h3>The story behind the numbers.</h3>
         </div>
         <a class="journal-all" href="{{ site.blogUrl }}" target="_blank" rel="noopener">All Things 4 Good posts <span class="arr">&rarr;</span></a>
@@ -108,7 +108,7 @@ card:
     <div class="sec-head reveal">
       <p class="eyebrow">The 2026 sale</p>
       <h2 class="t">Mark your calendar.</h2>
-      <p class="lead">One weekend, one table full of candles, and a whole lot of good. Stop by, pick your scents, and choose where your donation goes.</p>
+      <p class="lead">One weekend and a table full of candles. Stop by, pick your scents and choose where your donation goes.</p>
     </div>
 
     <div class="sale-grid">
@@ -134,20 +134,20 @@ card:
       <div class="info-card reveal">
         <div class="info-row">
           <div class="k">The candle</div>
-          <div class="v">A hand-poured, wooden-wick candle &mdash; <b>$25 donation</b> each. Same price it&rsquo;s been every year.</div>
+          <div class="v">A hand-poured, wooden-wick candle for a <b>$25 donation</b>. It&rsquo;s been the same price every year.</div>
         </div>
         <div class="info-row">
           <div class="k">Payment</div>
           <div class="v">
-            However&rsquo;s easiest for you. <a href="/pay/" style="color:var(--marigold-d);font-weight:600;text-decoration:none">How to pay &rarr;</a>
+            Whatever&rsquo;s easiest for you. <a href="/pay/" style="color:var(--marigold-d);font-weight:600;text-decoration:none">How to pay &rarr;</a>
             <div class="pay">
               <span>Venmo</span><span>Cash App</span><span>Apple Pay</span><span>Zelle</span><span>Cash</span><span>Check</span>
             </div>
           </div>
         </div>
         <div class="info-row">
-          <div class="k">Pre-orders</div>
-          <div class="v">Ordering <b>six or more</b>? {% if site.preorderSheet %}Add your candles and scents to our <a href="{{ site.preorderSheet }}" data-tinylytics-event="preorder.sheet" data-tinylytics-event-value="home-next" target="_blank" rel="noopener" style="color:var(--marigold-d);font-weight:600;text-decoration:none">pre-order sheet</a> and we&rsquo;ll have them ready to pick up anytime at the sale.{% else %}The pre-order sheet opens closer to the sale and goes to subscribers first. <a href="/preorder/" style="color:var(--marigold-d);font-weight:600;text-decoration:none">See preorder &amp; pickup notes</a>.{% endif %}</div>
+          <div class="k">Preorders</div>
+          <div class="v">Ordering <b>six or more</b>? {% if site.preorderSheet %}Fill out our <a href="{{ site.preorderSheet }}" data-tinylytics-event="preorder.sheet" data-tinylytics-event-value="home-next" target="_blank" rel="noopener" style="color:var(--marigold-d);font-weight:600;text-decoration:none">preorder form</a> and we&rsquo;ll have them ready to pick up anytime during the sale.{% else %}The preorder sheet opens closer to the sale and goes to subscribers first. <a href="/preorder/" style="color:var(--marigold-d);font-weight:600;text-decoration:none">See preorder &amp; pickup notes</a>.{% endif %}</div>
         </div>
         <div class="info-row">
           <div class="k">Scents</div>
@@ -167,7 +167,7 @@ card:
       <div class="mn-copy">
         {% set seatsLeft = makerNightSeats.total - makerNightSeats.sold %}<span class="tag">New &middot; {% if seatsLeft > 0 %}{{ seatsLeft }} of {{ makerNightSeats.total }} seats left{% else %}Sold out{% endif %}</span>
         <h3>Pour your own at Maker Night.</h3>
-        <p>Six gold Maker Night candles go on the counter at the sale, each a ${{ site.makerNightDonation }} donation and a seat at an evening of pouring four candles of your own, in any scents from our library. 100% to good.</p>
+        <p>We&rsquo;re trying something new! We&rsquo;ll have six gold Maker Night candles at the sale. Each one is a ${{ site.makerNightDonation }} donation and a seat at an evening of pouring four candles of your own, in any scents from our library. All of it goes to the non-profits.</p>
       </div>
       <div class="mn-act">
         <a class="btn btn--primary" href="/maker-night/">Explore Maker Night <span class="arr">&rarr;</span></a>
@@ -183,23 +183,23 @@ card:
   <div class="wrap">
     <div class="sec-head reveal">
       <p class="eyebrow">How it works</p>
-      <h2 class="t">Simple, by design.</h2>
+      <h2 class="t">It&rsquo;s pretty simple.</h2>
     </div>
     <div class="steps">
       <div class="step reveal">
         <div class="num">1</div>
         <h3>We make them</h3>
-        <p>We gather the materials, mix and hand-pour every candle, set the wicks, and wait for them to cure &mdash; then add labels Mazie designs herself.</p>
+        <p>We order wax, vessels, wicks and scent, weigh everything, and pour every candle by hand. Then we wait for them to cure and add the labels Mazie draws.</p>
       </div>
       <div class="step alt reveal">
         <div class="num">2</div>
         <h3>You pick yours</h3>
-        <p>Come by the sale, choose your favorite scents, and pay whichever way is easiest. Each candle is a flat $25 donation.</p>
+        <p>Come by the sale, pick your favorite scents and pay whichever way is easiest. Each candle is a $25 donation.</p>
       </div>
       <div class="step reveal">
         <div class="num">3</div>
-        <h3>You choose the good</h3>
-        <p>Split your donation however you like across the four causes our family picked this year. We tally it all and send every dollar along.</p>
+        <h3>You choose where it goes</h3>
+        <p>Split your donation however you like across the four causes we picked this year. After the sale we add it all up and send every dollar along.</p>
       </div>
     </div>
   </div>
@@ -214,9 +214,9 @@ card:
     <div class="story reveal">
       <p class="eyebrow">How it started</p>
       <h2 class="t" style="margin-bottom:18px">It began with a&nbsp;<em class="it" style="font-style:italic">crackle</em>.</h2>
-      <p>In 2019, Jamie bought a wooden-wick candle at a local Christmas market and fell in love with the sound &mdash; that soft <span class="crackle">crackle</span> of a tiny wood flame. So he started making his own. A few, then a few more.</p>
-      <p>He gave them as gifts, and people started asking to buy them. Rather than open a candle shop, the family landed on something better: a once-a-year sale where <b>every dollar goes to charity</b>.</p>
-      <p>Our family name is Thingelstad &mdash; shortened to <b>Things</b>. There are four of us. Four causes, every year. That&rsquo;s Things 4 Good.</p>
+      <p>In 2019 Jamie bought a wooden-wick candle at a Christmas market and loved the sound it made. That <span class="crackle">crackle!</span> Friends who have known Jamie for a long time won&rsquo;t be surprised that a box of candle-making supplies showed up soon after.</p>
+      <p>The first batch was a mess. It had about 20x too much fragrance and gave Jamie a terrible headache, so all of that wax got cut out with a knife and the stinky stuff went in the trash. Take two went much better. 🕯️</p>
+      <p>The candles became gifts and people started asking to buy them. Nobody wanted to open a candle shop, so the family landed on one sale a year where <b>all of the money goes to non-profits</b>. There are four of us and we go by the Things, so each of us picks a cause every year. That&rsquo;s Things 4 Good!</p>
     </div>
   </div>
 </section>
@@ -227,7 +227,7 @@ card:
     <div class="sec-head reveal">
       <p class="eyebrow">The four Things</p>
       <h2 class="t">Meet the makers.</h2>
-      <p class="lead">We all pitch in &mdash; acquiring materials, managing production, mixing, pouring, and setting wicks. Each of us also picks a cause we care about.</p>
+      <p class="lead">We all pitch in on everything: ordering supplies, mixing, pouring and setting wicks. Each of us also picks a cause every year.</p>
     </div>
     <div class="makers">
       {% for m in site.makers %}
@@ -248,7 +248,7 @@ card:
     <div class="sec-head reveal">
       <p class="eyebrow">The good</p>
       <h2 class="t">Where the money goes.</h2>
-      <p class="lead">Every candle&rsquo;s full $25 goes to a nonprofit &mdash; and you decide which. Each year the four of us each pick a cause we care about. Here&rsquo;s where it&rsquo;s gone.</p>
+      <p class="lead">The full $25 from every candle goes to a non-profit, and you decide which one. Each year the four of us each pick a cause we care about. Here&rsquo;s where it has gone.</p>
     </div>
 
     <h3 class="causes-head reveal" id="this-year">This year&rsquo;s four{% if not causes.list.length %} <span>announced {{ causes.announce }}</span>{% endif %}</h3>
@@ -283,21 +283,21 @@ card:
   <div class="wrap">
     <div class="sec-head reveal" style="text-align:center;margin-inline:auto">
       <p class="eyebrow" style="justify-content:center">Need the details?</p>
-      <h2 class="t">Everything has its place.</h2>
-      <p class="lead" style="margin:16px auto 0;text-align:center">The homepage is the quick version. The details live on focused pages you can come back to when it is time to plan, preorder, or dig into the impact.</p>
+      <h2 class="t">There&rsquo;s more if you want it.</h2>
+      <p class="lead" style="margin:16px auto 0;text-align:center">Here is every non-profit we&rsquo;ve supported, how preorders work, and the questions we get the most.</p>
     </div>
 
     <div class="path-grid">
       <a class="path-card reveal" href="/impact/">
         <span class="kicker">Impact</span>
         <h3>See every cause.</h3>
-        <p>Browse all {{ metrics.orgCount }} supported organizations, filter by year or event, and read the family&rsquo;s notes.</p>
+        <p>Browse all {{ metrics.orgCount }} organizations we&rsquo;ve supported, filter by year or event, and read our notes.</p>
         <span class="go">Explore impact <span class="arr">&rarr;</span></span>
       </a>
       <a class="path-card reveal" href="/preorder/">
         <span class="kicker">Preorder</span>
-        <h3>Plan the logistics.</h3>
-        <p>Ordering six or more? The logistics page keeps pickup, preorder status, and payment notes together.</p>
+        <h3>Preorder and pickup.</h3>
+        <p>Ordering six or more? Here&rsquo;s how preorders, pickup and payment work.</p>
         <span class="go">Pickup details <span class="arr">&rarr;</span></span>
       </a>
       <a class="path-card reveal" href="/faq/">
@@ -315,7 +315,7 @@ card:
   <div class="wrap">
     <p class="eyebrow" style="justify-content:center">Stay in the loop</p>
     <h2 class="t" style="max-width:20ch;margin-inline:auto">Get the fall candle sale announcement.</h2>
-    <p class="lead" style="margin:18px auto 0;text-align:center">Join the Thingelstad Family list and choose <b style="color:#fff">Candle Fundraiser</b> for sale dates, scent previews, preorder timing, and nonprofit highlights.</p>
+    <p class="lead" style="margin:18px auto 0;text-align:center">Sign up to our family mailing list and check <b style="color:#fff">Candle Fundraiser</b> to be notified about sale dates, new scents and preorders. We hope to see you there!</p>
     <div class="sub-form" style="max-width:none">
       <a class="btn btn--primary" href="{{ site.updatesUrl }}" data-tinylytics-event="updates.click" data-tinylytics-event-value="home-subscribe" target="_blank" rel="noopener">Get sale updates <span class="arr">&rarr;</span></a>
     </div>

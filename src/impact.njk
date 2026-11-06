@@ -1,6 +1,6 @@
 ---
 title: Impact — Things 4 Good
-description: Every nonprofit Things 4 Good has supported since 2021 — who picked it, the year, and what we raised together. Filter and sort the full list.
+description: Every non-profit Things 4 Good has supported since 2021 — who picked it, the year, and what we raised together. Filter and sort the full list.
 card:
   kicker: "Community impact"
   name: "Where the good has gone."
@@ -18,7 +18,7 @@ card:
     <a class="back-link" href="/">&larr; Things 4 Good</a>
     <p class="eyebrow">Community impact</p>
     <h1 style="font-family:var(--serif);font-weight:500;font-size:clamp(2.4rem,5.4vw,4rem);letter-spacing:-.02em;line-height:1.02;max-width:16ch">Where the good has gone.</h1>
-    <p class="lead" style="margin-top:18px">Every year each of us chooses one cause, and everyone who buys candles decides where their donation goes. Since 2021, that simple ritual has sent <b style="color:var(--ink)">100% of every candle donation</b> to {{ metrics.orgCount }} organizations and counting.</p>
+    <p class="lead" style="margin-top:18px">Every year each of us picks a cause, and whoever buys a candle decides where the donation goes. Since 2021 that has sent <b style="color:var(--ink)">100% of every candle donation</b> to {{ metrics.orgCount }} organizations so far.</p>
 
     <div class="sumstrip">
       <div class="s acc"><b>${{ metrics.grandTotalDisplay }}</b><span>Raised since 2021</span></div>
@@ -29,8 +29,8 @@ card:
 
     <div class="impact-principle">
       <p><b>Four family picks.</b> One cause from each of us, every fall.</p>
-      <p><b>Community choice.</b> Support one, split across all four, or ask for a specific allocation.</p>
-      <p><b>Every dollar onward.</b> We cover materials so the full candle donation goes to good.</p>
+      <p><b>Your choice.</b> Support one, split across all four, or ask for a specific split.</p>
+      <p><b>Every dollar.</b> We pay for the materials, so the full candle donation goes to the non-profits.</p>
     </div>
   </div>
 </section>
@@ -39,10 +39,10 @@ card:
 <section class="section" id="list" style="padding-top:clamp(20px,3vw,32px)">
   <div class="wrap">
     <div class="ledger-head reveal">
-      <p class="eyebrow">Explore the ledger</p>
-      <h2 class="t">Filter the story.</h2>
-      <p class="lead">Look at a single sale year, follow one family member&rsquo;s causes, or sort the full list by amount raised. The filters are shareable, so each view has its own URL.</p>
-      <div class="filter-story" id="filterStory">Showing the full Things 4 Good impact ledger across every sale year and event.</div>
+      <p class="eyebrow">The full list</p>
+      <h2 class="t">Every non-profit we&rsquo;ve supported.</h2>
+      <p class="lead">Look at a single sale year, follow one family member&rsquo;s causes, or sort the list by amount raised. Each view has its own URL, so you can share it.</p>
+      <div class="filter-story" id="filterStory">Showing every non-profit from every sale and event.</div>
     </div>
 
     <div class="controls" id="controls">
@@ -67,7 +67,7 @@ card:
       </div>
       <div class="ctrl select">
         <label class="lab" for="sort">Sort</label>
-        <select id="sort" aria-label="Sort nonprofits">
+        <select id="sort" aria-label="Sort non-profits">
           <option value="year-desc">Newest first</option>
           <option value="year-asc">Oldest first</option>
           <option value="amt-desc">Raised: high to low</option>
@@ -93,7 +93,7 @@ card:
     <div class="sec-head reveal">
       <p class="eyebrow">Year by year</p>
       <h2 class="t">Read the sale stories.</h2>
-      <p class="lead">The ledger shows where the dollars went. The journal posts add the texture: what sold, what surprised us, what the charts revealed, and what we learned for next year.</p>
+      <p class="lead">After every sale Jamie writes up how it went on the blog: what sold, what surprised us, and what we want to change next year. There are always charts. 🤓</p>
     </div>
 
     <div class="annual-grid">
@@ -105,7 +105,7 @@ card:
         </div>
         <h3>{{ ev.name }}</h3>
         <p class="annual-takeaway">{{ ev.takeaway }}</p>
-        <p>{{ ev.candles }} candles &middot; {{ ev.participants }} neighbors &middot; {{ ev.posts.length }} {% if ev.posts.length == 1 %}post{% else %}posts{% endif %}</p>
+        <p>{{ ev.candles }} candles &middot; {{ ev.participants }} folks &middot; {{ ev.posts.length }} {% if ev.posts.length == 1 %}post{% else %}posts{% endif %}</p>
         <div class="post-list">
           {% for post in ev.posts %}
           <a href="{{ post.url }}" target="_blank" rel="noopener"><span>{{ post.type }}</span>{{ post.title }} <i aria-hidden="true">&rarr;</i></a>
@@ -122,9 +122,9 @@ card:
   <div class="wrap">
     <div class="impact-close reveal">
       <div>
-        <p class="eyebrow">Next chapter</p>
+        <p class="eyebrow">Next up</p>
         <h3>Follow the next sale.</h3>
-        <p>The latest impact stories live on the blog, and the 2026 sale details go first to Candle Fundraiser subscribers.</p>
+        <p>Jamie writes up each sale on the blog, and the 2026 sale details go to Candle Fundraiser subscribers first.</p>
       </div>
       <div class="impact-close-actions">
         <a class="btn btn--primary" href="{{ site.updatesUrl }}" data-tinylytics-event="updates.click" data-tinylytics-event-value="impact-close" target="_blank" rel="noopener">Get sale updates <span class="arr">&rarr;</span></a>
@@ -182,7 +182,7 @@ card:
     const event = state.event === "all" ? null : eventBySlug.get(state.event);
     const raised = list.reduce((s, o) => s + o.amount, 0);
     const whoText = state.who === "all" ? "" : `${state.who}'s picks`;
-    let text = "Showing the full Things 4 Good impact ledger across every sale year and event.";
+    let text = "Showing every non-profit from every sale and event.";
     if (event && state.who !== "all") {
       text = `${whoText} in ${event.name}: ${list.length} ${list.length === 1 ? "organization" : "organizations"} and ${fmt(raised)} raised.`;
     } else if (event) {

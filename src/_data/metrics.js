@@ -281,7 +281,7 @@ module.exports = (() => {
   // ---- the home impact-chart footer stats ----
   const footStats = [
     { value: String(latest.candles), label: "Candles hand-poured in " + latestYear },
-    { value: String(latest.participants), label: "Neighbors who took part last year" },
+    { value: String(latest.participants), label: "Folks who took part last year" },
     { value: latest.growthDisplay, label: "Growth over the year before" },
   ];
 
