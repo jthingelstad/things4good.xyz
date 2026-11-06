@@ -33,6 +33,10 @@ module.exports = function (eleventyConfig) {
     createHash("sha256").update(require("node:fs").readFileSync(`src/${file}`)).digest("hex").slice(0, 10),
   );
 
+  // This year's pick for one family member, or nothing until it is announced
+  // (causes.json). The picks can land a few at a time.
+  eleventyConfig.addFilter("pickFor", (list, who) => list.find((c) => c.who === who));
+
   // Copy the stylesheet straight through to the site root.
   eleventyConfig.addPassthroughCopy({ "src/styles.css": "styles.css" });
 
