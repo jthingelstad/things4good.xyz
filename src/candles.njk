@@ -1,6 +1,6 @@
 ---
 title: The Candles — Things 4 Good
-description: This year’s Things 4 Good scents, from Just Crackle to Old Fashioned. Every hand-poured, wooden-wick candle is a donation, and 100% goes to good.
+description: This year’s Things 4 Good scents, from Just Crackle to Burnt Cinnamon. Every hand-poured, wooden-wick candle is a donation, and 100% goes to good.
 ---
 {% extends "base.njk" %}
 
@@ -24,7 +24,7 @@ description: This year’s Things 4 Good scents, from Just Crackle to Old Fashio
       {% for scent in candles.scents %}
       <article class="lineup-card reveal" id="{{ scent.slug }}">
         <div class="lineup-mark" aria-hidden="true"><b>Things 4 Good</b><span>Candles</span></div>
-        <div class="lineup-art"><img src="{{ scent.art }}" alt="Mazie’s hand-drawn {{ scent.name }} label" loading="lazy" decoding="async" /></div>
+        {% if scent.art %}<div class="lineup-art"><img src="{{ scent.art }}" alt="Mazie’s hand-drawn {{ scent.name }} label" loading="lazy" decoding="async" /></div>{% else %}<div class="lineup-art lineup-art--secret lineup-art--new" aria-hidden="true"><span>New</span></div>{% endif %}
         <div class="lineup-body">
           <h2>{{ scent.name }}</h2>
           <p>{{ scent.description }}</p>
