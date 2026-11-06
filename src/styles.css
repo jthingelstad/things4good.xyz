@@ -425,7 +425,7 @@ em.it { font-style: italic; }
 .split { display: grid; grid-template-columns: .9fr 1.1fr; gap: clamp(30px, 5vw, 70px); align-items: center; }
 .story p { color: var(--ink-soft); }
 .story p + p { margin-top: 16px; }
-.story .crackle { font-family: var(--hand); color: var(--marigold-d); font-size: 1.6rem; }
+.story .crackle { font-family: var(--hand); color: var(--marigold-d); font-size: 1.6rem; padding-right: .14em; }
 .story-art .ph { aspect-ratio: 5/4; border-radius: 20px; }
 
 /* ---------- makers ---------- */

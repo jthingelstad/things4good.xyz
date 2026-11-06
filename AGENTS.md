@@ -22,6 +22,16 @@ Pages, each a `src/*.njk` that extends `base.njk` (Eleventy emits `<name>/index.
 - `sitemap.njk` — `/sitemap.xml`, every page in `collections.all`, each with a `<lastmod>`: the last commit touching the page's template or the data it prints (`scripts/lastmod.cjs`, which lists those data files per page; a new page needs its entry there, `tests/sitemap.test.mjs` fails until it has one). Never the build time. The dates come from git history, so CI checks out with `fetch-depth: 0` and a shallow clone fails the build. `base.njk` chrome is not counted.
 - `llms.txt.njk` — `/llms.txt`, the site for agents and LLMs: the fundraiser, the pages, every sale and every nonprofit, all from `metrics` (plain text, so values go out with `| safe`). `base.njk` links it from every page; it stays out of `collections.all` and the sitemap. No feed, by Jamie's call.
 
+## Voice
+
+The site's copy follows Jamie's blog voice, in the third person (rewrite of 2026-11-05, on Jamie's approval line). Jamie on the first samples: "This is good but it should be in 3rd person not 1st person."
+
+- Name Jamie: "Jamie writes up every sale on the blog." Never "I", never a signed "- Jamie". "We" stays for the family. Use family members' names rather than pronouns.
+- Everyday words ("folks", "it turns out", "non-profit" with the hyphen), literal headings, the number and then a reaction, the mess left in (the first batch's 20x fragrance stays), sincere exclamation points. Em dashes are not banned; Jamie uses them too.
+- Emoji only as a handful, at the end of a sentence. Never in a heading, a button or a payment step.
+- No new facts: anything the site claims about the sale's history needs a source in the archive or from Jamie.
+- Leave alone: `card:` front matter and the eyebrows and h1s the share cards mirror (changing a card field redraws the card); `care.njk` (mirrors the printed burn card, "nonprofits" included); `candles.json` descriptions (match the printed markers); `reason` and `blurb` in `events.json` (the picker's own words); `causes.json`. `nonprofit` stays in code identifiers and Tinylytics values (`metrics.nonprofits`, `nonprofit.visit`).
+
 ## Commands
 
 ```bash

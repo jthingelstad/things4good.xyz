@@ -18,7 +18,7 @@ card:
     <a class="back-link" href="/">&larr; Things 4 Good</a>
     <p class="eyebrow">Sale logistics</p>
     <h1 style="font-family:var(--serif);font-weight:500;font-size:clamp(2.4rem,5.4vw,4rem);letter-spacing:-.02em;line-height:1.02;max-width:18ch">Preorder, pickup, and payment.</h1>
-    <p class="lead" style="margin-top:18px">{% if site.preorderSheet %}The {{ site.saleYear }} preorder form is open. Pick your scents, and Jamie will email you a payment link once your order is in.{% else %}This page is here for practical sale details. When the {{ site.saleYear }} candle lineup is ready, we&rsquo;ll share preorder timing, pickup notes, and payment options with Candle Fundraiser subscribers first.{% endif %}</p>
+    <p class="lead" style="margin-top:18px">{% if site.preorderSheet %}The {{ site.saleYear }} preorder form is open. Pick your scents, and Jamie will email you a payment link once your order is in.{% else %}When the {{ site.saleYear }} candle lineup is ready, we&rsquo;ll send preorder timing, pickup notes and payment options to Candle Fundraiser subscribers first.{% endif %}</p>
   </div>
 </section>
 
@@ -28,7 +28,7 @@ card:
     <div class="sec-head reveal">
       <p class="eyebrow">Preorder &middot; six or more</p>
       <h2 class="t">Planning a bigger order?</h2>
-      <p class="lead">Ordering <b style="color:var(--ink)">six or more</b>? {% if site.preorderSheet %}The <a href="{{ site.preorderSheet }}" data-tinylytics-event="preorder.sheet" data-tinylytics-event-value="preorder-head" target="_blank" rel="noopener" style="color:var(--marigold-d);font-weight:600;text-decoration:none">preorder form</a> is open.{% else %}The preorder sheet opens closer to the sale, and subscribers get it first.{% endif %} Smaller orders are always welcome right at the sale &mdash; no preorder needed. XL candles and the new scents we unveil at the sale are sale-only.</p>
+      <p class="lead">Many people buy candles as gifts, so we tend to see some larger orders. Ordering <b style="color:var(--ink)">six or more</b>? {% if site.preorderSheet %}The <a href="{{ site.preorderSheet }}" data-tinylytics-event="preorder.sheet" data-tinylytics-event-value="preorder-head" target="_blank" rel="noopener" style="color:var(--marigold-d);font-weight:600;text-decoration:none">preorder form</a> is open.{% else %}The preorder sheet opens closer to the sale, and subscribers get it first.{% endif %} Just getting a couple? Come by the sale, no preorder needed. XL candles and the new scents we&rsquo;re saving are only at the sale.</p>
     </div>
 
     <div class="steps">
@@ -42,7 +42,7 @@ card:
       <div class="step alt reveal">
         <div class="num">2</div>
         <h3>We pour &amp; prep</h3>
-        <p>We hand-pour your candles, set the wooden wicks, let them cure, and add Mazie&rsquo;s labels &mdash; all set aside with your name on them.</p>
+        <p>We pour your candles, let them cure and add Mazie&rsquo;s labels, then set them aside with your name on them.</p>
       </div>
       <div class="step reveal">
         <div class="num">3</div>
@@ -55,7 +55,7 @@ card:
       <div class="glow" aria-hidden="true"></div>
       <div class="mn-copy">
         <span class="tag">{% if site.preorderSheet %}Preorder form &middot; open now{% else %}Preorder sheet{% endif %}</span>
-        <h3>Ready to reserve your batch?</h3>
+        <h3>Ready to order?</h3>
         <p>{% if site.preorderSheet %}Pick your scents, and we&rsquo;ll email a payment link.{% else %}The sheet opens closer to the sale and goes out to Candle Fundraiser subscribers first.{% endif %} Best for six or more, picked up anytime at the sale.</p>
       </div>
       <div class="mn-act">
@@ -76,14 +76,14 @@ card:
     <div class="sec-head reveal">
       <p class="eyebrow">How to pay</p>
       <h2 class="t">Send your donation.</h2>
-      <p class="lead">Each candle is a <b style="color:var(--ink)">$25 donation</b>. Pay however&rsquo;s easiest; Venmo is the most popular. On a phone, tap to open the app; on a computer, scan a code. Preorders pay once Jamie confirms the order.</p>
+      <p class="lead">Each candle is a <b style="color:var(--ink)">$25 donation</b>. Pay whatever way is easiest. Venmo is the most popular. On a phone, tap to open the app. On a computer, scan a code. Preorders pay once Jamie confirms the order.</p>
     </div>
 
     {% include "payment-methods.njk" %}
 
     <div class="good-note reveal" style="margin-top:clamp(28px,4vw,40px)">
       <span class="hand" style="font-size:1.7rem">100% &mdash; for real.</span>
-      <span style="font-weight:500;color:var(--pine-d)">We cover every cost of making the candles ourselves, so the entire amount you send becomes a donation. Preorders are divided evenly across this year&rsquo;s four causes; choosing your own split is for purchases at the sale.</span>
+      <span style="font-weight:500;color:var(--pine-d)">We pay for the materials ourselves, so everything you send becomes a donation. Preorders are divided evenly across this year&rsquo;s four causes. Choosing your own split is for purchases at the sale.</span>
     </div>
 
     <div class="sumstrip reveal" style="margin-top:clamp(22px,3vw,32px)">
@@ -100,7 +100,7 @@ card:
   <div class="wrap">
     <p class="eyebrow" style="justify-content:center">Questions before you order?</p>
     <h2 class="t" style="max-width:20ch;margin-inline:auto">We&rsquo;re happy to help.</h2>
-    <p class="lead" style="margin:18px auto 0;text-align:center">Get the fall announcement, read the common questions, or just reach out &mdash; a real Thing will answer.</p>
+    <p class="lead" style="margin:18px auto 0;text-align:center">Get the fall announcement, read the common questions, or just email us. A real Thing will answer.</p>
     <div class="sub-form" style="max-width:none;gap:12px">
       <a class="btn btn--primary" href="{{ site.updatesUrl }}" data-tinylytics-event="updates.click" data-tinylytics-event-value="preorder-close" target="_blank" rel="noopener">Get sale updates <span class="arr">&rarr;</span></a>
       <a class="btn btn--ghost" href="/faq/">Read the FAQ</a>

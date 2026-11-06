@@ -19,13 +19,13 @@ card:
     <a class="back-link" href="/">&larr; Things 4 Good</a>
     <p class="eyebrow">Data lab</p>
     <h1>The candle sale, counted carefully.</h1>
-    <p class="lead">Every fall we pour candles, track inventory, reconcile payments, chart what happened, and use the data to make the next sale better.</p>
+    <p class="lead">A fun thing about the fundraiser is that it lets us play the role of a retailer for a weekend. So we track inventory, reconcile payments and make a lot of charts, then use it all to make next year&rsquo;s sale better.</p>
 
     <div class="stats-hero-grid">
       <div class="stats-hero-total">
         <span>Raised since 2021</span>
         <b><span class="pre">$</span><span id="counter" data-target="{{ metrics.grandTotal }}">{{ metrics.grandTotalDisplay }}</span></b>
-        <p>The candle sale, markets, and little extras all count toward the same thing: every dollar onward to good.</p>
+        <p>The candle sale, markets and little extras all count, and every dollar goes to the non-profits.</p>
       </div>
     </div>
   </div>
@@ -35,15 +35,15 @@ card:
 <section class="section" id="dashboard">
   <div class="wrap">
     <div class="sec-head reveal">
-      <p class="eyebrow">Operating dashboard</p>
-      <h2 class="t">The tiny candle economy.</h2>
-      <p class="lead">This is the working view of the fundraiser: how many candles moved, how many transactions happened, and what the spreadsheet says people actually did.</p>
+      <p class="eyebrow">The basics</p>
+      <h2 class="t">The sale, by the numbers.</h2>
+      <p class="lead">How many candles we&rsquo;ve sold, how many transactions that took, and what the spreadsheet says people actually did.</p>
     </div>
 
     <div class="ops-grid">
       <div class="ops-card reveal"><div class="k">{{ ops.totals.candlesSoldDisplay }}</div><div class="l">Candles sold</div><p>Across five annual sales.</p></div>
       <div class="ops-card reveal"><div class="k">{{ ops.totals.transactions }}</div><div class="l">Transactions</div><p>Across five weekends of orders, preorders, pickup, and the occasional extra.</p></div>
-      <div class="ops-card reveal"><div class="k">{{ ops.totals.avgCandlesPerTransaction }}</div><div class="l">Candles per transaction</div><p>A practical planning number for vessels, wax, and scent.</p></div>
+      <div class="ops-card reveal"><div class="k">{{ ops.totals.avgCandlesPerTransaction }}</div><div class="l">Candles per transaction</div><p>Handy for figuring out how many vessels, how much wax and how much scent to order.</p></div>
       <div class="ops-card reveal"><div class="k">{{ ops.totals.venmoShareDisplay }}</div><div class="l">All-time Venmo share</div><p>{{ ops.totals.venmoCount }} of {{ ops.totals.paymentCount }} recorded payments.</p></div>
       <div class="ops-card reveal"><div class="k">{{ ops.latest.lidsSold }}</div><div class="l">Lids sold in {{ ops.latest.year }}</div><p>A new add-on that mostly helped gift purchases.</p></div>
       <div class="ops-card reveal"><div class="k">{{ ops.totals.latestLeft }}</div><div class="l">Candles left after {{ ops.latest.year }}</div><p>{{ ops.latest.candlesSold }} sold from {{ ops.latest.candlesMade }} prepared.</p></div>
@@ -55,9 +55,9 @@ card:
 <section class="section section--paper2" id="growth">
   <div class="wrap">
     <div class="sec-head reveal">
-      <p class="eyebrow">Growth model</p>
-      <h2 class="t">Money, candles, and transactions do not grow the same way.</h2>
-      <p class="lead">The fundraiser keeps getting bigger, but each metric tells a slightly different story: dollars raised, candles sold, and the number of checkout moments.</p>
+      <p class="eyebrow">Growth</p>
+      <h2 class="t">It keeps growing, just not evenly.</h2>
+      <p class="lead">Dollars raised have gone up every year, but candles and transactions each tell a slightly different story.</p>
     </div>
 
     <div class="year-grid reveal">
@@ -80,7 +80,7 @@ card:
     <div class="insight-row">
       <div class="insight reveal">
         <span class="k">Biggest dollar jump</span>
-        <b>{{ ops.latest.growthDisplay }}</b>
+        <b>{{ (ops.years | last).growthDisplay }}</b>
         <p>{{ ops.latest.year }} raised ${{ ops.latest.raisedDisplay }}, even with fewer transactions than 2024.</p>
       </div>
       <div class="insight reveal">
@@ -96,9 +96,9 @@ card:
 <section class="section" id="buying">
   <div class="wrap">
     <div class="sec-head reveal">
-      <p class="eyebrow">Buyer behavior</p>
+      <p class="eyebrow">How people buy</p>
       <h2 class="t">People tend to buy in pairs.</h2>
-      <p class="lead">Order size is one of the most useful planning signals. It affects inventory, checkout, bags, labels, and how much preorder pickup becomes a logistics puzzle.</p>
+      <p class="lead">Order size is one of the most useful numbers for planning. It changes how much inventory we need, how checkout goes, how many bags and labels we use, and how much of a puzzle preorder pickup turns into.</p>
     </div>
 
     <div class="behavior-grid">
@@ -144,8 +144,8 @@ card:
   <div class="wrap">
     <div class="sec-head reveal">
       <p class="eyebrow">Inventory</p>
-      <h2 class="t">Scents are the hardest forecast.</h2>
-      <p class="lead">{{ ops.latest.year }} added more products: Charcoal Rose, T4G Labs, Rekindled, XL candles, and lids. The inventory board is where the sale starts to look like a tiny retailer.</p>
+      <h2 class="t">Scents are the hardest thing to predict.</h2>
+      <p class="lead">In {{ ops.latest.year }} we added more products: Charcoal Rose, T4G Labs, Rekindled, XL candles and lids. This is where the sale starts to look like a tiny retail store.</p>
     </div>
 
     <div class="inventory-layout">
@@ -173,8 +173,8 @@ card:
 
       <div class="learn-card reveal">
         <p class="eyebrow">What the data taught us</p>
-        <h3>More products need a better checkout system.</h3>
-        <p>Adding XL candles, lids, T4G Labs, and Rekindled made the sale more interesting, but it also pushed the tracking spreadsheet harder. The lesson for 2026 is not just “make more candles” &mdash; it is “make the sale easier to operate.”</p>
+        <h3>Adding more products completely broke our checkout!</h3>
+        <p>XL candles, lids, T4G Labs and Rekindled made the sale more interesting, but our tracking sheets couldn&rsquo;t keep up. Jamie realized it on Saturday and <a href="https://www.thingelstad.com/2025/11/09/realized-we-had-some-big.html" target="_blank" rel="noopener" style="color:var(--marigold-d);font-weight:600;text-decoration:none">redid them for Sunday</a>, and that was so much better.</p>
         <ul>
           <li><b>{{ ops.topLatestScent.sold }}</b> {{ ops.topLatestScent.name }} candles sold.</li>
           <li><b>{{ ops.latest.lidsSold }}</b> lids sold as a new add-on.</li>
@@ -191,7 +191,7 @@ card:
     <div class="sec-head reveal">
       <p class="eyebrow">Candle math</p>
       <h2 class="t">What {{ ops.totals.candlesSoldDisplay }} candles means in materials.</h2>
-      <p class="lead">These are production estimates based on the documented candle constants. They are useful for planning, not nonprofit accounting.</p>
+      <p class="lead">These are estimates based on what goes into one candle. They&rsquo;re useful for planning, not for non-profit accounting.</p>
     </div>
 
     <div class="math-grid">
@@ -203,14 +203,14 @@ card:
 
     <div class="cost-note reveal">
       <div>
-        <p class="eyebrow">Materials ledger</p>
+        <p class="eyebrow">What it costs us</p>
         <h3>Each candle costs roughly {{ ops.materialCost.costRangeDisplay }} in materials.</h3>
-        <p>{{ ops.materialCost.note }} When we catch sales and bulk discounts, the real range is closer to {{ ops.materialCost.discountRangeDisplay }}. We cover that ourselves, so the full ${{ metrics.pricePerCandle }} donation goes to the nonprofits.</p>
+        <p>{{ ops.materialCost.note }} When we catch sales and bulk discounts, the real range is closer to {{ ops.materialCost.discountRangeDisplay }}. We pay for that ourselves, so the full ${{ metrics.pricePerCandle }} donation goes to the non-profits.</p>
       </div>
       <a class="btn btn--ghost" href="{{ ops.materialCost.url }}" target="_blank" rel="noopener">Read the cost post</a>
     </div>
 
-    <p class="note-est reveal"><b>Good to know:</b> the dollar totals tell the impact story; the rest of this page is the nerdy planning layer behind the candles.</p>
+    <p class="note-est reveal"><b>Good to know:</b> the dollars are what matter. The rest of this page is just us being nerds about candles. 🤓</p>
   </div>
 </section>
 
@@ -218,9 +218,9 @@ card:
 <section class="section section--paper2" id="journal">
   <div class="wrap">
     <div class="sec-head reveal">
-      <p class="eyebrow">Source notes</p>
+      <p class="eyebrow">From the blog</p>
       <h2 class="t">The charts have a backstory.</h2>
-      <p class="lead">After each sale we write up the results, surprises, and spreadsheet lessons. These posts are the narrative layer behind the numbers.</p>
+      <p class="lead">After each sale Jamie writes up the results, what surprised us and what the spreadsheets taught us.</p>
     </div>
 
     <div class="journal-grid">
@@ -242,7 +242,7 @@ card:
   <div class="wrap">
     <p class="eyebrow" style="justify-content:center">From numbers to names</p>
     <h2 class="t" style="max-width:20ch;margin-inline:auto">See where the money went.</h2>
-    <p class="lead" style="margin:18px auto 0;text-align:center">The stats explain how the sale works. The impact ledger shows the causes behind every dollar.</p>
+    <p class="lead" style="margin:18px auto 0;text-align:center">This page is about how the sale works. The Impact page shows where every dollar went.</p>
     <div class="sub-form" style="max-width:none">
       <a class="btn btn--primary" href="/impact/">Explore the impact <span class="arr">&rarr;</span></a>
     </div>
