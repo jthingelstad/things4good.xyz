@@ -8,6 +8,7 @@
 const data = require("./events.json");
 const site = require("./site.json");
 const saleStats = require("./saleStats.json");
+const causes = require("./causes.json");
 
 const fmt = (n) => n.toLocaleString("en-US");
 const round1 = (n) => Math.round(n * 10) / 10; // one decimal place
@@ -20,6 +21,10 @@ module.exports = (() => {
     .filter((e) => e.kind === "candle-sale")
     .sort((a, b) => a.year - b.year);
   const specialEvents = events.filter((e) => e.kind === "special-event");
+  // Where an event's own page lives (src/event.njk). A candle sale is /<year>/
+  // before and after it happens, so one link serves the pre-sale email and the
+  // write-up.
+  const eventPath = (e) => (e.kind === "candle-sale" ? String(e.year) : e.slug);
   const postsForEvent = (e) =>
     (e.posts || []).map((p, index) => ({
       ...p,
@@ -103,6 +108,7 @@ module.exports = (() => {
       eventKind: e.kind,
       eventName: e.name,
       event: e.slug,
+      eventUrl: `/${eventPath(e)}/`,
     }))
   );
 
@@ -111,6 +117,7 @@ module.exports = (() => {
     .sort((a, b) => b.year - a.year || (a.kind === "candle-sale" ? -1 : 1))
     .map((e) => ({
       slug: e.slug,
+      path: eventPath(e),
       name: e.name,
       year: e.year,
       kind: e.kind,
@@ -121,6 +128,77 @@ module.exports = (() => {
       orgCount: e.supported.length,
       takeaway: e.takeaway || e.note || "",
     }));
+
+  // ---- a page per event (src/event.njk), oldest first ----
+  // Finished events read from events.json. This year's sale reads from causes.json
+  // until its picks move to events.json after the sale, at the same URL.
+  const money = (n) =>
+    "$" + n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const listNames = (names) =>
+    names.length < 2 ? names.join("") : names.slice(0, -1).join(", ") + " and " + names[names.length - 1];
+  const finishedEventPages = [...events]
+    .sort((a, b) => a.year - b.year || (a.kind === "candle-sale" ? -1 : 1))
+    .map((e) => {
+      const sale = e.kind === "candle-sale";
+      const label = sale ? `The ${e.year} candle sale` : `${e.name}, ${e.year}`;
+      const headline = `We raised $${fmt(e.raised)}.`;
+      const takeaway = e.takeaway || e.note || "";
+      return {
+        path: eventPath(e),
+        navLabel: sale ? String(e.year) : `${e.name} ${e.year}`,
+        kind: e.kind,
+        year: e.year,
+        upcoming: false,
+        label,
+        headline,
+        takeaway,
+        raisedDisplay: fmt(e.raised),
+        candles: e.candles || null,
+        participants: e.participants || null,
+        hasNotes: e.supported.some((s) => s.reason),
+        picks: e.supported.map((s) => ({ ...s, amountDisplay: money(s.amount) })),
+        posts: postsForEvent(e),
+        // A year's total on the chart counts its special events too, so a sale's
+        // page says so rather than seeming to disagree with it.
+        alsoThatYear: sale
+          ? specialEvents
+              .filter((o) => o.year === e.year)
+              .map((o) => ({ path: eventPath(o), name: o.name, raisedDisplay: fmt(o.raised) }))
+          : [],
+        title: `${label} \u2014 Things 4 Good`,
+        description: `${label} raised $${fmt(e.raised)} for ${listNames(e.supported.map((s) => s.name))}. Who picked each one, and why.`,
+        card: { kicker: label, name: headline, summary: takeaway, photo: "impact" },
+      };
+    });
+  const FAMILY = ["Jamie", "Tammy", "Mazie", "Tyler"];
+  const upcomingEventPages =
+    causes.list.length && !candleSaleEvents.some((e) => e.year === causes.year)
+      ? [
+          {
+            path: String(causes.year),
+            navLabel: String(causes.year),
+            kind: "candle-sale",
+            year: causes.year,
+            upcoming: true,
+            label: `The ${causes.year} candle sale`,
+            headline: "The four causes we picked.",
+            hasNotes: true,
+            picks: FAMILY.map((who) => causes.list.find((c) => c.who === who) || { who, soon: true }),
+            posts: [],
+            title: `The ${causes.year} candle sale \u2014 Things 4 Good`,
+            description: `The Thingelstad family's ${causes.year} candle sale is ${site.saleDates} in Minneapolis. The four causes we picked, and why.`,
+            card: {
+              kicker: `The ${causes.year} candle sale`,
+              name: "The four causes we picked.",
+              accent: "we picked.",
+              summary: "Who picked each one, and why.",
+              photo: "home",
+              saleFacts: true,
+            },
+          },
+        ]
+      : [];
+  const eventPages = [...finishedEventPages, ...upcomingEventPages];
 
   // ---- curated blog archive ----
   // Blog posts stay manually curated in events.json so this site can highlight the
@@ -304,6 +382,7 @@ module.exports = (() => {
     pricePerCandle: site.pricePerCandle,
     nonprofits,
     eventList,
+    eventPages,
     allPosts,
     journalPosts,
     annualStories,

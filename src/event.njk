@@ -1,0 +1,114 @@
+---js
+{
+  pagination: { data: "metrics.eventPages", size: 1, alias: "ev", addAllPagesToCollections: true },
+  permalink: "/{{ ev.path }}/",
+  eleventyComputed: {
+    title: (data) => data.ev.title,
+    description: (data) => data.ev.description,
+    card: (data) => data.ev.card,
+  },
+}
+---
+{% extends "base.njk" %}
+
+{% block content %}
+
+<!-- ============================ HEADER ============================ -->
+<section class="section page-head" id="head">
+  <div class="hero-glow" aria-hidden="true"></div>
+  <div class="wrap">
+    <a class="back-link" href="/">&larr; Things 4 Good</a>
+    <p class="eyebrow">{{ ev.label }}</p>
+    <h1 style="font-family:var(--serif);font-weight:500;font-size:clamp(2.4rem,5.4vw,4rem);letter-spacing:-.02em;line-height:1.02;max-width:18ch">{{ ev.headline }}</h1>
+    {% if ev.upcoming %}
+    <p class="lead" style="margin-top:18px">The sale is <b style="color:var(--ink)">{{ site.saleDates | safe }}</b> in Minneapolis. Every candle is a <b style="color:var(--ink)">${{ site.pricePerCandle }} donation</b>. At the sale you can split yours however you like across these four (preorders are divided evenly). We pay for the materials ourselves, so every dollar goes along.</p>
+    <div class="ev-cta">
+      {% if site.preorderSheet %}<a class="btn btn--primary" href="{{ site.preorderSheet }}" data-tinylytics-event="preorder.sheet" data-tinylytics-event-value="event-head" target="_blank" rel="noopener">Preorder candles <span class="arr">&rarr;</span></a>{% endif %}
+      <a class="btn btn--ghost" href="/candles/">See the scents</a>
+    </div>
+    <p class="ev-note">Pick up preorders anytime during the sale. Hours and the address come by email: join the <a href="{{ site.updatesUrl }}" data-tinylytics-event="updates.click" data-tinylytics-event-value="event-head" target="_blank" rel="noopener">Candle Fundraiser list</a>, or <a href="mailto:{{ site.email }}">email Jamie</a>.</p>
+    {% else %}
+    {% if ev.takeaway %}<p class="lead" style="margin-top:18px">{{ ev.takeaway | safe }}</p>{% endif %}
+    {% if ev.candles %}
+    <div class="sumstrip">
+      <div class="s acc"><b>${{ ev.raisedDisplay }}</b><span>Raised</span></div>
+      <div class="s"><b>{{ ev.candles }}</b><span>Candles</span></div>
+      <div class="s"><b>{{ ev.participants }}</b><span>Folks took part</span></div>
+      <div class="s acc2"><b>{{ ev.picks | length }}</b><span>Organizations</span></div>
+    </div>
+    {% endif %}
+    {% for o in ev.alsoThatYear %}<p class="ev-note">Plus <a href="/{{ o.path }}/">${{ o.raisedDisplay }} from the {{ o.name }}</a> that year.</p>{% endfor %}
+    {% endif %}
+  </div>
+</section>
+
+<!-- ============================ THE PICKS ============================ -->
+<section class="section" id="picks" style="padding-top:clamp(20px,3vw,32px)">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <h2 class="t">{{ "Who picked each one, and why." if ev.hasNotes else ("Who picked each one." if ev.kind == "candle-sale" else "Where it went.") }}</h2>
+    </div>
+    <div class="picks{% if not ev.hasNotes %} picks--plain{% endif %}">
+      {% for p in ev.picks %}{% if p.soon %}
+      <article class="pick pick--soon reveal">
+        <div class="pick-side">
+          <div class="pick-top"><span class="glyph">{{ p.who | first }}</span><span class="pick-who">{{ p.who }}&rsquo;s pick</span></div>
+          <p>Coming soon.</p>
+        </div>
+      </article>{% else %}{% set shared = p.who == "Everyone" %}
+      <article class="pick{% if not p.reason %} pick--plain{% endif %} reveal" id="{{ p.slug }}">
+        <div class="pick-side">
+          <div class="pick-top">{% if p.logo %}<span class="glyph haslogo"><img src="/images/logos/{{ p.logo }}" alt="" /></span>{% else %}<span class="glyph">{{ p.who | first }}</span>{% endif %}<span class="pick-who">{{ "Our shared pick" if shared else (p.who + "’s pick") }}</span></div>
+          <h3><a href="{{ p.url }}" target="_blank" rel="noopener" data-tinylytics-event="nonprofit.visit" data-tinylytics-event-value="{{ p.slug }}">{{ p.name | safe }}</a></h3>
+          <p>{{ p.blurb | safe }}</p>
+          {% if p.amountDisplay %}<p class="pick-amt"><b>{{ p.amountDisplay }}</b> raised</p>{% endif %}
+          <a class="go" href="{{ p.url }}" target="_blank" rel="noopener" data-tinylytics-event="nonprofit.visit" data-tinylytics-event-value="{{ p.slug }}">Visit <span class="arr">&rarr;</span></a>
+        </div>
+        {% if p.reason %}<figure class="pick-note">
+          <figcaption>{{ "Why we supported it" if shared else ("Why " + p.who + " picked it") }}</figcaption>
+          <blockquote>{{ p.reason }}{% if not shared %}<cite>&mdash; {{ p.who }}</cite>{% endif %}</blockquote>
+          {% if p.post %}<a class="pick-post" href="{{ p.post }}" target="_blank" rel="noopener">Read {{ p.who }}&rsquo;s post <span class="arr">&rarr;</span></a>{% endif %}
+        </figure>{% endif %}
+      </article>{% endif %}{% endfor %}
+    </div>
+    {% if ev.upcoming %}
+    <p class="ev-after reveal">After the sale, the results and Jamie&rsquo;s write-up land on this page.</p>
+    {% if site.preorderSheet %}<div class="ev-cta reveal"><a class="btn btn--primary" href="{{ site.preorderSheet }}" data-tinylytics-event="preorder.sheet" data-tinylytics-event-value="event-close" target="_blank" rel="noopener">Preorder candles <span class="arr">&rarr;</span></a></div>{% endif %}
+    {% endif %}
+  </div>
+</section>
+
+{% if ev.posts.length %}
+<!-- ============================ THE WRITE-UPS ============================ -->
+<section class="section section--paper2" id="writeups">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">On the blog</p>
+      <h2 class="t">What Jamie wrote about this sale.</h2>
+    </div>
+    <div class="journal-grid">
+      {% for post in ev.posts %}
+      <a class="journal-card reveal" href="{{ post.url }}" target="_blank" rel="noopener">
+        <span class="jtype">{{ post.type }} &middot; {{ post.year }}</span>
+        <h4>{{ post.title }}</h4>
+        <p>{{ post.description }}</p>
+        <span class="go">Read post <span class="arr">&rarr;</span></span>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- ============================ EVERY SALE ============================ -->
+<section class="section" id="every-sale" style="padding-block:clamp(24px,3.4vw,40px)">
+  <div class="wrap">
+    <nav class="ev-nav" aria-label="Every sale">
+      <span class="ev-nav-label">Every sale</span>
+      {% for e in metrics.eventPages %}<a href="/{{ e.path }}/"{% if e.path == ev.path %} aria-current="page"{% endif %}>{{ e.navLabel }}</a>
+      {% endfor %}<a href="/impact/">Every cause &rarr;</a>
+    </nav>
+  </div>
+</section>
+
+{% endblock %}

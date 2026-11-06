@@ -22,6 +22,7 @@ const DATA_SOURCES = {
   "src/index.njk": [...METRICS, ...CANDLES, ...SEATS, ...CAUSES],
   "src/faq.njk": METRICS,
   "src/impact.njk": METRICS,
+  "src/event.njk": [...METRICS, ...CAUSES],
   "src/stats.njk": METRICS,
   "src/maker-night.njk": [...SITE, ...SEATS],
   "src/preorder.njk": PAYMENT,
