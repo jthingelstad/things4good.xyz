@@ -251,22 +251,29 @@ card:
       <p class="lead">The full $25 from every candle goes to a non-profit, and you decide which one. Each year the four of us each pick a cause we care about. Here&rsquo;s where it has gone.</p>
     </div>
 
-    <h3 class="causes-head reveal" id="this-year">This year&rsquo;s four{% if not causes.list.length %} <span>announced {{ causes.announce }}</span>{% endif %}</h3>
+    <h3 class="causes-head reveal" id="this-year">This year&rsquo;s four{% if causes.list.length < 4 %} <span>announced {{ causes.announce }}</span>{% endif %}</h3>
     <div class="charities charities--four reveal">
-      {% if causes.list.length %}{% for c in causes.list %}
-      <a class="charity" href="{{ c.url }}" target="_blank" rel="noopener">
+      {% for who in ["Jamie", "Tammy", "Mazie", "Tyler"] %}{% set c = causes.list | pickFor(who) %}{% if c %}
+      <a class="charity" href="{{ c.url }}" target="_blank" rel="noopener" data-tinylytics-event="nonprofit.visit" data-tinylytics-event-value="{{ c.slug }}">
         <div class="ctop"><span class="glyph">{{ c.who | first }}</span><span class="yr">{{ c.who }}&rsquo;s pick</span></div>
         <h3>{{ c.name }}</h3>
         <p>{{ c.blurb }}</p>
         <span class="go">Visit <span class="arr">&rarr;</span></span>
-      </a>{% endfor %}
-      {% else %}{% for who in ["Jamie", "Tammy", "Mazie", "Tyler"] %}
+      </a>{% else %}
       <div class="charity charity--soon">
         <div class="ctop"><span class="glyph">{{ who | first }}</span><span class="yr">{{ causes.year }}</span></div>
         <h3>{{ who }}&rsquo;s pick</h3>
         <p>Coming {{ causes.announce.split(",")[0] }}.</p>
-      </div>{% endfor %}{% endif %}
+      </div>{% endif %}{% endfor %}
     </div>
+
+    {% if causes.list.length %}<div class="pick-notes reveal">
+      {% for who in ["Jamie", "Tammy", "Mazie", "Tyler"] %}{% set c = causes.list | pickFor(who) %}{% if c and c.reason %}
+      <figure class="pick-note">
+        <figcaption>Why {{ c.who }} picked {{ c.name }}</figcaption>
+        <blockquote>{{ c.reason }}<cite>&mdash; {{ c.who }}</cite></blockquote>
+      </figure>{% endif %}{% endfor %}
+    </div>{% endif %}
 
     <div class="logo-wall reveal">
       {% for o in metrics.nonprofits %}<span class="lw"><img src="/images/logos/{{ o.logo }}" alt="{{ o.name }}" /></span>{% endfor %}

@@ -1,6 +1,23 @@
 {
-  "_note": "This year's four causes, one per Thing, in this order. Jamie announces them Thursday before the sale; until `list` has entries the home page, FAQ and llms.txt show a placeholder naming `announce`. Each entry: who (Jamie|Tammy|Mazie|Tyler), name, url, blurb (one line). After the sale the year's picks move into events.json with amounts.",
+  "_note": "This year's four causes, one per Thing. Jamie announces them Thursday before the sale, and they can land a few at a time: anyone not in `list` yet keeps a placeholder card naming `announce` on the home page, and llms.txt says the rest are coming. Each entry: who (Jamie|Tammy|Mazie|Tyler), slug (the org key events.json will use, and the Tinylytics nonprofit.visit value), name, url, blurb (one line about the org), reason (the picker's own words, printed in full under the cards). After the sale the year's picks move into events.json with amounts and logos.",
   "year": 2026,
   "announce": "Thursday, November 5",
-  "list": []
+  "list": [
+    {
+      "who": "Tammy",
+      "slug": "bridging",
+      "name": "Bridging",
+      "url": "https://bridging.org",
+      "blurb": "Provides quality furniture and household goods for people moving toward housing stability.",
+      "reason": "When Tyler started first grade I wanted to start a volunteer gig that I could do each week and feel like I was giving something back to the community. I found that opportunity with Bridging and this year marks my 10th year of helping in their mission to “furnish homes with hope”. Once a week I show up, unpack boxes of donated home furnishings and curate shelves of product so that when a client shows up and shops there is plenty to choose from. People that donate feel good about where their old things are going and the clients are able to come away with everything they need to set up their household from furniture to dishes, art for the walls, small appliances and everything in between."
+    },
+    {
+      "who": "Tyler",
+      "slug": "physicians-for-a-national-health-program",
+      "name": "Physicians for a National Health Program",
+      "url": "https://pnhp.org",
+      "blurb": "Works toward a universal, single-payer healthcare system through research, public education, and advocacy.",
+      "reason": "Physicians for a National Health Program (PNHP) works toward a universal, single-payer healthcare system through research, public education, and advocacy. Their goals connect with me through the policy debate topic this year; I’ve spent months researching the healthcare system, and single-payer seems great. With the last two resolutions, there wasn’t really a direct or obvious way to help or contribute, but this one is a very obvious and easy way to support the push for what seems to be a very promising cause. PNHP lets me take what I’ve learned from debate and actually use it toward real-life policy because healthcare shouldn’t be dependent on who won the round."
+    }
+  ]
 }
