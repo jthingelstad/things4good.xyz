@@ -9,13 +9,16 @@ eleventyExcludeFromCollections: true
 
 > Things 4 Good is the Thingelstad family's annual handmade-candle fundraiser in Minneapolis. Since {{ metrics.perYear[0].year }} the family has hand-poured wooden-wick candles for a fall sale; every candle is a ${{ site.pricePerCandle }} donation, and 100% goes to the non-profits the four family members pick each year. That has added up to ${{ metrics.grandTotalDisplay | safe }} for {{ metrics.orgCount }} organizations.
 
-The {{ site.saleYear }} sale is {{ site.saleDates | safe }} in Minneapolis. Buyers at the sale split their donation across that year's four causes (preorders are divided evenly); the family covers the materials. Preorders, meant for orders of six or more, stay open until the sale ends and are picked up anytime during it. Hours and the address are sent by email, never posted. {% if causes.list.length %}This year's four causes{% if causes.list.length < 4 %} so far{% endif %}: {% for c in causes.list %}[{{ c.name | safe }}]({{ c.url }}) ({{ c.who }}){% if not loop.last %}, {% endif %}{% endfor %}.{% if causes.list.length < 4 %} The rest are announced {{ causes.announce }}.{% endif %}{% else %}This year's four causes are announced {{ causes.announce }}.{% endif %} Per-non-profit amounts on the site are estimates; each sale's total is exact.
+The {{ site.saleYear }} sale is {{ site.saleDates | safe }} in Minneapolis. Buyers at the sale split their donation across that year's four causes (preorders are divided evenly); the family covers the materials. Preorders, meant for orders of six or more, stay open until the sale ends and are picked up anytime during it. Hours and the address are sent by email, never posted. {% if causes.list.length %}This year's four causes{% if causes.list.length < 4 %} so far{% endif %}: {% for c in causes.list %}[{{ c.name | safe }}]({{ c.url }}) ({{ c.who }}){% if not loop.last %}, {% endif %}{% endfor %}.{% if causes.list.length < 4 %} The rest are coming soon.{% endif %}{% else %}This year's four causes are announced {{ causes.announce }}.{% endif %} Per-non-profit amounts on the site are estimates; each sale's total is exact.
 
 ## Pages
 
 - [Home](https://things4good.xyz/): the fundraiser, how it works, the makers and the sale dates
 - [Candles](https://things4good.xyz/candles/): this year's scents, the XL size and the candle lid
 - [Impact](https://things4good.xyz/impact/): every non-profit supported, filterable by who picked it and by event
+{%- if causes.list.length %}
+- [The {{ causes.year }} sale](https://things4good.xyz/{{ causes.year }}/): this year's causes, who picked each one and why; each past sale has its own page too, listed under Sales
+{%- endif %}
 - [Numbers](https://things4good.xyz/stats/): dollars raised, candles sold, growth by year and candle math
 - [Preorder](https://things4good.xyz/preorder/): preorder steps, pickup and payment methods
 - [Pay](https://things4good.xyz/pay/): Venmo, Cash App, Zelle and Apple Pay with pay buttons and QR codes, plus cash and check
@@ -40,7 +43,7 @@ Each scent is a ${{ site.pricePerCandle }} donation.
 ## Sales
 
 {% for event in metrics.eventList -%}
-- {{ event.name | safe }}{% if (event.year | string) not in event.name %} ({{ event.year }}){% endif %}: ${{ event.raisedDisplay }}{% if event.candles %} from {{ event.candles }} candles and {{ event.participants }} participants{% endif %}, for {{ event.orgCount }} {{ "non-profit" if event.orgCount == 1 else "non-profits" }}. {{ event.takeaway | safe }}
+- [{{ event.name | safe }}](https://things4good.xyz/{{ event.path }}/){% if (event.year | string) not in event.name %} ({{ event.year }}){% endif %}: ${{ event.raisedDisplay }}{% if event.candles %} from {{ event.candles }} candles and {{ event.participants }} participants{% endif %}, for {{ event.orgCount }} {{ "non-profit" if event.orgCount == 1 else "non-profits" }}. {{ event.takeaway | safe }}
 {% endfor %}
 ## Non-profits supported
 

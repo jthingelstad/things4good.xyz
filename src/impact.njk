@@ -173,7 +173,7 @@ card:
     const sentence = clipped.lastIndexOf(". ");
     const word = clipped.lastIndexOf(" ");
     const tidy = sentence > 120
-      ? clipped.slice(0, sentence + 1)
+      ? clipped.slice(0, sentence)
       : clipped.slice(0, word > 160 ? word : max).trim().replace(/[,:;/-]$/, "");
     return tidy + "…";
   }
@@ -214,7 +214,8 @@ card:
       ? `<div class="why-note">
           <div class="why-k">${whyLabel}</div>
           <blockquote>&ldquo;${safeExcerpt}&rdquo;<cite>&mdash; ${whoLabel}</cite></blockquote>
-          ${reason.length > 230 ? `<details class="why-full"><summary>Read full note</summary><blockquote>&ldquo;${safeReason}&rdquo;</blockquote></details>` : ""}
+          ${reason.length > 230 ? `<details class="why-full"><summary>Read full note</summary><blockquote>&ldquo;${safeReason}&rdquo;<cite>&mdash; ${whoLabel}</cite></blockquote></details>` : ""}
+          ${o.post ? `<a class="why-post" href="${o.post}" target="_blank" rel="noopener">Read ${o.who}&rsquo;s post <span class="arr">&rarr;</span></a>` : ""}
         </div>`
       : "";
     return `
@@ -223,7 +224,7 @@ card:
         ${glyph}
         <div class="cardtags">
           <span class="who-pill" data-who="${o.who}">${whoLabel}</span>
-          <span class="ybadge">${o.year}</span>
+          <a class="ybadge" href="${o.eventUrl}" aria-label="See the ${escapeHTML(o.eventName)} page">${o.year}</a>
           ${eventTag}
         </div>
       </div>

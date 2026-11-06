@@ -66,7 +66,7 @@ card:
 
     <div class="impact-chart reveal">
       {% for y in metrics.perYear %}
-      <a class="bar{% if y.isLatest %} now{% endif %}" href="/impact/?event={{ y.slug }}" data-tinylytics-event="chart.year" data-tinylytics-event-value="{{ y.year }}" aria-label="See the {{ y.year }} organizations"><span class="val">${{ y.yearTotalDisplay }}</span><span class="col" style="height:{{ y.barHeightPct }}%;transition-delay:{{ 0.05 + loop.index0 * 0.08 }}s">{% if y.eventsRaised %}<span class="seg seg--event" style="flex:{{ y.eventsRaised }}" title="{{ y.yearEvents[0].name }}: ${{ y.eventsRaisedDisplay }}"></span>{% endif %}<span class="seg seg--candle" style="flex:{{ y.raised }}"></span></span><span class="yr">{{ y.year }}</span></a>
+      <a class="bar{% if y.isLatest %} now{% endif %}" href="/{{ y.year }}/" data-tinylytics-event="chart.year" data-tinylytics-event-value="{{ y.year }}" aria-label="See the {{ y.year }} sale"><span class="val">${{ y.yearTotalDisplay }}</span><span class="col" style="height:{{ y.barHeightPct }}%;transition-delay:{{ 0.05 + loop.index0 * 0.08 }}s">{% if y.eventsRaised %}<span class="seg seg--event" style="flex:{{ y.eventsRaised }}" title="{{ y.yearEvents[0].name }}: ${{ y.eventsRaisedDisplay }}"></span>{% endif %}<span class="seg seg--candle" style="flex:{{ y.raised }}"></span></span><span class="yr">{{ y.year }}</span></a>
       {% endfor %}
     </div>
     <div class="chart-legend reveal">
@@ -251,7 +251,7 @@ card:
       <p class="lead">The full $25 from every candle goes to a non-profit, and you decide which one. Each year the four of us each pick a cause we care about. Here&rsquo;s where it has gone.</p>
     </div>
 
-    <h3 class="causes-head reveal" id="this-year">This year&rsquo;s four{% if causes.list.length < 4 %} <span>announced {{ causes.announce }}</span>{% endif %}</h3>
+    <h3 class="causes-head reveal" id="this-year">This year&rsquo;s four{% if not causes.list.length %} <span>announced {{ causes.announce }}</span>{% endif %}</h3>
     <div class="charities charities--four reveal">
       {% for who in ["Jamie", "Tammy", "Mazie", "Tyler"] %}{% set c = causes.list | pickFor(who) %}{% if c %}
       <a class="charity" href="{{ c.url }}" target="_blank" rel="noopener" data-tinylytics-event="nonprofit.visit" data-tinylytics-event-value="{{ c.slug }}">
@@ -263,7 +263,7 @@ card:
       <div class="charity charity--soon">
         <div class="ctop"><span class="glyph">{{ who | first }}</span><span class="yr">{{ causes.year }}</span></div>
         <h3>{{ who }}&rsquo;s pick</h3>
-        <p>Coming {{ causes.announce.split(",")[0] }}.</p>
+        <p>Coming {{ "soon" if causes.list.length else causes.announce.split(",")[0] }}.</p>
       </div>{% endif %}{% endfor %}
     </div>
 
@@ -272,8 +272,10 @@ card:
       <figure class="pick-note">
         <figcaption>Why {{ c.who }} picked {{ c.name }}</figcaption>
         <blockquote>{{ c.reason }}<cite>&mdash; {{ c.who }}</cite></blockquote>
+        {% if c.post %}<a class="pick-post" href="{{ c.post }}" target="_blank" rel="noopener">Read {{ c.who }}&rsquo;s post <span class="arr">&rarr;</span></a>{% endif %}
       </figure>{% endif %}{% endfor %}
-    </div>{% endif %}
+    </div>
+    <p class="impact-link reveal pick-more"><a href="/{{ causes.year }}/">More on the {{ causes.year }} sale &rarr;</a></p>{% endif %}
 
     <div class="logo-wall reveal">
       {% for o in metrics.nonprofits %}<span class="lw"><img src="/images/logos/{{ o.logo }}" alt="{{ o.name }}" /></span>{% endfor %}
