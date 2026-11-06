@@ -142,7 +142,7 @@ card:
 </style>
 <script>
   // ---- data (flattened from src/_data/events.json via metrics.nonprofits) ----
-  // per-org `amount` is the exact figure from each year's tally.
+  // per-org `amount` is the figure from each year's tally: pretty exact, reconciliation aside.
   // `logo`: a filename in src/images/logos/ (e.g. "oceanites.png"); shown as the card icon when set.
   // `reason`: the picker's own words; "" hides the "Why … picked it" details (e.g. 2021–22, not yet backfilled).
   const ORGS = {{ metrics.nonprofits | dump | safe }};

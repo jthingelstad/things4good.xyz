@@ -469,15 +469,17 @@ em.it { font-style: italic; }
 .charities--four { grid-template-columns: repeat(4, minmax(0, 1fr)); margin-bottom: clamp(28px, 4vw, 40px); }
 .causes-head { font-size: 1.4rem; margin: 0 0 16px; }
 .causes-head span { font-family: var(--hand); font-size: 1.3rem; font-weight: 400; color: var(--pine-d); margin-left: .3em; }
-.pick-notes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(20px, 3vw, 36px); margin-bottom: clamp(28px, 4vw, 40px); }
 .pick-note { margin: 0; padding-top: 14px; border-top: 1px dashed var(--line); }
 .pick-note figcaption { font-size: .74rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--pine-d); margin-bottom: 8px; }
 .pick-note blockquote { margin: 0; font-family: var(--serif); font-style: italic; font-size: 1.02rem; line-height: 1.55; color: var(--ink); }
 .pick-note cite { display: block; margin-top: 8px; font-family: var(--sans); font-style: normal; font-weight: 700; font-size: .8rem; color: var(--ink-soft); }
-@media (max-width: 760px) { .pick-notes { grid-template-columns: minmax(0, 1fr); } }
 .pick-more { margin-top: 0; margin-bottom: clamp(28px, 4vw, 40px); }
 .pick-note .pick-post, .pick-side .go { display: inline-flex; align-items: center; gap: .4em; font-weight: 700; font-size: .88rem; color: var(--marigold-d); text-decoration: none; }
 .pick-note .pick-post { margin-top: 12px; }
+.charities--four .charity .ctop { flex-direction: column; align-items: flex-start; justify-content: flex-start; }
+.charities--four .charity .glyph.haslogo { max-width: 100%; }
+.charities--four .charity .glyph.haslogo img { height: 34px; }
+.charities--four .charity .yr { margin-left: 0; white-space: nowrap; }
 .charity--soon { border-style: dashed; box-shadow: none; }
 .charity--soon:hover { transform: none; box-shadow: none; border-color: var(--line); }
 .charity {
@@ -1117,7 +1119,9 @@ em.it { font-style: italic; }
 .pick--plain, .pick--soon { grid-template-columns: minmax(0, 1fr); }
 .picks--plain { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .pick--soon { border-style: dashed; box-shadow: none; }
-.pick-top { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.pick-top { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 12px; }
+.pick .glyph.haslogo { max-width: 100%; }
+.pick .glyph.haslogo img { height: 38px; }
 .pick-who { font-size: .72rem; font-weight: 700; letter-spacing: .04em; color: var(--ink-soft); background: var(--paper-2); border: 1px solid var(--line); padding: 3px 9px; border-radius: 999px; white-space: nowrap; }
 .pick h3 { font-size: clamp(1.3rem, 2.4vw, 1.6rem); line-height: 1.15; }
 .pick h3 a { color: inherit; text-decoration: none; }
@@ -1127,7 +1131,7 @@ em.it { font-style: italic; }
 .pick-side .pick-amt b { font-family: var(--serif); font-weight: 500; font-size: 1.3rem; color: var(--marigold-d); }
 .pick-side .go { margin-top: 14px; }
 .pick .pick-note { padding-top: 0; border-top: 0; }
-.pick .pick-note blockquote, .pick-notes .pick-note blockquote { white-space: pre-line; }
+.pick .pick-note blockquote { white-space: pre-line; }
 .ev-after { margin: clamp(22px, 3vw, 32px) 0 0; color: var(--ink-soft); }
 .ev-nav { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
 .ev-nav-label { font-size: .74rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--pine-d); margin-right: 4px; }
