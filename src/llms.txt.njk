@@ -25,7 +25,7 @@ The {{ site.saleYear }} sale is {{ site.saleDates | safe }} in Minneapolis. Buye
 - [Candle care](https://things4good.xyz/care/): how to burn a wooden-wick candle, the same tips as the card that comes home with every candle
 - [FAQ](https://things4good.xyz/faq/): how it works, what it costs and where the money goes
 {%- if site.makerNight %}
-- [Maker Night](https://things4good.xyz/maker-night/): an evening for six on {{ site.makerNightDate }}, {{ site.makerNightTime | safe }}; a seat is one of six gold Maker Night candles, a ${{ site.makerNightDonation }} donation at the sale (or by preorder), at most two per person, divided evenly across the four causes. Guests get a thank-you candle and pour four of their own in any scents from the library. {% set seatsLeft = makerNightSeats.total - makerNightSeats.sold %}{% if seatsLeft > 0 %}{{ seatsLeft }} of {{ makerNightSeats.total }} seats left{% else %}Sold out{% endif %}
+- [Maker Night](https://things4good.xyz/maker-night/): an evening for six on {{ site.makerNightDate }}, {{ site.makerNightTime | safe }}; a seat is one of six Golden Ticket candles, a ${{ site.makerNightDonation }} donation at the sale (or by preorder), at most two per person, divided evenly across the four causes. Guests get a thank-you candle and pour four of their own in any scents from the library. {% set seatsLeft = makerNightSeats.total - makerNightSeats.sold %}{% if seatsLeft > 0 %}{{ seatsLeft }} of {{ makerNightSeats.total }} seats left{% else %}Sold out{% endif %}
 {%- endif %}
 
 ## The {{ site.saleYear }} candles
@@ -33,7 +33,7 @@ The {{ site.saleYear }} sale is {{ site.saleDates | safe }} in Minneapolis. Buye
 Each scent is a ${{ site.pricePerCandle }} donation unless noted.
 
 {% for scent in candles.scents -%}
-- {{ scent.name | safe }}{% if scent.xl %} (also XL, ${{ candles.xlDonation }}){% endif %}{% if scent.makerNight %} (${{ site.makerNightDonation }}, with a Maker Night seat){% endif %}: {{ scent.description | safe }}
+- {{ scent.name | safe }}{% if scent.makerNight %} (${{ site.makerNightDonation }}, with a Maker Night seat){% endif %}: {{ scent.description | safe }}
 {% endfor %}
 {%- if candles.secretScents %}- A couple of new scents are held back until the sale.
 {% endif -%}
