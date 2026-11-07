@@ -7,6 +7,7 @@ permalink: /print/maker-night/
 {#- No seat count: it would be out of date by the second customer. Jamie tracks seats at the table. -#}
 
 {% block style %}
+  .body { justify-content: space-evenly; }
   .hero { display: grid; grid-template-columns: 1fr 2.55in; gap: 0.24in; align-items: stretch; }
   .hero .photo { border-radius: 16px; overflow: hidden; position: relative; background: #1f1812; }
   .hero .photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -14,20 +15,20 @@ permalink: /print/maker-night/
   .date { margin-top: 12px; display: inline-flex; gap: 12px; align-items: baseline; padding: 8px 14px; border-radius: 12px; background: var(--ink); color: #fff; }
   .date b { font-family: var(--serif); font-weight: 500; font-size: 17pt; }
   .date span { color: var(--marigold); font-weight: 700; font-size: 12pt; }
-  .label { margin-top: 0.12in; display: grid; grid-template-columns: 1.55in 1fr; gap: 0.2in; align-items: center; padding: 0.14in 0.2in; border-radius: 16px; background: var(--marigold-t); }
+  .label { display: grid; grid-template-columns: 1.55in 1fr; gap: 0.2in; align-items: center; padding: 0.14in 0.2in; border-radius: 16px; background: var(--marigold-t); }
   .label img { width: 100%; background: #fff; border-radius: 8px; padding: 6px; }
   .label .hand { font-size: 25pt; line-height: 1; color: var(--marigold-d); }
-  .label p { margin-top: 4px; font-size: 12pt; line-height: 1.35; }
-  .steps { margin-top: 0.16in; display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.16in; }
+  .label p { margin-top: 4px; font-size: 13pt; line-height: 1.35; }
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.16in; }
   .step { border: 2px solid var(--c); border-radius: 14px; padding: 0.14in 0.16in; }
   .step .num { width: 0.36in; height: 0.36in; border-radius: 50%; background: var(--c); color: #fff; display: grid; place-items: center; font-weight: 800; font-size: 13pt; }
-  .step h3 { margin-top: 8px; font-size: 14.5pt; }
-  .step p { margin-top: 5px; font-size: 10.5pt; line-height: 1.35; }
+  .step h3 { margin-top: 8px; font-size: 16pt; }
+  .step p { margin-top: 5px; font-size: 11.5pt; line-height: 1.35; }
   .more svg { width: 1.3in; height: 1.3in; }
-  .more-row { margin-top: 0.12in; padding-bottom: 0.08in; display: grid; grid-template-columns: 1fr auto; gap: 0.24in; align-items: center; }
+  .more-row { display: grid; grid-template-columns: 1fr auto; gap: 0.24in; align-items: center; }
   .details { display: grid; grid-template-columns: 1fr 1fr; gap: 0.08in 0.24in; }
-  .details div { padding: 6px 0; border-top: 1px solid var(--line); font-size: 10.2pt; line-height: 1.35; }
-  .details b { display: block; font-size: 11pt; color: var(--pine-d); }
+  .details div { padding: 7px 0; border-top: 1px solid var(--line); font-size: 11pt; line-height: 1.35; }
+  .details b { display: block; font-size: 12pt; color: var(--pine-d); }
 {% endblock %}
 
 {% block content %}

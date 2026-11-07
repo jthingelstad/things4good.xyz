@@ -5,7 +5,7 @@ permalink: /print/causes/
 {% extends "print.njk" %}
 
 {% block style %}
-  .head { display: grid; grid-template-columns: 1fr auto; gap: 0.28in; align-items: center; padding: 0.2in 0 0.18in; }
+  .head { display: grid; grid-template-columns: 1fr auto; gap: 0.28in; align-items: center; padding: 0 0 0.2in; }
   .head h1 { font-size: 40pt; }
   .lead { font-size: 12.5pt; }
   .causes { flex: 1; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: minmax(0, 1fr) minmax(0, 1fr); min-height: 0; gap: 0.2in; padding-bottom: 0.22in; }
@@ -13,12 +13,12 @@ permalink: /print/causes/
   .cause.tammy { --c: var(--pine); --c-d: var(--pine-d); --c-t: var(--pine-t); }
   .cause.mazie { --c: var(--berry); --c-d: var(--berry-d); --c-t: var(--berry-t); }
   .cause.tyler { --c: var(--sky); --c-d: var(--sky-d); --c-t: var(--sky-t); }
-  .cause .logo { height: 1.2in; padding: 0.16in 0.3in; background: #fff; border-bottom: 1px solid var(--c-t); }
+  .cause .logo { height: 1.35in; padding: 0.16in 0.3in; background: #fff; border-bottom: 1px solid var(--c-t); }
   .cause .logo img { display: block; width: 100%; height: 100%; object-fit: contain; }
   .cause .text { flex: 1; padding: 0.16in 0.22in 0.2in; background: var(--c-t); display: flex; flex-direction: column; }
-  .cause .who { font-family: var(--hand); font-weight: 700; font-size: 20pt; line-height: 1; color: var(--c-d); }
-  .cause h2 { font-size: 19pt; margin-top: 6px; }
-  .cause p { margin-top: 8px; font-size: 11.5pt; line-height: 1.38; }
+  .cause .who { font-family: var(--hand); font-weight: 700; font-size: 22pt; line-height: 1; color: var(--c-d); }
+  .cause h2 { font-size: 21pt; margin-top: 6px; }
+  .cause p { margin-top: 8px; font-size: 12.5pt; line-height: 1.38; }
 {% endblock %}
 
 {% block content %}

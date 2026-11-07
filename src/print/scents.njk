@@ -8,7 +8,7 @@ permalink: /print/scents/
     fit; a much longer lineup would need smaller cards. -#}
 
 {% block style %}
-  .head { display: grid; grid-template-columns: auto 1fr; column-gap: 0.32in; align-items: end; padding: 0.2in 0 0.16in; }
+  .head { display: grid; grid-template-columns: auto 1fr; column-gap: 0.32in; align-items: end; padding: 0 0 0.16in; }
   .head .eyebrow { grid-column: 1 / -1; }
   .head h1 { font-size: 40pt; }
   .lead { margin: 0 0 4px; font-size: 11.5pt; line-height: 1.38; max-width: none; }
@@ -30,7 +30,7 @@ permalink: /print/scents/
 <div class="head">
   <p class="eyebrow">{{ candles.scents | length }} scents this year</p>
   <h1>Pick your <em>scents.</em></h1>
-  <p class="lead">Each is 12&nbsp;oz of 100% virgin soy wax, hand-poured with a wooden wick and wearing a label Mazie drew. Every candle is a <b>${{ site.pricePerCandle }} donation</b>{% set maker = candles.scents | selectattr("makerNight") | first %}{% if maker %} (the {{ maker.name }} is ${{ site.makerNightDonation }}){% endif %}.</p>
+  <p class="lead">Each is 12&nbsp;oz of 100% virgin soy wax, hand-poured with a wooden wick and wearing a label Mazie drew. Every candle is a <b>${{ site.pricePerCandle }} donation</b>.</p>
 </div>
 <div class="body">
   <div class="scents">
