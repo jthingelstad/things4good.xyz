@@ -67,8 +67,8 @@ description: Order Things 4 Good candles online, for pickup or SPS delivery. Bef
         <label class="order-field">Email
           <input name="email" type="email" autocomplete="email" maxlength="254" required />
         </label>
-        <label class="order-field">Mobile <small>optional</small>
-          <input name="mobile" type="tel" autocomplete="tel" maxlength="30" />
+        <label class="order-field">Mobile <small>so we can follow up</small>
+          <input name="mobile" type="tel" autocomplete="tel" maxlength="30" required />
         </label>
 
         <fieldset class="order-field order-choice">
@@ -113,7 +113,7 @@ description: Order Things 4 Good candles online, for pickup or SPS delivery. Bef
 <script>
 (() => {
   const ART = { {% for scent in candles.scents %}{{ scent.name | dump | safe }}: {{ scent.art | dump | safe }}{% if not loop.last %}, {% endif %}{% endfor %} };
-  const GROUPS = [["Candle", "Candles"], ["XL candle", "XL candles"], ["Lid", "Candle lids"]];
+  const GROUPS = [["Candle", "Candles"], ["XL candle", "XL candles"], ["Lid", "Candle lids"], ["Maker Night candle", "Maker Night"]];
   const EMAIL = {{ site.email | dump | safe }};
   const CHECK_KEY = {{ site.turnstileSiteKey | dump | safe }};
   const LINE_MAX = 24, ORDER_MAX = 30;
@@ -344,6 +344,7 @@ description: Order Things 4 Good candles online, for pickup or SPS delivery. Bef
     if (!answers.items.length) return sayError("Pick at least one candle first.");
     if (!answers.name) return sayError("We need your name.");
     if (!answers.email.includes("@")) return sayError("We need your email.");
+    if (answers.mobile.replace(/\D/g, "").length < 7) return sayError("We need your mobile number, so we can follow up.");
 
     const text = JSON.stringify(answers);
     if (text !== lastAnswers) { lastAnswers = text; requestId = crypto.randomUUID(); }

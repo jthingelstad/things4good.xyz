@@ -60,6 +60,7 @@ const newService = (overrides = {}) =>
   createService({ store, verify: passes, orders: AFTER, floorMs: 0, sleep: async () => {}, log: () => {}, ...overrides });
 
 const stockEvent = { rawPath: '/api/stock', requestContext: { http: { method: 'GET' } }, headers: {} };
+const seatsEvent = { rawPath: '/api/seats', requestContext: { http: { method: 'GET' } }, headers: {} };
 let address = 0;
 const orderEvent = (body) => ({
   rawPath: '/api/order',
@@ -356,4 +357,20 @@ test('the order shows on the pick-list formulas, and an unpaid one holds stock',
   assert.ok(offering.Sold > offerings['Tea Time'].sold);
   assert.equal(offering.Left, offerings['Tea Time'].sold + 20 - offering.Sold);
   assert.ok(!row.Paid);
+});
+
+test('seats: the Golden Ticket count in any window, and an order takes its seats', async () => {
+  const seats = async () => JSON.parse((await newService({ orders: { window: 'closed' } }).handle(seatsEvent)).body);
+  const ticket = offerings['Golden Ticket'];
+  // Earlier tests may have sold some, so count from what is sold now.
+  const [{ Sold: sold }] = await sql('select Sold from Offerings where id = ?', [ticket.offering]);
+  await setStock([{ offering: ticket.offering, made: sold + 3 }]);
+  const before = await seats();
+  assert.equal(before.left, 3);
+  const typed = buyer({ items: [{ product: ticket.product, quantity: 2 }] });
+  assert.equal((await newService().handle(orderEvent(typed))).statusCode, 200);
+  const after = await seats();
+  assert.equal(after.left, 1);
+  assert.equal(after.total, before.total);
+  assert.deepEqual(Object.keys(after).sort(), ['event', 'left', 'total']);
 });
