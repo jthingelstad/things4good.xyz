@@ -5,6 +5,9 @@ permalink: /print/causes/
 {% extends "print.njk" %}
 
 {% block style %}
+  .head { display: grid; grid-template-columns: 1fr auto; gap: 0.28in; align-items: center; padding: 0.2in 0 0.18in; }
+  .head h1 { font-size: 40pt; }
+  .lead { font-size: 12.5pt; }
   .causes { flex: 1; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: minmax(0, 1fr) minmax(0, 1fr); min-height: 0; gap: 0.2in; padding-bottom: 0.22in; }
   .cause { --c: var(--marigold); --c-d: var(--marigold-d); --c-t: var(--marigold-t); border: 2px solid var(--c); border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; background: #fff; }
   .cause.tammy { --c: var(--pine); --c-d: var(--pine-d); --c-t: var(--pine-t); }
@@ -20,9 +23,12 @@ permalink: /print/causes/
 
 {% block content %}
 <div class="head">
+  <div>
   <p class="eyebrow">Where your donation goes</p>
   <h1>This year&rsquo;s <em>four</em> causes.</h1>
   <p class="lead">Each of us picked one. Every candle is a donation, and <b>100% goes to these four</b>. When you pay, add a note with the causes you&rsquo;d like to support.</p>
+  </div>
+  <div class="more">{{ ("https://things4good.xyz/" ~ causes.year ~ "/") | qrSvg | safe }}<span class="hand">Why we picked them</span><small>things4good.xyz/{{ causes.year }}</small></div>
 </div>
 <div class="causes">
   {% for who in ["Jamie", "Tammy", "Mazie", "Tyler"] %}{% set c = causes.list | pickFor(who) %}{% if c %}
@@ -38,4 +44,3 @@ permalink: /print/causes/
 </div>
 {% endblock %}
 
-{% block footNote %}Why we each picked them: <b>things4good.xyz/{{ causes.year }}</b>{% endblock %}

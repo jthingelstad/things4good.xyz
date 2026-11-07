@@ -37,6 +37,18 @@ module.exports = function (eleventyConfig) {
   // (causes.json). The picks can land a few at a time.
   eleventyConfig.addFilter("pickFor", (list, who) => list.find((c) => c.who === who));
 
+  // An inline SVG QR code for a URL, drawn at build time so a print sign's
+  // code follows its data (the causes sign points at this year's page). Ink on
+  // white with a two-module quiet zone; the sign sets its size.
+  eleventyConfig.addAsyncFilter("qrSvg", (url) =>
+    require("qrcode").toString(url, {
+      type: "svg",
+      errorCorrectionLevel: "M",
+      margin: 2,
+      color: { dark: "#2B2017", light: "#FFFFFF" },
+    }),
+  );
+
   // Copy the stylesheet straight through to the site root.
   eleventyConfig.addPassthroughCopy({ "src/styles.css": "styles.css" });
 

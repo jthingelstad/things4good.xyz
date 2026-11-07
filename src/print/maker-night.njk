@@ -9,7 +9,7 @@ permalink: /print/maker-night/
 {% block style %}
   .hero { display: grid; grid-template-columns: 1fr 2.55in; gap: 0.24in; align-items: stretch; }
   .hero .photo { border-radius: 16px; overflow: hidden; position: relative; background: #1f1812; }
-  .hero .photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .hero .photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
   .hero .photo .tag { position: absolute; left: 10px; bottom: 10px; background: var(--marigold); color: var(--ink); font-weight: 800; font-size: 10pt; letter-spacing: .08em; text-transform: uppercase; padding: 5px 10px; border-radius: 999px; }
   .date { margin-top: 12px; display: inline-flex; gap: 12px; align-items: baseline; padding: 8px 14px; border-radius: 12px; background: var(--ink); color: #fff; }
   .date b { font-family: var(--serif); font-weight: 500; font-size: 17pt; }
@@ -23,7 +23,9 @@ permalink: /print/maker-night/
   .step .num { width: 0.36in; height: 0.36in; border-radius: 50%; background: var(--c); color: #fff; display: grid; place-items: center; font-weight: 800; font-size: 13pt; }
   .step h3 { margin-top: 8px; font-size: 14.5pt; }
   .step p { margin-top: 5px; font-size: 10.5pt; line-height: 1.35; }
-  .details { margin-top: 0.12in; padding-bottom: 0.08in; display: grid; grid-template-columns: 1fr 1fr; gap: 0.08in 0.24in; }
+  .more svg { width: 1.3in; height: 1.3in; }
+  .more-row { margin-top: 0.12in; padding-bottom: 0.08in; display: grid; grid-template-columns: 1fr auto; gap: 0.24in; align-items: center; }
+  .details { display: grid; grid-template-columns: 1fr 1fr; gap: 0.08in 0.24in; }
   .details div { padding: 6px 0; border-top: 1px solid var(--line); font-size: 10.2pt; line-height: 1.35; }
   .details b { display: block; font-size: 11pt; color: var(--pine-d); }
 {% endblock %}
@@ -53,11 +55,14 @@ permalink: /print/maker-night/
     <div class="step" style="--c:var(--berry)"><span class="num">4</span><h3>Candles you pour</h3><p>Pick any scents and mix and match. We guide every step. Pick them up once they set.</p></div>
   </div>
 
+  <div class="more-row">
   <div class="details">
     <div><b>Six candles, all told</b>We have the wax, the wicks and everything else, and we&rsquo;ve already made most of the mistakes.</div>
     <div><b>Where your ${{ site.makerNightDonation }} goes</b>Divided evenly across this year&rsquo;s four causes. 100% goes to good.</div>
     <div><b>Bring a friend</b>Buy two Golden Tickets and come together. Two is the most one person can buy.</div>
     <div><b>Where</b>Hosted by the Thingelstad family in Minneapolis. We take your name, email and phone, and send the address before the night.</div>
+  </div>
+  <div class="more">{{ "https://things4good.xyz/maker-night/" | qrSvg | safe }}<span class="hand">More about the night</span><small>things4good.xyz/maker-night</small></div>
   </div>
 </div>
 {% endblock %}
