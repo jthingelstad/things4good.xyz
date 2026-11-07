@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+{#- One-page signs for the sale tables, printed in color on US Letter (Jamie, 2026-11-07). Public but
+    unlinked: no nav, kept out of collections (so out of the sitemap and llms.txt), and noindex. Each
+    page fills one .page; on screen it shows as a sheet of paper, in print the browser's margins frame it.
+    Content comes from the same data as the site, so a change there reprints correctly. -#}
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex" />
+<title>{{ title }}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Hanken+Grotesk:wght@400;500;600;700;800&family=Caveat:wght@500;600;700&display=swap" rel="stylesheet" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<style>
+  @page { size: letter portrait; margin: 0.4in; }
+  :root {
+    --paper: #FBF3E5; --paper-2: #F6EAD3; --ink: #2B2017; --ink-soft: #6A5A4A; --line: #E4D4B8;
+    --marigold: #EE8B26; --marigold-d: #C9701A; --marigold-t: #FBE3C2;
+    --pine: #18876F; --pine-d: #0F6A57; --pine-t: #D6EAE0;
+    --berry: #D5564B; --berry-d: #B23E34; --berry-t: #F4DAD7;
+    --sky: #3E80A6; --sky-d: #2C6587; --sky-t: #D8E7EF;
+    --serif: "Newsreader", Georgia, serif;
+    --sans: "Hanken Grotesk", system-ui, sans-serif;
+    --hand: "Caveat", cursive;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { margin: 0; background: #E2DACB; color: var(--ink); font-family: var(--sans); font-size: 12pt; line-height: 1.4; -webkit-font-smoothing: antialiased; }
+  h1, h2, h3, p { margin: 0; }
+  h1, h2, h3 { font-family: var(--serif); font-weight: 500; letter-spacing: -.01em; line-height: 1.04; }
+
+  /* A sheet of Letter paper on screen; in print the page margins do the framing. */
+  .tip { max-width: 8.5in; margin: 20px auto 0; text-align: center; font-size: 14px; color: var(--ink-soft); }
+  .tip b { color: var(--ink); }
+  .page { width: 8.5in; height: 11in; margin: 16px auto 40px; padding: 0.4in; background: #fff; box-shadow: 0 10px 40px rgba(43,32,23,.18); }
+  .sheet { height: 100%; display: flex; flex-direction: column; overflow: hidden; }
+  @media print {
+    body { background: none; }
+    .tip { display: none; }
+    .page { width: auto; height: 10.05in; margin: 0; padding: 0; box-shadow: none; }
+  }
+
+  .top { display: flex; justify-content: space-between; align-items: baseline; padding-bottom: 10px; border-bottom: 2px solid var(--marigold); }
+  .brand { font-family: var(--serif); font-weight: 600; font-size: 17pt; letter-spacing: -.01em; }
+  .brand .four { color: var(--marigold); font-style: italic; }
+  .top .when { font-weight: 700; font-size: 10pt; letter-spacing: .08em; text-transform: uppercase; color: var(--pine-d); }
+  .head { padding: 0.28in 0 0.22in; }
+  .eyebrow { font-weight: 800; font-size: 10pt; letter-spacing: .12em; text-transform: uppercase; color: var(--marigold-d); }
+  .head h1 { font-size: 46pt; margin-top: 6px; }
+  .head h1 em { color: var(--pine); }
+  .lead { margin-top: 10px; font-size: 13.5pt; line-height: 1.42; color: var(--ink-soft); max-width: 6.6in; }
+  .lead b { color: var(--ink); }
+  .hand { font-family: var(--hand); font-weight: 700; }
+  .body { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+  .foot { margin-top: auto; padding-top: 10px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; align-items: baseline; font-size: 10pt; color: var(--ink-soft); }
+  .foot .hand { font-size: 17pt; color: var(--pine-d); }
+  .foot b { color: var(--ink); }
+  {% block style %}{% endblock %}
+</style>
+</head>
+<body>
+<p class="tip">A sign for the sale. <b>Print in color on Letter paper, portrait, at 100% scale</b>, with background graphics on.</p>
+<div class="page"><div class="sheet">
+  <div class="top">
+    <span class="brand">Things <span class="four">4</span> Good</span>
+    <span class="when">{{ site.saleYear }} candle sale</span>
+  </div>
+  {% block content %}{% endblock %}
+  <div class="foot">
+    <span class="hand">100% goes to good.</span>
+    <span>{% block footNote %}We pay for the materials ourselves. <b>things4good.xyz</b>{% endblock %}</span>
+  </div>
+</div></div>
+</body>
+</html>
