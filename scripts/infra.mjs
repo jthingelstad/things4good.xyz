@@ -181,7 +181,7 @@ if (name === 'orders') {
     const result = JSON.parse(Buffer.from(check.Payload).toString());
     console.log('Self-check:', JSON.stringify(result));
     if (!result.ok) {
-      console.error('The function cannot read stock yet. If the secret is new, put the key in it (AGENTS.md, "Order service").');
+      console.error('The function cannot take orders yet: it cannot read stock, or the secret has no Turnstile key. Put the keys in it (AGENTS.md, "Order service").');
       process.exitCode = 1;
     }
   } finally {

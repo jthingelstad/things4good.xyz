@@ -1179,6 +1179,8 @@ em.it { font-style: italic; }
 .order-choice b { display: block; color: var(--ink); font-weight: 600; }
 .order-trap { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 .order-error { margin: 0 0 12px; padding: 10px 12px; border-radius: 10px; background: var(--berry-t); color: var(--berry-d); font-weight: 500; font-size: .95rem; }
+.order-check { margin: 0 0 12px; }
+.order-check:empty { display: none; }
 .order-submit { width: 100%; justify-content: center; }
 .order-submit:disabled { opacity: .55; cursor: default; transform: none; }
 .order-fine { margin: 12px 0 0; font-size: .84rem; color: var(--ink-soft); }

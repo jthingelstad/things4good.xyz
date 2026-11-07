@@ -47,10 +47,13 @@ const setStock = (updates) =>
     records: updates.map(({ offering, made, adjustment = 0 }) => ({ id: offering, fields: { Made: made, Adjustment: adjustment } }))
   });
 
+// Turnstile and Buttondown have their own unit tests; this file is about Grist.
+const passes = async () => ({ ok: true, codes: [] });
+
 let offerings; // Product name -> { offering, product, sold }.
 let store;
 const newService = (overrides = {}) =>
-  createService({ store, open: true, floorMs: 0, sleep: async () => {}, log: () => {}, ...overrides });
+  createService({ store, verify: passes, open: true, floorMs: 0, sleep: async () => {}, log: () => {}, ...overrides });
 
 const stockEvent = { rawPath: '/api/stock', requestContext: { http: { method: 'GET' } }, headers: {} };
 let address = 0;
@@ -290,7 +293,7 @@ test('when the lines fail the order and the new person come back out', async () 
   const before = await counts();
   const failing = { ...store, addLines: async () => { throw Object.assign(new Error('boom'), { step: 'add-lines' }); } };
   const logged = [];
-  const service = createService({ store: failing, open: true, floorMs: 0, sleep: async () => {}, log: (entry) => logged.push(entry) });
+  const service = createService({ store: failing, verify: passes, open: true, floorMs: 0, sleep: async () => {}, log: (entry) => logged.push(entry) });
   const typed = buyer({ items: [{ product: offerings['True North'].product, quantity: 1 }] });
   const response = await service.handle(orderEvent(typed));
   assert.equal(response.statusCode, 503);

@@ -8,8 +8,13 @@
 // shows as a 403 or 404 becomes the site's HTML 404 page (CustomErrorResponses), so this answers only
 // with 200, 400, 405, 409, 413, 422, 429, 500 and 503.
 //
-// The key and the document id live in one secret, so neither is in this public repo. Logs carry
-// outcomes only: no name, email, phone, note or IP, and never the text of a Grist error.
+// Every order carries a Cloudflare Turnstile token, checked before any call to Grist; a refused token
+// is a 422, never a 403. Each new order then adds the buyer to the family's Buttondown list, without a
+// confirmation email and never over an unsubscribe. A list failure is logged and never fails the order.
+//
+// The Grist key, the document id, the Turnstile secret and the Buttondown key live in one secret, so none
+// is in this public repo. Logs carry outcomes only: no name, email, phone, note or IP, and never the text
+// of a Grist error.
 
 const MAKER_NIGHT = 'Maker Night candle'; // Golden Ticket: sold at the fall sale or by preorder, never here.
 
@@ -32,6 +37,17 @@ const HOUR = 3_600_000;
 const FULFILLMENT = new Set(['Pickup', 'SPS delivery']);
 const ORDER_TYPE = 'After the sale';
 const STOCK_CACHE = 'public, max-age=60, s-maxage=300';
+
+// The widget is set to these hosts in Cloudflare; a token solved anywhere else is refused here too.
+const TURNSTILE_HOSTS = new Set(['things4good.xyz', 'www.things4good.xyz']);
+const TURNSTILE_ACTION = 'order';
+// Codes that mean our secret or our request is wrong, or Cloudflare is, rather than the buyer's token.
+const TURNSTILE_OURS = new Set(['missing-input-secret', 'invalid-input-secret', 'bad-request', 'internal-error']);
+// A token is good once. A retry of the same order (the page resends after a 503) passes on the request
+// id it already proved, for this long.
+const VERIFIED_FOR = 15 * 60_000;
+// Buttondown's answers for an address it already has, subscribed or not. Never resubscribed.
+const LIST_ALREADY = new Set(['email_already_exists', 'subscriber_already_exists', 'subscriber_suppressed', 'subscriber_blocked']);
 
 const clean = (value) => (typeof value === 'string' ? value.replace(/[\u0000-\u001f\u007f]+/g, ' ').trim() : '');
 
@@ -147,17 +163,26 @@ const json = (statusCode, body, cache = 'no-store') => ({
   body: JSON.stringify(body)
 });
 
+const LOGGERS = { error: console.error, warn: console.warn };
+
 export function createService({
   store,
+  // ({ token }) => { ok, codes }, or throws when Turnstile can't answer. Without one, no order gets in.
+  verify = async () => {
+    throw new StepError('turnstile', 'no verifier');
+  },
+  // ({ email, ip }) => { outcome: 'added' | 'already' | 'refused' | 'skipped', code }, or throws.
+  subscribe = async () => ({ outcome: 'skipped' }),
   open = false,
   now = Date.now,
   sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms)),
-  log = (entry) => (entry.level === 'error' ? console.error(entry) : console.log(entry)),
+  log = (entry) => (LOGGERS[entry.level] ?? console.log)(entry),
   // A known email and a new one take different numbers of Grist calls, so an order never answers
   // sooner than this, which covers both. It holds the one slot, and the page retries a 429.
   floorMs = 3000
 } = {}) {
   const limiter = rateLimiter(now);
+  const verified = new Map(); // requestId -> when its token passed.
 
   const stockResponse = async () => {
     const { event, products } = toStock(await store.readStock());
@@ -194,6 +219,13 @@ export function createService({
 
     const { errors, order } = validate(body);
     if (errors) return { response: json(422, { error: 'invalid', fields: errors }), outcome: 'invalid' };
+
+    for (const [id, at] of verified) if (now() - at >= VERIFIED_FOR) verified.delete(id);
+    if (!verified.has(order.requestId)) {
+      const check = await verify({ token: body.turnstile });
+      if (!check.ok) return { response: json(422, { error: 'turnstile' }), outcome: 'turnstile', codes: check.codes };
+      verified.set(order.requestId, now());
+    }
 
     const sourceRow = `web ${order.requestId}`;
     const previous = await store.findOrder(sourceRow);
@@ -260,7 +292,19 @@ export function createService({
     limiter.add(`order:${ip}`);
     limiter.add('orders');
     const total = order.items.reduce((sum, item) => sum + item.quantity * known.get(item.product).price, 0);
-    return { response: json(200, { ok: true, total }), outcome: 'created', floor: true };
+    return { response: json(200, { ok: true, total }), outcome: 'created', floor: true, list: await addToList(order.email, ip) };
+  };
+
+  // After the order is in, so the list can never cost a buyer their candles.
+  const addToList = async (email, ip) => {
+    try {
+      const { outcome, code } = await subscribe({ email, ip });
+      if (outcome === 'refused') log({ level: 'warn', route: 'order', outcome: 'list-refused', code: safeCode(code) });
+      return outcome;
+    } catch (error) {
+      log({ level: 'error', route: 'order', outcome: 'list-failed', step: error.step ?? 'unknown', status: error.status });
+      return 'failed';
+    }
   };
 
   // Lines failed, or the answer to a write never came. Remove whatever this attempt left.
@@ -301,9 +345,10 @@ export function createService({
       try {
         result = await route(event);
       } catch (error) {
-        log({ level: 'error', outcome: 'grist-failed', step: error.step ?? 'unknown', status: error.status });
+        const outcome = error.step === 'turnstile' ? 'turnstile-failed' : 'grist-failed';
+        log({ level: 'error', outcome, step: error.step ?? 'unknown', status: error.status, codes: error.codes });
         const isOrder = event.requestContext?.http?.method === 'POST';
-        result = { response: json(503, { error: 'try-again' }), route: isOrder ? 'order' : 'stock', outcome: 'grist-failed', floor: isOrder };
+        result = { response: json(503, { error: 'try-again' }), route: isOrder ? 'order' : 'stock', outcome, floor: isOrder };
       }
       if (result.floor) {
         const wait = floorMs - (now() - started);
@@ -316,7 +361,9 @@ export function createService({
         outcome: result.outcome,
         status: result.response.statusCode,
         ms: now() - started,
-        hasAddress: viewerIp(event.headers) !== 'unknown'
+        hasAddress: viewerIp(event.headers) !== 'unknown',
+        ...(result.codes ? { codes: result.codes } : {}),
+        ...(result.list ? { list: result.list } : {})
       });
       return result.response;
     }
@@ -392,6 +439,88 @@ export function gristStore({ apiKey, docId, fetch: fetchFn = fetch, base = 'http
   };
 }
 
+const safeCode = (code) => (typeof code === 'string' && /^[a-z0-9_-]{1,40}$/.test(code) ? code : 'other');
+
+// Cloudflare's siteverify. No remoteip: a browser on two networks can reach Cloudflare over IPv6 and
+// CloudFront over IPv4, and the token alone is the check Cloudflare documents.
+export function turnstileVerifier({
+  secret,
+  fetch: fetchFn = fetch,
+  url = 'https://challenges.cloudflare.com/turnstile/v0/siteverify',
+  onDenied = () => {}
+}) {
+  return async ({ token }) => {
+    if (typeof token !== 'string' || !token || token.length > 2048) return { ok: false, codes: ['missing-input-response'] };
+    let response;
+    try {
+      response = await fetchFn(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ secret, response: token }),
+        signal: AbortSignal.timeout(5000)
+      });
+    } catch (cause) {
+      throw new StepError('turnstile', cause.name);
+    }
+    if (!response.ok) {
+      const error = new StepError('turnstile', `status ${response.status}`);
+      error.status = response.status;
+      throw error;
+    }
+    const result = await response.json();
+    const codes = (Array.isArray(result['error-codes']) ? result['error-codes'] : []).slice(0, 5).map(safeCode);
+    if (codes.some((code) => TURNSTILE_OURS.has(code))) {
+      if (codes.includes('invalid-input-secret')) onDenied();
+      const error = new StepError('turnstile', 'refused our request');
+      error.codes = codes;
+      throw error;
+    }
+    if (result.success !== true) return { ok: false, codes };
+    if (!TURNSTILE_HOSTS.has(result.hostname)) return { ok: false, codes: ['wrong-hostname'] };
+    if (result.action !== TURNSTILE_ACTION) return { ok: false, codes: ['wrong-action'] };
+    return { ok: true, codes: [] };
+  };
+}
+
+// Buttondown. type regular skips the confirmation email: buying candles is the consent the page states.
+// No collision header, so an address already there (subscribed or unsubscribed) is left alone. The
+// buyer's IP goes along so Buttondown's firewall judges the buyer, not the function's few addresses;
+// its bypass header allows only five an hour.
+export function buttondownSubscriber({
+  apiKey,
+  fetch: fetchFn = fetch,
+  base = 'https://api.buttondown.com/v1',
+  onDenied = () => {}
+}) {
+  return async ({ email, ip }) => {
+    let response;
+    try {
+      response = await fetchFn(`${base}/subscribers`, {
+        method: 'POST',
+        headers: { Authorization: `Token ${apiKey}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email_address: email,
+          type: 'regular',
+          notes: 'Added by the order form',
+          ...(ip && ip !== 'unknown' ? { ip_address: ip } : {})
+        }),
+        signal: AbortSignal.timeout(5000)
+      });
+    } catch (cause) {
+      throw new StepError('buttondown', cause.name);
+    }
+    if (response.ok) return { outcome: 'added' };
+    const body = await response.json().catch(() => ({}));
+    const code = typeof body?.code === 'string' ? body.code : undefined;
+    if (response.status === 409 || LIST_ALREADY.has(code)) return { outcome: 'already' };
+    if ([400, 422, 429].includes(response.status)) return { outcome: 'refused', code: code ?? `status-${response.status}` };
+    if (response.status === 401 || response.status === 403) onDenied();
+    const error = new StepError('buttondown', `status ${response.status}`);
+    error.status = response.status;
+    throw error;
+  };
+}
+
 // The real thing: credentials from Secrets Manager, read once per environment and read again if Grist
 // turns the key down, so a rotated key needs no redeploy.
 let credentials;
@@ -400,9 +529,9 @@ const readCredentials = async () => {
     const { SecretsManagerClient, GetSecretValueCommand } = await import('@aws-sdk/client-secrets-manager');
     const client = new SecretsManagerClient({});
     const { SecretString } = await client.send(new GetSecretValueCommand({ SecretId: process.env.SECRET_ID }));
-    const { apiKey, docId } = JSON.parse(SecretString);
+    const { apiKey, docId, turnstileSecret, buttondownKey } = JSON.parse(SecretString);
     if (!apiKey || !docId) throw new StepError('secret', 'the secret has no key yet');
-    credentials = { apiKey, docId };
+    credentials = { apiKey, docId, turnstileSecret, buttondownKey };
   }
   return credentials;
 };
@@ -420,17 +549,40 @@ for (const method of [
   'removePerson'
 ]) {
   lazyStore[method] = async (...args) => {
-    const store = gristStore({ ...(await readCredentials()), onDenied: () => (credentials = undefined) });
+    const { apiKey, docId } = await readCredentials();
+    const store = gristStore({ apiKey, docId, onDenied: () => (credentials = undefined) });
     return store[method](...args);
   };
 }
 
+// Fails closed: with no Turnstile secret every order is a 503 and an alarm.
+const lazyVerify = async (args) => {
+  const { turnstileSecret } = await readCredentials();
+  if (!turnstileSecret) throw new StepError('turnstile', 'the secret has no Turnstile key');
+  return turnstileVerifier({ secret: turnstileSecret, onDenied: () => (credentials = undefined) })(args);
+};
+
+// Fails open: with no Buttondown key orders go through and nobody is added.
+const lazySubscribe = async (args) => {
+  const { buttondownKey } = await readCredentials();
+  if (!buttondownKey) return { outcome: 'skipped' };
+  return buttondownSubscriber({ apiKey: buttondownKey, onDenied: () => (credentials = undefined) })(args);
+};
+
 let service;
 export const handler = async (event) => {
-  service ??= createService({ store: lazyStore, open: process.env.ORDERS_OPEN === 'true' });
+  service ??= createService({
+    store: lazyStore,
+    verify: lazyVerify,
+    subscribe: lazySubscribe,
+    open: process.env.ORDERS_OPEN === 'true'
+  });
   if (event?.selfCheck) {
     try {
-      return await service.selfCheck();
+      const stock = await service.selfCheck();
+      const { turnstileSecret, buttondownKey } = await readCredentials();
+      // Which keys are in the secret, never their values.
+      return { ...stock, ok: stock.ok && Boolean(turnstileSecret), turnstile: Boolean(turnstileSecret), list: Boolean(buttondownKey) };
     } catch (error) {
       return { ok: false, step: error.step ?? 'unknown', status: error.status };
     }
