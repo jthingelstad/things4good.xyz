@@ -320,6 +320,9 @@ export function createService({
         Fulfillment_Method: order.fulfillment,
         Source_Row: sourceRow,
         Notes: order.note,
+        // The done screen sends every buyer to /pay/, so the link is sent. Without it a preorder would sit
+        // at Stage "Send link", which is for Google Form preorders that still need one.
+        Payment_Link_Sent: true,
         Paid: false
       });
       await store.addLines(order.items.map((item) => ({ Order: orderId, Product: item.product, Quantity: item.quantity })));
