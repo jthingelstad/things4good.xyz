@@ -29,6 +29,7 @@ const DATA_SOURCES = {
   "src/pay.njk": PAYMENT,
   "src/care.njk": SITE,
   "src/candles.njk": [...CANDLES, ...SITE],
+  "src/order.njk": [...CANDLES, ...SITE, ...CAUSES],
 };
 
 const git = (args, cwd) => execFileSync("git", args, { cwd, encoding: "utf8" }).trim();

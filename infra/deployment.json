@@ -5,7 +5,8 @@
   "stacks": {
     "certificate": "things4good-certificate",
     "site": "things4good-site",
-    "delivery": "things4good-delivery"
+    "delivery": "things4good-delivery",
+    "orders": "things4good-orders"
   },
   "stackTags": {
     "Application": "Thingelstad",

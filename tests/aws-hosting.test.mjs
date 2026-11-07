@@ -4,7 +4,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { viewerRequestCode } from "../infra/viewer-request.mjs";
-import { certificate, site, delivery } from "../infra/templates.mjs";
+import { certificate, site, delivery, orders } from "../infra/templates.mjs";
 import { cacheControlFor, contentTypeFor } from "../scripts/publish-plan.mjs";
 
 const handler = new Function(viewerRequestCode + "\nreturn handler;")();
@@ -73,6 +73,53 @@ test("access logs carry no viewer IP and no query string", () => {
 });
 
 test("the committed templates are what infra/templates.mjs writes", () => {
-  for (const [name, body] of Object.entries({ certificate, site, delivery }))
+  for (const [name, body] of Object.entries({ certificate, site, delivery, orders }))
     assert.deepEqual(JSON.parse(readFileSync(`infra/generated/${name}.json`, "utf8")), body, `run npm run infra:generate (${name})`);
+});
+
+test("/api/ goes to the order service, without the slash function and without the site's open CORS", () => {
+  const config = site.Resources.Distribution.Properties.DistributionConfig;
+  const [behavior] = config.CacheBehaviors;
+  assert.equal(config.CacheBehaviors.length, 1);
+  assert.equal(behavior.PathPattern, "/api/*");
+  assert.equal(behavior.TargetOriginId, "orders");
+  assert.ok(behavior.AllowedMethods.includes("POST"));
+  assert.equal(behavior.FunctionAssociations, undefined);
+  assert.deepEqual(behavior.ResponseHeadersPolicyId, { Ref: "OrderHeaders" });
+  assert.equal(site.Resources.OrderHeaders.Properties.ResponseHeadersPolicyConfig.CorsConfig, undefined);
+  const origin = config.Origins.find((o) => o.Id === "orders");
+  assert.deepEqual(origin.OriginAccessControlId, { Ref: "OrderOriginAccess" });
+  assert.equal(site.Resources.OrderOriginAccess.Properties.OriginAccessControlConfig.OriginAccessControlOriginType, "lambda");
+  // The signature needs the body's hash, and must be for the function URL's name, not the site's.
+  const { Headers } = site.Resources.OrderOriginRequest.Properties.OriginRequestPolicyConfig.HeadersConfig;
+  assert.ok(Headers.includes("x-amz-content-sha256"));
+  assert.ok(!Headers.map((h) => h.toLowerCase()).includes("host"));
+});
+
+test("the order function runs one at a time, behind IAM, and only it can read the key", () => {
+  const { Function: fn, FunctionUrl, SecretPolicy, Role, Logs, CloudFrontInvoke, CloudFrontInvokeUrl } = orders.Resources;
+  assert.equal(fn.Properties.ReservedConcurrentExecutions, 1);
+  assert.equal(FunctionUrl.Properties.AuthType, "AWS_IAM");
+  assert.equal(CloudFrontInvoke.Properties.Principal, "cloudfront.amazonaws.com");
+  assert.equal(CloudFrontInvoke.Properties.Action, "lambda:InvokeFunction");
+  assert.equal(CloudFrontInvokeUrl.Properties.Action, "lambda:InvokeFunctionUrl");
+  const [deny] = SecretPolicy.Properties.ResourcePolicy.Statement;
+  assert.equal(deny.Effect, "Deny");
+  assert.equal(deny.Action, "secretsmanager:GetSecretValue");
+  assert.deepEqual(deny.Condition.StringNotEquals["aws:PrincipalArn"], { "Fn::GetAtt": ["Role", "Arn"] });
+  const reads = Role.Properties.Policies[0].PolicyDocument.Statement.find((s) => s.Action === "secretsmanager:GetSecretValue");
+  assert.deepEqual(reads.Resource, { Ref: "Secret" });
+  assert.equal(Logs.Properties.RetentionInDays, 90);
+});
+
+test("errors alarm, whether the service caught them or Lambda did", () => {
+  const { ErrorAlarm, ErrorFilter } = orders.Resources;
+  assert.equal(ErrorFilter.Properties.FilterPattern, '{ $.level = "ERROR" }');
+  assert.match(JSON.stringify(ErrorAlarm.Properties.AlarmActions), /projects-sysadmin-alarms/);
+  const names = ErrorAlarm.Properties.Metrics.filter((m) => m.MetricStat).map((m) => m.MetricStat.Metric.MetricName);
+  assert.deepEqual(names.sort(), ["Errors", "ServiceErrors"]);
+});
+
+test("no CloudFormation description has an em dash", () => {
+  for (const body of [site, orders]) assert.ok(!JSON.stringify(body).includes("\u2014"));
 });

@@ -1,4 +1,4 @@
-// Deploy one of the three stacks in infra/generated/ from this Mac, as the cloud-engineer identity
+// Deploy one of the four stacks in infra/generated/ from this Mac, as the cloud-engineer identity
 // (it refuses any other), through a change set it prints before executing.
 //
 //   npm run infra -- certificate   the certificate; prints both validation CNAMEs (apex and www) for
@@ -6,6 +6,9 @@
 //   npm run infra -- site          the site; gives the distribution things4good.xyz and
 //                                  www.things4good.xyz once the certificate is ISSUED
 //   npm run infra -- delivery      the role CI assumes; print its ARN for the AWS_DEPLOY_ROLE_ARN variable
+//   npm run infra -- orders        the order service: its stack, then its code (infra/order-service.mjs),
+//                                  then a read-only check that it reaches Grist. Open or closed follows
+//                                  site.json's orderForm
 //   add --plan to print the change set and stop
 //
 // Each run records the stack's outputs in infra/deployment.json.
@@ -22,15 +25,20 @@ import {
   waitUntilStackCreateComplete,
   waitUntilStackUpdateComplete
 } from '@aws-sdk/client-cloudformation';
+import { InvokeCommand, LambdaClient, UpdateFunctionCodeCommand, waitUntilFunctionUpdatedV2 } from '@aws-sdk/client-lambda';
 import { GetCallerIdentityCommand, STSClient } from '@aws-sdk/client-sts';
-import { readFileSync, writeFileSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
+import { copyFileSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { setTimeout as delay } from 'node:timers/promises';
 
 const CONFIG = 'infra/deployment.json';
 const config = JSON.parse(readFileSync(CONFIG, 'utf8'));
 const [name] = process.argv.slice(2).filter((arg) => !arg.startsWith('--'));
 const planOnly = process.argv.includes('--plan');
-if (!['certificate', 'site', 'delivery'].includes(name)) throw new Error('Usage: npm run infra -- certificate|site|delivery [--plan]');
+if (!['certificate', 'site', 'delivery', 'orders'].includes(name))
+  throw new Error('Usage: npm run infra -- certificate|site|delivery|orders [--plan]');
 
 const region = config.region;
 const identity = await new STSClient({ region }).send(new GetCallerIdentityCommand({}));
@@ -51,7 +59,20 @@ if (name === 'site') {
     arn = cert.Certificate.Status === 'ISSUED' ? config.certificateArn : '';
     console.log(`Certificate ${cert.Certificate.Status}${arn ? '' : ': the distribution stays on its CloudFront domain'}`);
   }
-  parameters = [{ ParameterKey: 'CertificateArn', ParameterValue: arn }];
+  const { OrdersOriginDomain } = outputs(await describe(config.stacks.orders));
+  if (!OrdersOriginDomain) throw new Error('Deploy the orders stack first: the site points /api/ at its function URL.');
+  parameters = [
+    { ParameterKey: 'CertificateArn', ParameterValue: arn },
+    { ParameterKey: 'OrdersOriginDomain', ParameterValue: OrdersOriginDomain }
+  ];
+}
+if (name === 'orders') {
+  const { orderForm } = JSON.parse(readFileSync('src/_data/site.json', 'utf8'));
+  parameters = [
+    { ParameterKey: 'DistributionId', ParameterValue: config.distributionId },
+    { ParameterKey: 'OrdersOpen', ParameterValue: orderForm === true ? 'true' : 'false' }
+  ];
+  console.log(`Orders ${orderForm === true ? 'OPEN' : 'closed'} (site.json orderForm)`);
 }
 if (name === 'delivery') {
   const site = outputs(await describe(config.stacks.site));
@@ -82,7 +103,7 @@ if (!pending) {
       ChangeSetType: existing ? 'UPDATE' : 'CREATE',
       TemplateBody: readFileSync(`infra/generated/${name}.json`, 'utf8'),
       Parameters: parameters,
-      Capabilities: name === 'delivery' ? ['CAPABILITY_IAM'] : [],
+      Capabilities: ['delivery', 'orders'].includes(name) ? ['CAPABILITY_IAM'] : [],
       Tags: Object.entries(config.stackTags).map(([Key, Value]) => ({ Key, Value }))
     })
   );
@@ -140,6 +161,30 @@ if (name === 'certificate') {
       cloudfrontDomain: out.CloudFrontDomain
     });
   if (name === 'delivery') config.deploymentRoleArn = out.DeploymentRoleArn;
+  if (name === 'orders') config.ordersOriginDomain = out.OrdersOriginDomain;
   console.log(JSON.stringify(out, null, 2));
 }
 writeFileSync(CONFIG, JSON.stringify(config, null, 2) + '\n');
+
+if (name === 'orders') {
+  const FunctionName = outputs(await describe(StackName)).FunctionName;
+  const dir = mkdtempSync(join(tmpdir(), 't4g-orders-'));
+  try {
+    copyFileSync('infra/order-service.mjs', join(dir, 'index.mjs'));
+    execFileSync('zip', ['-q', '-X', 'code.zip', 'index.mjs'], { cwd: dir });
+    const lambda = new LambdaClient({ region });
+    await lambda.send(new UpdateFunctionCodeCommand({ FunctionName, ZipFile: readFileSync(join(dir, 'code.zip')) }));
+    await waitUntilFunctionUpdatedV2({ client: lambda, maxWaitTime: 120 }, { FunctionName });
+    console.log(`${FunctionName}: code uploaded`);
+    // One read from Grist, through the function, because nothing else here can read the secret.
+    const check = await lambda.send(new InvokeCommand({ FunctionName, Payload: JSON.stringify({ selfCheck: true }) }));
+    const result = JSON.parse(Buffer.from(check.Payload).toString());
+    console.log('Self-check:', JSON.stringify(result));
+    if (!result.ok) {
+      console.error('The function cannot read stock yet. If the secret is new, put the key in it (AGENTS.md, "Order service").');
+      process.exitCode = 1;
+    }
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+}

@@ -1,0 +1,285 @@
+---
+title: Order candles — Things 4 Good
+description: Order the Things 4 Good candles left after the sale, for pickup or SPS delivery. 100% goes to this year's four causes.
+---
+{% extends "base.njk" %}
+
+{# Hidden until Jamie turns it on: site.json's orderForm gates this page (order.11tydata.js gives it no URL when off) and the service behind it (npm run infra -- orders). Stock and prices come from /api/stock, never from this file. #}
+
+{% block content %}
+
+<section class="section page-head" id="head">
+  <div class="hero-glow" aria-hidden="true"></div>
+  <div class="wrap">
+    <a class="back-link" href="/">&larr; Things 4 Good</a>
+    <p class="eyebrow">After the sale</p>
+    <h1 style="font-family:var(--serif);font-weight:500;font-size:clamp(2.4rem,5.4vw,4rem);letter-spacing:-.02em;line-height:1.02;max-width:18ch">Order the candles we have left.</h1>
+    <p class="lead" style="margin-top:18px">The {{ site.saleYear }} sale is over and we still have some candles. Pick what you&rsquo;d like, then pick them up or, if you&rsquo;re on the SPS team, have them delivered at work. Online orders are divided evenly across <a href="/{{ causes.year }}/" style="color:var(--marigold-d);font-weight:600;text-decoration:none">this year&rsquo;s four causes</a>.</p>
+  </div>
+</section>
+
+<section class="section" id="order" style="padding-top:clamp(20px,3vw,32px)">
+  <div class="wrap">
+    <noscript><p class="order-message">This form needs JavaScript. Email <a href="mailto:{{ site.email }}">{{ site.email }}</a> and we&rsquo;ll take your order that way.</p></noscript>
+    <p class="order-message" id="order-status" role="status" aria-live="polite">Checking what we have left&hellip;</p>
+
+    <form class="order-grid" id="order-form" hidden novalidate>
+      <div id="order-products"></div>
+
+      <aside class="order-panel" aria-label="Your order">
+        <h2>Your order</h2>
+        <ul class="order-summary" id="order-summary"></ul>
+        <p class="order-total"><span>Total donation</span><b id="order-total" aria-live="polite">$0</b></p>
+
+        <label class="order-field">Name
+          <input name="name" type="text" autocomplete="name" maxlength="100" required />
+        </label>
+        <label class="order-field">Email
+          <input name="email" type="email" autocomplete="email" maxlength="254" required />
+        </label>
+        <label class="order-field">Mobile <small>optional</small>
+          <input name="mobile" type="tel" autocomplete="tel" maxlength="30" />
+        </label>
+
+        <fieldset class="order-field order-choice">
+          <legend>How should we get them to you?</legend>
+          <label><input type="radio" name="fulfillment" value="Pickup" checked /> <span><b>Pickup</b> Jamie will email you the details.</span></label>
+          <label><input type="radio" name="fulfillment" value="SPS delivery" /> <span><b>SPS delivery</b> For SPS team members, delivered at work.</span></label>
+        </fieldset>
+
+        <label class="order-field">Anything we should know? <small>optional</small>
+          <textarea name="note" rows="2" maxlength="500"></textarea>
+        </label>
+
+        {# The spam trap: people never see this, and a filled one is refused. #}
+        <div class="order-trap" aria-hidden="true">
+          <label>Leave this empty <input name="website" type="text" tabindex="-1" autocomplete="off" /></label>
+        </div>
+
+        <p class="order-error" id="order-error" role="alert" hidden></p>
+        <button class="btn btn--primary order-submit" id="order-submit" type="submit" disabled>Place order</button>
+        <p class="order-fine">Your order holds these candles right away. Please send your donation soon after you order, because we may release an order that stays unpaid.</p>
+      </aside>
+    </form>
+
+    <div class="order-done" id="order-done" tabindex="-1" hidden>
+      <span class="hand" style="font-size:1.9rem">Thank you!</span>
+      <h2 id="order-done-title"></h2>
+      <p class="order-done-total">Your total is <b id="order-done-total"></b>.</p>
+      <ul class="order-summary" id="order-done-items"></ul>
+      <a class="btn btn--primary" href="/pay/">Send your donation <span class="arr">&rarr;</span></a>
+      <p id="order-done-next"></p>
+      <p>This page is your confirmation, so nothing is emailed automatically. Questions? Email <a href="mailto:{{ site.email }}">{{ site.email }}</a>.</p>
+    </div>
+  </div>
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+(() => {
+  const ART = { {% for scent in candles.scents %}{{ scent.name | dump | safe }}: {{ scent.art | dump | safe }}{% if not loop.last %}, {% endif %}{% endfor %} };
+  const GROUPS = [["Candle", "Candles"], ["XL candle", "XL candles"], ["Lid", "Candle lids"]];
+  const EMAIL = {{ site.email | dump | safe }};
+  const LINE_MAX = 24, ORDER_MAX = 30;
+
+  const $ = (id) => document.getElementById(id);
+  const form = $("order-form"), status = $("order-status"), errorBox = $("order-error"), submit = $("order-submit");
+  const money = (n) => "$" + n.toLocaleString("en-US", { maximumFractionDigits: 2 });
+  const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+  const el = (tag, className, text) => {
+    const node = document.createElement(tag);
+    if (className) node.className = className;
+    if (text !== undefined) node.textContent = text;
+    return node;
+  };
+
+  let products = [];
+  const cart = new Map();
+
+  const say = (text) => { status.textContent = text; status.hidden = !text; };
+  const sayError = (text) => { errorBox.textContent = text; errorBox.hidden = !text; };
+  const closed = () => { form.hidden = true; say(`Online orders aren’t open right now. Email ${EMAIL} and we’ll sort it out.`); };
+
+  const chosen = () => products.filter((p) => cart.get(p.id) > 0).map((p) => ({ ...p, quantity: cart.get(p.id) }));
+  const count = () => chosen().reduce((sum, p) => sum + p.quantity, 0);
+
+  function fillSummary(list, items) {
+    list.replaceChildren(...items.map((p) => {
+      const row = el("li");
+      row.append(el("span", "", `${p.quantity} × ${p.name}`), el("span", "", money(p.quantity * p.price)));
+      return row;
+    }));
+  }
+
+  function refresh() {
+    const items = chosen();
+    fillSummary($("order-summary"), items);
+    $("order-total").textContent = money(items.reduce((sum, p) => sum + p.quantity * p.price, 0));
+    submit.disabled = items.length === 0;
+    const atMax = count() >= ORDER_MAX;
+    for (const p of products) {
+      const q = cart.get(p.id) || 0;
+      const row = document.querySelector(`[data-product="${p.id}"]`);
+      if (!row) continue;
+      row.querySelector("output").textContent = q;
+      row.querySelector("[data-less]").disabled = q === 0;
+      row.querySelector("[data-more]").disabled = atMax || q >= Math.min(p.left, LINE_MAX);
+      row.querySelector(".order-left").textContent = p.left > 0 ? `${p.left} left` : "All gone";
+      row.classList.toggle("is-out", p.left === 0);
+    }
+    if (atMax && !errorBox.textContent) sayError(`Online orders top out at ${ORDER_MAX}. For a bigger one, email ${EMAIL}.`);
+    if (!atMax && errorBox.textContent.startsWith("Online orders top out")) sayError("");
+  }
+
+  function draw() {
+    const box = $("order-products");
+    box.replaceChildren();
+    const known = GROUPS.map(([type]) => type);
+    const groups = [...GROUPS, ...[...new Set(products.map((p) => p.type))].filter((t) => !known.includes(t)).map((t) => [t, t])];
+    for (const [type, title] of groups) {
+      const list = products.filter((p) => p.type === type);
+      if (!list.length) continue;
+      box.append(el("h2", "order-group", title));
+      for (const p of list) {
+        const row = el("div", "order-row");
+        row.dataset.product = p.id;
+        const art = ART[p.name] || ART[p.name.replace(/ XL$/, "")];
+        const pic = el("div", "order-art");
+        if (art) {
+          const img = el("img");
+          img.src = art; img.alt = ""; img.loading = "lazy"; img.decoding = "async";
+          pic.append(img);
+        }
+        const about = el("div", "order-about");
+        about.append(el("b", "", p.name), el("span", "", `${money(p.price)} donation · `), el("span", "order-left"));
+        const stepper = el("div", "order-stepper");
+        const less = el("button", "", "−"), qty = el("output"), more = el("button", "", "+");
+        less.type = more.type = "button";
+        less.dataset.less = more.dataset.more = "";
+        less.setAttribute("aria-label", `One less ${p.name}`);
+        more.setAttribute("aria-label", `One more ${p.name}`);
+        less.addEventListener("click", () => { cart.set(p.id, Math.max(0, (cart.get(p.id) || 0) - 1)); refresh(); });
+        more.addEventListener("click", () => { cart.set(p.id, (cart.get(p.id) || 0) + 1); refresh(); });
+        stepper.append(less, qty, more);
+        row.append(pic, about, stepper);
+        box.append(row);
+      }
+    }
+    refresh();
+  }
+
+  async function loadStock() {
+    let response;
+    for (const wait of [0, 1500, 3000, 5000]) {
+      await sleep(wait);
+      response = await fetch("/api/stock").catch(() => null);
+      if (response && response.status !== 429) break;
+    }
+    if (response && response.status === 503) {
+      const body = await response.json().catch(() => ({}));
+      if (body.open === false) return closed();
+    }
+    if (!response || !response.ok) return say(`We couldn’t load what we have left. Try again in a minute, or email ${EMAIL}.`);
+    const stock = await response.json();
+    products = stock.products;
+    if (!products.length) return say("We’re all sold out. Thank you, everyone!");
+    say("");
+    form.hidden = false;
+    draw();
+  }
+
+  // A retry with the same answers keeps its id, so the service can't take the order twice. Changed
+  // answers are a new order.
+  let requestId, lastAnswers;
+
+  async function send(body) {
+    const bytes = new TextEncoder().encode(body);
+    const digest = await crypto.subtle.digest("SHA-256", bytes);
+    const hash = [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, "0")).join("");
+    let response, data = {};
+    // The service takes one request at a time, so a 429 from Lambda usually clears in a few seconds.
+    for (const wait of [0, 2000, 4000, 8000]) {
+      await sleep(wait);
+      response = await fetch("/api/order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "x-amz-content-sha256": hash },
+        body,
+      }).catch(() => null);
+      data = response ? await response.json().catch(() => ({})) : {};
+      const again = !response || response.status === 429 || response.status >= 500;
+      if (!again || data.error === "slow-down" || data.open === false) break;
+    }
+    return { response, data };
+  }
+
+  function showDone(answers, items, total) {
+    form.hidden = true;
+    say("");
+    $("order-done-title").textContent = `Your order is in, ${answers.name}.`;
+    $("order-done-total").textContent = money(total);
+    fillSummary($("order-done-items"), items);
+    $("order-done-next").textContent = answers.fulfillment === "SPS delivery"
+      ? "Jamie will get them to you at work."
+      : "Jamie will email you the pickup details.";
+    const done = $("order-done");
+    done.hidden = false;
+    done.focus();
+    done.scrollIntoView({ block: "start" });
+  }
+
+  const FIELD_WORDS = { name: "your name", email: "your email", mobile: "your mobile number", note: "your note", fulfillment: "how to get them to you", items: "the candles in your order" };
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    sayError("");
+    const values = new FormData(form);
+    const answers = {
+      name: values.get("name").trim(),
+      email: values.get("email").trim(),
+      mobile: values.get("mobile").trim(),
+      fulfillment: values.get("fulfillment"),
+      note: values.get("note").trim(),
+      website: values.get("website"),
+      items: chosen().map((p) => ({ product: p.id, quantity: p.quantity })),
+    };
+    if (!answers.items.length) return sayError("Pick at least one candle first.");
+    if (!answers.name) return sayError("We need your name.");
+    if (!answers.email.includes("@")) return sayError("We need your email.");
+
+    const text = JSON.stringify(answers);
+    if (text !== lastAnswers) { lastAnswers = text; requestId = crypto.randomUUID(); }
+    const items = chosen();
+
+    submit.disabled = true;
+    submit.textContent = "Placing your order…";
+    const { response, data } = await send(JSON.stringify({ ...answers, requestId }));
+    submit.disabled = false;
+    submit.textContent = "Place order";
+
+    if (response && response.ok && data.ok) return showDone(answers, items, data.total);
+    if (data.open === false) return closed();
+    if (response && response.status === 409 && data.short) {
+      for (const short of data.short) {
+        const p = products.find((x) => x.id === short.id);
+        if (p) p.left = short.left;
+        cart.set(short.id, Math.min(cart.get(short.id) || 0, short.left));
+      }
+      refresh();
+      const words = data.short.map((s) => (s.left ? `${s.left} ${s.name}` : `no ${s.name}`)).join(" and ");
+      return sayError(`We only have ${words} left, so we changed your order. Check it and press Place order again.`);
+    }
+    if (data.error === "unknown-product") return sayError(`One of those isn’t available online. Reload the page, or email ${EMAIL}.`);
+    if (data.error === "invalid" && data.fields && data.fields.length) {
+      return sayError(`Please check ${data.fields.map((f) => FIELD_WORDS[f]).filter(Boolean).join(" and ") || "your order"}.`);
+    }
+    if (data.error === "invalid") return sayError(`We couldn’t take that order. Please email ${EMAIL}.`);
+    if (data.error === "slow-down") return sayError(`That’s a lot of orders in a short time. Try again in a while, or email ${EMAIL}.`);
+    sayError(`Something went wrong on our end. Press Place order again: it won’t double up. Or email ${EMAIL}.`);
+  });
+
+  loadStock();
+})();
+</script>
+{% endblock %}
