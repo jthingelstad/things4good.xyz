@@ -1,6 +1,5 @@
 {
-  "_note": "This year's lineup for /candles/, in the order of the scent markers at the sale. Each scent is site.pricePerCandle; xl: true adds the XL size at xlDonation. art is the label drawing in src/images/scents/. secretScents: true shows an \"under wraps\" card for the new scents held back until the sale; set it false once they are revealed (and add them to scents). A scent with no art yet shows a New frame until its label is ready. makerNight: true prices a card at site.makerNightDonation and links it to Maker Night.",
-  "xlDonation": 50,
+  "_note": "This year's lineup for /candles/, in the order of the scent markers at the sale. Each scent is site.pricePerCandle. art is the label drawing in src/images/scents/. secretScents: true shows an \"under wraps\" card for the new scents held back until the sale; set it false once they are revealed (and add them to scents). A scent with no art yet shows a New frame until its label is ready. makerNight: true prices a card at site.makerNightDonation and links it to Maker Night.",
   "secretScents": false,
   "scents": [
     { "slug": "just-crackle", "name": "Just Crackle", "art": "/images/scents/just-crackle.png",
@@ -9,13 +8,13 @@
       "description": "Where beauty burns slow — petals kissed by smoke, grounded in sandalwood and secrets. A scent that smolders rather than blooms." },
     { "slug": "apple-of-my-eye", "name": "Apple Of My Eye", "art": "/images/scents/apple-of-my-eye.png",
       "description": "An orchard stroll in candle form, with cinnamon as your tour guide and vanilla as the afterparty." },
-    { "slug": "true-north", "name": "True North", "art": "/images/scents/true-north.png", "xl": true,
+    { "slug": "true-north", "name": "True North", "art": "/images/scents/true-north.png",
       "description": "A scent that makes even Santa consider relocating his workshop to the Alps." },
     { "slug": "oh-my-darling", "name": "Oh My Darling", "art": "/images/scents/oh-my-darling.png",
       "description": "It’s like a fruit salad went on vacation and came back with a tan and a tropical accent." },
     { "slug": "t4g-labs", "name": "T4G Labs", "art": "/images/scents/t4g-labs.png",
       "description": "A playground for our wilder ideas — unexpected blends, bold mistakes, and happy accidents, all poured just for fun." },
-    { "slug": "winter-wonderland", "name": "Winter Wonderland", "art": "/images/scents/winter-wonderland.png", "xl": true,
+    { "slug": "winter-wonderland", "name": "Winter Wonderland", "art": "/images/scents/winter-wonderland.png",
       "description": "It’s like hugging a pine tree without the sap — pure holiday forest air, no axe required." },
     { "slug": "rekindled", "name": "Rekindled", "art": "/images/scents/rekindled.png",
       "description": "Because good things deserve a second spark — and you’re too classy to toss glass." },
@@ -26,13 +25,15 @@
     { "slug": "old-fashioned", "name": "Old Fashioned", "art": "/images/scents/old-fashioned.png",
       "description": "Smells like your favorite speakeasy decided to moonlight as a candlemaker — sweet, rich, and socially refined." },
     { "slug": "sweet-tooth", "name": "Sweet Tooth", "art": "/images/scents/sweet-tooth.png",
-      "description": "New this year. Come smell it at the sale." },
+      "description": "All the candy, none of the cavities." },
     { "slug": "burnt-cinnamon", "name": "Burnt Cinnamon", "art": "/images/scents/burnt-cinnamon.png",
-      "description": "New this year. Come smell it at the sale." },
+      "description": "Cinnamon that stayed by the fire a little too long, and is better for it." },
     { "slug": "golden-ticket", "name": "Golden Ticket", "art": "/images/scents/golden-ticket.png", "makerNight": true,
-      "description": "Our gold Maker Night candle. There are just six, in a scent we made only for them, and each one is your seat at Maker Night." }
+      "description": "There are just six, in a scent we made only for them, and each one is your seat at Maker Night." }
   ],
   "extras": [
+    { "slug": "xl", "name": "XL candles", "donation": 50,
+      "description": "Our 24 oz size, in limited supply. See what we have at the sale." },
     { "slug": "candle-lid", "name": "Candle Lid", "donation": 10,
       "description": "Enhance your candles with beautiful thick wood candle lids. Helps preserve fragrance for longer." }
   ]

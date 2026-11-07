@@ -32,7 +32,6 @@ description: This year’s Things 4 Good scents, from Just Crackle to Golden Tic
           <div class="lineup-foot">
             <span>${{ site.makerNightDonation if scent.makerNight else site.pricePerCandle }} donation</span>
             {% if scent.makerNight and site.makerNight %}<span><a href="/maker-night/" style="color:var(--marigold-d);font-weight:600;text-decoration:none">About Maker Night &rarr;</a></span>{% endif %}
-            {% if scent.xl %}<span class="lineup-xl">Also in XL &middot; ${{ candles.xlDonation }}</span>{% endif %}
           </div>
         </div>
       </article>
@@ -60,10 +59,6 @@ description: This year’s Things 4 Good scents, from Just Crackle to Golden Tic
       <h2 class="t">Go bigger, or top it off.</h2>
     </div>
     <div class="info-card reveal">
-      <div class="info-row">
-        <div class="k">XL candles</div>
-        <div class="v"><b>${{ candles.xlDonation }} donation.</b> {% for scent in candles.scents | selectattr("xl") %}{% if not loop.first %}{% if loop.last %} and {% else %}, {% endif %}{% endif %}<a href="#{{ scent.slug }}" style="color:var(--marigold-d);font-weight:600;text-decoration:none">{{ scent.name }}</a>{% endfor %} also come in an XL size.</div>
-      </div>
       {% for extra in candles.extras %}
       <div class="info-row">
         <div class="k">{{ extra.name }}</div>

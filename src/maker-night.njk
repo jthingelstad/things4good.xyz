@@ -1,6 +1,6 @@
 ---
 title: Maker Night — Things 4 Good
-description: An evening for six. Buy one of six gold Maker Night candles at the fall sale and come pour four candles of your own, in any scents from our library. 100% to good.
+description: An evening for six. Buy one of six Golden Ticket candles at the fall sale and come pour four candles of your own, in any scents from our library. 100% to good.
 ---
 {% extends "base.njk" %}
 
@@ -22,7 +22,7 @@ description: An evening for six. Buy one of six gold Maker Night candles at the 
       <a href="/" style="display:inline-flex;align-items:center;gap:.4em;color:var(--marigold);font-weight:700;font-size:.9rem;text-decoration:none;margin-bottom:8px">&larr; Things 4 Good</a>
       <p class="eyebrow">{{ site.makerNightDate }} &middot; {{ site.makerNightTime }}</p>
       <h1 style="margin-top:18px">Maker <span class="pine" style="color:var(--marigold)">Night.</span></h1>
-      <p class="lead">We&rsquo;re trying something new! At the fall sale we&rsquo;ll have six gold Maker Night candles, each in a scent we made only for them. Buy one and you get a seat at Maker Night, where you&rsquo;ll pour four candles of your own in any scents from our library. It&rsquo;s an evening for six.</p>
+      <p class="lead">We&rsquo;re trying something new! At the fall sale we&rsquo;ll have six Golden Ticket candles, each in a scent we made only for them. Buy one and you get a seat at Maker Night, where you&rsquo;ll pour four candles of your own in any scents from our library. It&rsquo;s an evening for six.</p>
       <div class="spots" role="img" aria-label="{% if seatsLeft > 0 %}{{ seatsLeft }} of {{ makerNightSeats.total }} seats left{% else %}Sold out{% endif %}">
         <span class="flames">{% for i in range(0, makerNightSeats.total) %}<span class="flame{% if i >= seatsLeft %} out{% endif %}"></span>{% endfor %}</span>
         <span class="stxt">{% if seatsLeft > 0 %}{{ seatsLeft }} of {{ makerNightSeats.total }} seats left{% else %}Sold out{% endif %}</span>
@@ -31,13 +31,13 @@ description: An evening for six. Buy one of six gold Maker Night candles at the 
         {% if seatsLeft > 0 %}<a class="btn btn--primary" href="#reserve">How to get a seat <span class="arr">&rarr;</span></a>
         <a class="btn btn--ghost" href="#evening">How it works</a>{% else %}<a class="btn btn--primary" href="#evening">How it works <span class="arr">&rarr;</span></a>{% endif %}
       </div>
-      <p class="hero-note">${{ site.makerNightDonation }} gold Maker Night candle at the sale, {{ site.saleDates | safe }} &middot; 100% to good</p>
+      <p class="hero-note">${{ site.makerNightDonation }} Golden Ticket candle at the sale, {{ site.saleDates | safe }} &middot; 100% to good</p>
     </div>
 
     <div class="hero-art reveal">
       <div class="tape" style="background:#1f1812;border-color:rgba(255,255,255,.16)">
         <span class="hand" style="color:var(--marigold)">one of six&hellip;</span>
-        <small style="color:rgba(255,255,255,.6)">GOLD MAKER NIGHT CANDLE</small>
+        <small style="color:rgba(255,255,255,.6)">GOLDEN TICKET CANDLE</small>
       </div>
       <img class="ph" src="/images/maker-night.jpg" alt="A tray of lit wooden-wick candles glowing in the dark" style="object-fit:cover" />
       <div class="badge" style="background:var(--marigold);color:#2B2017" aria-hidden="true">
@@ -58,8 +58,8 @@ description: An evening for six. Buy one of six gold Maker Night candles at the 
     <div class="steps">
       <div class="step reveal">
         <div class="num">1</div>
-        <h3>Buy a gold candle</h3>
-        <p>We&rsquo;ll have six gold Maker Night candles at the fall sale, {{ site.saleDates | safe }}, in a scent we made only for them. Each is a ${{ site.makerNightDonation }} donation. You take yours home that day and it&rsquo;s your seat.</p>
+        <h3>Buy a Golden Ticket candle</h3>
+        <p>We&rsquo;ll have six Golden Ticket candles at the fall sale, {{ site.saleDates | safe }}, in a scent we made only for them. Each is a ${{ site.makerNightDonation }} donation. You take yours home that day and it&rsquo;s your seat.</p>
       </div>
       <div class="step alt reveal">
         <div class="num">2</div>
@@ -84,8 +84,9 @@ description: An evening for six. Buy one of six gold Maker Night candles at the 
     </div>
     <div class="gifts">
       <div class="gift reveal">
+        <img class="gift-label" src="/images/scents/golden-ticket.png" alt="Mazie’s hand-drawn Golden Ticket label" loading="lazy" decoding="async" />
         <div class="big">1</div>
-        <h3>Gold Maker Night candle</h3>
+        <h3>Golden Ticket candle</h3>
         <p>Yours from the sale, in a scent made only for Maker Night. Only six exist.</p>
       </div>
       <div class="gift alt reveal">
@@ -121,7 +122,7 @@ description: An evening for six. Buy one of six gold Maker Night candles at the 
       <div class="info-card reveal">
         <div class="info-row">
           <div class="k">Donation</div>
-          <div class="v"><b>${{ site.makerNightDonation }}</b> per seat, given when you buy your gold candle. It&rsquo;s divided evenly across this year&rsquo;s four causes, and 100% goes to good.</div>
+          <div class="v"><b>${{ site.makerNightDonation }}</b> per seat, given when you buy your Golden Ticket candle. It&rsquo;s divided evenly across this year&rsquo;s four causes, and 100% goes to good.</div>
         </div>
         <div class="info-row">
           <div class="k">Spots</div>
@@ -129,7 +130,7 @@ description: An evening for six. Buy one of six gold Maker Night candles at the 
         </div>
         <div class="info-row">
           <div class="k">Bring a friend</div>
-          <div class="v">Buy two gold candles and come together. Two is the most one person can buy.</div>
+          <div class="v">Buy two Golden Ticket candles and come together. Two is the most one person can buy.</div>
         </div>
         <div class="info-row">
           <div class="k">Where</div>
@@ -138,7 +139,7 @@ description: An evening for six. Buy one of six gold Maker Night candles at the 
         {% if seatsLeft > 0 %}
         <div class="info-row">
           <div class="k">Can&rsquo;t make the sale?</div>
-          <div class="v">{% if site.preorderSheet %}Preorder one on our <a href="{{ site.preorderSheet }}" data-tinylytics-event="preorder.sheet" data-tinylytics-event-value="maker-night-details" target="_blank" rel="noopener" style="color:var(--marigold-d);font-weight:600;text-decoration:none">preorder form</a>; Maker Night is at the bottom. Jamie emails a payment link once it&rsquo;s confirmed.{% else %}Preorder one. Email <a href="mailto:{{ site.email }}" style="color:var(--marigold-d);font-weight:600;text-decoration:none">{{ site.email }}</a> and we&rsquo;ll set a gold candle aside for you.{% endif %}</div>
+          <div class="v">{% if site.preorderSheet %}Preorder one on our <a href="{{ site.preorderSheet }}" data-tinylytics-event="preorder.sheet" data-tinylytics-event-value="maker-night-details" target="_blank" rel="noopener" style="color:var(--marigold-d);font-weight:600;text-decoration:none">preorder form</a>; Maker Night is at the bottom. Jamie emails a payment link once it&rsquo;s confirmed.{% else %}Preorder one. Email <a href="mailto:{{ site.email }}" style="color:var(--marigold-d);font-weight:600;text-decoration:none">{{ site.email }}</a> and we&rsquo;ll set a Golden Ticket candle aside for you.{% endif %}</div>
         </div>
         {% endif %}
       </div>
@@ -151,8 +152,8 @@ description: An evening for six. Buy one of six gold Maker Night candles at the 
   <div class="wrap">
     <p class="eyebrow" style="justify-content:center">Seats</p>
     {% if seatsLeft > 0 %}
-    <h2 class="t" style="max-width:20ch;margin-inline:auto">{% if seatsLeft == makerNightSeats.total %}Six gold candles. Six seats.{% else %}{{ seatsLeft }} {{ seatsWord }} left.{% endif %}</h2>
-    <p class="lead" style="margin:18px auto 0;text-align:center">Look for the gold Maker Night candles at the Things 4 Good sale, {{ site.saleDates | safe }}. Each is a ${{ site.makerNightDonation }} donation and a seat at Maker Night, {{ site.makerNightTime }} on {{ site.makerNightDate }}. First come, first served.</p>
+    <h2 class="t" style="max-width:28ch;margin-inline:auto">{% if seatsLeft == makerNightSeats.total %}Six Golden Tickets. Six seats.{% else %}{{ seatsLeft }} {{ seatsWord }} left.{% endif %}</h2>
+    <p class="lead" style="margin:18px auto 0;text-align:center">Look for the Golden Ticket candles at the Things 4 Good sale, {{ site.saleDates | safe }}. Each is a ${{ site.makerNightDonation }} donation and a seat at Maker Night, {{ site.makerNightTime }} on {{ site.makerNightDate }}. First come, first served.</p>
     <div class="sub-form" style="max-width:none;gap:12px">
       <a class="btn btn--primary" href="/#sale">See the sale details</a>
       {% if site.preorderSheet %}<a class="btn btn--ghost" href="{{ site.preorderSheet }}" data-tinylytics-event="preorder.sheet" data-tinylytics-event-value="maker-night-reserve" target="_blank" rel="noopener">Preorder online</a>{% else %}<a class="btn btn--ghost" href="mailto:{{ site.email }}?subject=Maker%20Night%20preorder">Preorder by email</a>{% endif %}
