@@ -1101,6 +1101,7 @@ em.it { font-style: italic; }
 .lineup-xl { color: #555; }
 .lineup-art--secret { display: grid; place-items: center; border: 1.5px dashed #111; border-radius: 3px; }
 .lineup-art--secret span { font-size: clamp(5rem, 9vw, 7rem); font-weight: 700; line-height: 1; }
+.lineup-art--new span { font-size: clamp(3rem, 5vw, 4.25rem); }
 @media (max-width: 920px) { .lineup { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 560px) { .lineup { grid-template-columns: minmax(0, 1fr); } }
 @media (max-width: 560px) { .charities--four { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; } .charities--four .charity { padding: 16px; } }
