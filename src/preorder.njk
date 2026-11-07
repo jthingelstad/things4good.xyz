@@ -28,7 +28,7 @@ card:
     <div class="sec-head reveal">
       <p class="eyebrow">Order ahead</p>
       <h2 class="t">Order before the sale.</h2>
-      <p class="lead">Lots of people buy candles as gifts, and ordering ahead sets your scents aside before anything sells out. {% if orders.preorder %}The <a href="/order/" data-tinylytics-event="order.link" data-tinylytics-event-value="preorder-head" style="color:var(--marigold-d);font-weight:600;text-decoration:none">order form</a> is open through {{ orders.closesDay }}.{% else %}Online orders open about a week before the sale, and subscribers hear first.{% endif %} Just getting a couple? Come by the sale, no order needed.{% if orders.candlesOnly %} XL candles, lids and the Golden Ticket are only at the sale.{% endif %}</p>
+      <p class="lead">Lots of people buy candles as gifts, and ordering ahead sets your scents aside before anything sells out. {% if orders.preorder %}The <a href="/order/" data-tinylytics-event="order.link" data-tinylytics-event-value="preorder-head" style="color:var(--marigold-d);font-weight:600;text-decoration:none">order form</a> is open through {{ orders.closesDay }}.{% else %}Online orders open about a week before the sale, and subscribers hear first.{% endif %} Just getting a couple? Come by the sale, no order needed.{% if not orders.goldenTicket %} Golden Tickets are at the sale, or email us to set one aside.{% endif %}</p>
     </div>
 
     <div class="steps">

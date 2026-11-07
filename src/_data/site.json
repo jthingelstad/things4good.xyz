@@ -6,7 +6,7 @@
   "orders": {
     "window": "preorder",
     "closes": "2026-11-08T23:59:00-06:00",
-    "candlesOnly": true,
+    "goldenTicket": false,
     "saleEnds": "2026-11-08T23:59:00-06:00",
     "reopens": ""
   },

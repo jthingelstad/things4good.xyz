@@ -51,8 +51,8 @@ const setStock = (updates) =>
 const passes = async () => ({ ok: true, codes: [] });
 
 // Windows open well past this run.
-const AFTER = { window: 'after', closes: '2099-01-01T00:00:00-06:00' };
-const PREORDER = { window: 'preorder', closes: '2099-01-01T00:00:00-06:00', candlesOnly: true };
+const AFTER = { window: 'after', closes: '2099-01-01T00:00:00-06:00', goldenTicket: true };
+const PREORDER = { window: 'preorder', closes: '2099-01-01T00:00:00-06:00' };
 
 let offerings; // Product name -> { offering, product, sold }.
 let store;
@@ -262,7 +262,7 @@ test('the spam trap writes nothing', async () => {
   assert.deepEqual(await counts(), before);
 });
 
-test('an unknown product, and the Golden Ticket under candlesOnly, are refused, and nothing is written', async () => {
+test('an unknown product, and a Golden Ticket with its switch off, are refused, and nothing is written', async () => {
   const before = await counts();
   for (const [orders, product] of [[AFTER, 999999], [PREORDER, offerings['Golden Ticket'].product]]) {
     const response = await newService({ orders }).handle(orderEvent(buyer({ items: [{ product, quantity: 1 }] })));
@@ -276,7 +276,16 @@ test('a preorder: regular candles past what is poured, written as a Preorder', a
   const service = newService({ orders: PREORDER });
   const stock = JSON.parse((await service.handle(stockEvent)).body);
   assert.equal(stock.window, 'preorder');
-  assert.ok(stock.products.length > 0 && stock.products.every((p) => p.type === 'Candle' && p.left === null && p.limit === 24));
+  const candles = stock.products.filter((p) => p.type === 'Candle');
+  assert.ok(candles.length > 0 && candles.every((p) => p.left === null && p.limit === 24));
+  // Lids and XL candles are on the form, capped at what the copy counts; the Golden Ticket is not.
+  assert.deepEqual(
+    (({ left, limit }) => ({ left, limit }))(stock.products.find((p) => p.name === 'Winter Wonderland XL')),
+    { left: 1, limit: 1 }
+  );
+  const lid = stock.products.find((p) => p.name === 'Candle Lid');
+  assert.ok(lid.left > 0 && lid.left <= 30 && lid.limit === Math.min(lid.left, 24));
+  assert.ok(!stock.products.some((p) => p.type === 'Maker Night candle'));
   // Tea Time has 20 left on the copy.
   const typed = buyer({ items: [{ product: offerings['Tea Time'].product, quantity: 24 }] });
   const response = await service.handle(orderEvent(typed));
@@ -337,8 +346,9 @@ test('the last candle goes to the first buyer; the next one is told', async () =
 });
 
 test('the order shows on the pick-list formulas, and an unpaid one holds stock', async () => {
+  // The preorder test took Tea Time past what is poured, so only a preorder can still take one.
   const typed = buyer({ items: [{ product: offerings['Tea Time'].product, quantity: 1 }] });
-  await newService().handle(orderEvent(typed));
+  assert.equal((await newService({ orders: PREORDER }).handle(orderEvent(typed))).statusCode, 200);
   const row = await orderRow(typed.requestId);
   const [offering] = await sql('select Sold, Left from Offerings where id = ?', [offerings['Tea Time'].offering]);
   assert.ok(offering.Sold > offerings['Tea Time'].sold);

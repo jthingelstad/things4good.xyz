@@ -117,6 +117,8 @@ description: Order Things 4 Good candles online, for pickup or SPS delivery. Bef
   const EMAIL = {{ site.email | dump | safe }};
   const CHECK_KEY = {{ site.turnstileSiteKey | dump | safe }};
   const LINE_MAX = 24, ORDER_MAX = 30;
+  // A counted line says how many are left only once it's under a dozen (Jamie, 2026-11-07).
+  const LOW = 12;
   // The window this page was built in, and when the sale ends, for the paused message.
   const BUILT = {{ orders.window | dump | safe }};
   const SALE_ENDS = Date.parse({{ orders.saleEnds | dump | safe }});
@@ -180,8 +182,11 @@ description: Order Things 4 Good candles online, for pickup or SPS delivery. Bef
       // A preorder candle is poured to order: no count, only the per-line cap.
       const most = p.limit ?? Math.min(p.left ?? LINE_MAX, LINE_MAX);
       row.querySelector("[data-more]").disabled = sending || atMax || q >= most;
-      const each = p.left !== null && most > 0 && most < Math.min(p.left, LINE_MAX) ? ` · ${most} per order` : "";
-      row.querySelector(".order-left").textContent = p.left === null ? "" : p.left > 0 ? `${p.left} left${each}` : "All gone";
+      const notes = [];
+      if (p.left === 0) notes.push("All gone");
+      else if (p.left !== null && p.left < LOW) notes.push(`${p.left} available`);
+      if (p.left !== null && most > 0 && most < Math.min(p.left, LINE_MAX)) notes.push(`${most} per order`);
+      row.querySelector(".order-left").textContent = notes.map((note) => ` · ${note}`).join("");
       row.classList.toggle("is-out", most === 0);
     }
     if (atMax && !errorBox.textContent) sayError(`Online orders top out at ${ORDER_MAX}. For a bigger one, email ${EMAIL}.`);
@@ -208,7 +213,7 @@ description: Order Things 4 Good candles online, for pickup or SPS delivery. Bef
           pic.append(img);
         }
         const about = el("div", "order-about");
-        about.append(el("b", "", p.name), el("span", "", `${money(p.price)} donation${p.left === null ? "" : " · "}`), el("span", "order-left"));
+        about.append(el("b", "", p.name), el("span", "", `${money(p.price)} donation`), el("span", "order-left"));
         const stepper = el("div", "order-stepper");
         const less = el("button", "", "−"), qty = el("output"), more = el("button", "", "+");
         less.type = more.type = "button";

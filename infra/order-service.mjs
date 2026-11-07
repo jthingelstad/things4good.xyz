@@ -83,15 +83,16 @@ export function currentWindow({ window, closes } = {}, at = Date.now()) {
   return at < Date.parse(closes) ? window : AFTERWARDS[window];
 }
 
-// Left is Made + Adjustment - Sold, never below zero. `limit` is the most one order can take: what is
-// left, at most 24, and at most two Golden Tickets. A preorder candle has no count (left is null), since
-// it is poured to order. candlesOnly holds back everything but regular candles: lids, XL candles and the
-// Golden Ticket. Nothing about any buyer is in here: Sold is one number per product.
-export function toStock(rows, { window = 'after', candlesOnly = false } = {}) {
+// The form sells everything the current event offers (Jamie, 2026-11-07: "a full sales order method"),
+// except the Golden Ticket until goldenTicket is on, because the Maker Night page's seat count doesn't
+// follow Grist yet. Left is Made + Adjustment - Sold, never below zero. `limit` is the most one order can
+// take: what is left, at most 24, and at most two Golden Tickets. A preorder candle has no count (left is
+// null), since it is poured to order. Nothing about any buyer is in here: Sold is one number per product.
+export function toStock(rows, { window = 'after', goldenTicket = false } = {}) {
   const events = new Set(rows.map((row) => row.event));
   if (events.size > 1) throw new StepError('stock', 'more than one current event');
   const products = rows
-    .filter((row) => !candlesOnly || row.type === CANDLE)
+    .filter((row) => goldenTicket || row.type !== MAKER_NIGHT)
     .map((row) => {
       const poured = window === 'preorder' && row.type === CANDLE;
       const left = Math.max(0, (Number(row.made) || 0) + (Number(row.adjustment) || 0) - (Number(row.sold) || 0));
@@ -205,7 +206,7 @@ export function createService({
   },
   // ({ email, ip }) => { outcome: 'added' | 'already' | 'refused' | 'skipped', code }, or throws.
   subscribe = async () => ({ outcome: 'skipped' }),
-  // { window, closes, candlesOnly }: see currentWindow. Without one, nothing is open.
+  // { window, closes, goldenTicket }: see currentWindow and toStock. Without one, nothing is open.
   orders = { window: 'closed' },
   now = Date.now,
   sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms)),
@@ -217,7 +218,7 @@ export function createService({
   const limiter = rateLimiter(now);
   const verified = new Map(); // requestId -> when its token passed.
 
-  const rules = (window) => ({ window, candlesOnly: orders.candlesOnly === true });
+  const rules = (window) => ({ window, goldenTicket: orders.goldenTicket === true });
 
   const stockResponse = async (window) => {
     const { event, products } = toStock(await store.readStock(), rules(window));
@@ -619,7 +620,7 @@ export const handler = async (event) => {
     orders: {
       window: process.env.ORDERS_WINDOW,
       closes: process.env.ORDERS_CLOSES,
-      candlesOnly: process.env.ORDERS_CANDLES_ONLY === 'true'
+      goldenTicket: process.env.ORDERS_GOLDEN_TICKET === 'true'
     }
   });
   if (event?.selfCheck) {
