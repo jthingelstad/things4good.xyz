@@ -57,6 +57,11 @@
   .foot { margin-top: auto; padding-top: 10px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; align-items: baseline; font-size: 10pt; color: var(--ink-soft); }
   .foot .hand { font-size: 17pt; color: var(--pine-d); }
   .foot b { color: var(--ink); }
+  /* A QR code to the page with more, captioned with the short address for anyone without a camera. */
+  .more { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 0.08in 0.12in 0.07in; border-radius: 14px; background: #fff; border: 2px solid var(--pine); }
+  .more svg { display: block; width: 1.1in; height: 1.1in; }
+  .more .hand { margin-top: 4px; font-size: 15pt; line-height: 1; color: var(--pine-d); }
+  .more small { margin-top: 3px; font-size: 8.5pt; font-weight: 700; color: var(--ink-soft); }
   {% block style %}{% endblock %}
 </style>
 </head>
