@@ -96,6 +96,7 @@ description: Order the Things 4 Good candles left after the sale, for pickup or 
   };
 
   let products = [];
+  let sending = false;
   const cart = new Map();
 
   const say = (text) => { status.textContent = text; status.hidden = !text; };
@@ -117,15 +118,15 @@ description: Order the Things 4 Good candles left after the sale, for pickup or 
     const items = chosen();
     fillSummary($("order-summary"), items);
     $("order-total").textContent = money(items.reduce((sum, p) => sum + p.quantity * p.price, 0));
-    submit.disabled = items.length === 0;
+    submit.disabled = sending || items.length === 0;
     const atMax = count() >= ORDER_MAX;
     for (const p of products) {
       const q = cart.get(p.id) || 0;
       const row = document.querySelector(`[data-product="${p.id}"]`);
       if (!row) continue;
       row.querySelector("output").textContent = q;
-      row.querySelector("[data-less]").disabled = q === 0;
-      row.querySelector("[data-more]").disabled = atMax || q >= Math.min(p.left, LINE_MAX);
+      row.querySelector("[data-less]").disabled = sending || q === 0;
+      row.querySelector("[data-more]").disabled = sending || atMax || q >= Math.min(p.left, LINE_MAX);
       row.querySelector(".order-left").textContent = p.left > 0 ? `${p.left} left` : "All gone";
       row.classList.toggle("is-out", p.left === 0);
     }
@@ -233,6 +234,7 @@ description: Order the Things 4 Good candles left after the sale, for pickup or 
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
+    if (sending) return;
     sayError("");
     const values = new FormData(form);
     const answers = {
@@ -252,11 +254,14 @@ description: Order the Things 4 Good candles left after the sale, for pickup or 
     if (text !== lastAnswers) { lastAnswers = text; requestId = crypto.randomUUID(); }
     const items = chosen();
 
-    submit.disabled = true;
+    // Nothing changes while an order is on its way: a changed quantity would be a new order.
+    sending = true;
+    refresh();
     submit.textContent = "Placing your order…";
     const { response, data } = await send(JSON.stringify({ ...answers, requestId }));
-    submit.disabled = false;
+    sending = false;
     submit.textContent = "Place order";
+    refresh();
 
     if (response && response.ok && data.ok) return showDone(answers, items, data.total);
     if (data.open === false) return closed();
