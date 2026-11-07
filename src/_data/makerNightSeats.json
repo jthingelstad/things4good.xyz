@@ -1,5 +1,5 @@
 {
   "_note": "Maker Night seats. total is the page's six; sold follows Grist: the 'Maker Night seats from Grist' workflow (maker-night-seats.yml) rewrites it every 15 minutes from the Golden Ticket's Left and redeploys. Change the count in Grist, never here. Seats left = total - sold; 0 left shows Sold out.",
   "total": 6,
-  "sold": 0
+  "sold": 1
 }
