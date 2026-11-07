@@ -8,18 +8,18 @@ permalink: /print/pay/
 
 {% block style %}
   .body { justify-content: space-evenly; }
-  .qrs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.18in; }
+  .qrs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.18in; }
   .qr { border: 2px solid var(--c); border-radius: 16px; padding: 0.16in 0.14in 0.18in; text-align: center; background: #fff; display: flex; flex-direction: column; align-items: center; }
   .qr .name { height: 0.42in; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 800; font-size: 17pt; }
   .mk { fill: var(--c); height: 0.34in; width: auto; }
   .mk.word { height: 0.3in; }
-  .qr img { width: 2.05in; height: 2.05in; margin: 0.1in 0 0.08in; image-rendering: pixelated; }
+  .qr img { width: 100%; max-width: 2.05in; height: auto; aspect-ratio: 1; margin: 0.1in 0 0.08in; image-rendering: pixelated; }
   .qr .handle { font-weight: 800; font-size: 14pt; }
   .qr .how { margin-top: 4px; font-size: 10.5pt; color: var(--ink-soft); line-height: 1.3; }
   .note { margin: 0; padding: 0.14in 0.2in; border-radius: 14px; background: var(--marigold-t); display: flex; align-items: center; gap: 0.16in; }
   .note .hand { font-size: 24pt; color: var(--marigold-d); line-height: 1; white-space: nowrap; }
   .note p { font-size: 12.5pt; font-weight: 600; line-height: 1.35; }
-  .others { margin: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.18in; }
+  .others { margin: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.18in; }
   .other { border-radius: 14px; background: var(--paper); border: 1px solid var(--line); padding: 0.16in 0.18in; }
   .other .name { display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 14pt; height: 0.32in; }
   .other .mk { height: 0.3in; fill: #111; }
