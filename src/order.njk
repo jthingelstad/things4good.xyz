@@ -272,8 +272,9 @@ description: Order the Things 4 Good candles left after the sale, for pickup or 
         cart.set(short.id, Math.min(cart.get(short.id) || 0, short.left));
       }
       refresh();
-      const words = data.short.map((s) => (s.left ? `${s.left} ${s.name}` : `no ${s.name}`)).join(" and ");
-      return sayError(`We only have ${words} left, so we changed your order. Check it and press Place order again.`);
+      const words = data.short.map((s) => (s.left ? `only ${s.left} ${s.name}` : `no ${s.name}`)).join(" and ");
+      const next = chosen().length ? "so we changed your order. Check it and press Place order again." : "so your order is empty now. Pick something else, or come back another time.";
+      return sayError(`We have ${words} left, ${next}`);
     }
     if (data.error === "unknown-product") return sayError(`One of those isn’t available online. Reload the page, or email ${EMAIL}.`);
     if (data.error === "invalid" && data.fields && data.fields.length) {
