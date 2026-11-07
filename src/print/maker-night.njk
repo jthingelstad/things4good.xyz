@@ -1,0 +1,63 @@
+---
+title: Sign — Maker Night — Things 4 Good
+permalink: /print/maker-night/
+---
+{% extends "print.njk" %}
+
+{#- No seat count: it would be out of date by the second customer. Jamie tracks seats at the table. -#}
+
+{% block style %}
+  .hero { display: grid; grid-template-columns: 1fr 2.55in; gap: 0.24in; align-items: stretch; }
+  .hero .photo { border-radius: 16px; overflow: hidden; position: relative; background: #1f1812; }
+  .hero .photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .hero .photo .tag { position: absolute; left: 10px; bottom: 10px; background: var(--marigold); color: var(--ink); font-weight: 800; font-size: 10pt; letter-spacing: .08em; text-transform: uppercase; padding: 5px 10px; border-radius: 999px; }
+  .date { margin-top: 12px; display: inline-flex; gap: 12px; align-items: baseline; padding: 8px 14px; border-radius: 12px; background: var(--ink); color: #fff; }
+  .date b { font-family: var(--serif); font-weight: 500; font-size: 17pt; }
+  .date span { color: var(--marigold); font-weight: 700; font-size: 12pt; }
+  .label { margin-top: 0.12in; display: grid; grid-template-columns: 1.55in 1fr; gap: 0.2in; align-items: center; padding: 0.14in 0.2in; border-radius: 16px; background: var(--marigold-t); }
+  .label img { width: 100%; background: #fff; border-radius: 8px; padding: 6px; }
+  .label .hand { font-size: 25pt; line-height: 1; color: var(--marigold-d); }
+  .label p { margin-top: 4px; font-size: 12pt; line-height: 1.35; }
+  .steps { margin-top: 0.16in; display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.16in; }
+  .step { border: 2px solid var(--c); border-radius: 14px; padding: 0.14in 0.16in; }
+  .step .num { width: 0.36in; height: 0.36in; border-radius: 50%; background: var(--c); color: #fff; display: grid; place-items: center; font-weight: 800; font-size: 13pt; }
+  .step h3 { margin-top: 8px; font-size: 14.5pt; }
+  .step p { margin-top: 5px; font-size: 10.5pt; line-height: 1.35; }
+  .details { margin-top: 0.12in; padding-bottom: 0.08in; display: grid; grid-template-columns: 1fr 1fr; gap: 0.08in 0.24in; }
+  .details div { padding: 6px 0; border-top: 1px solid var(--line); font-size: 10.2pt; line-height: 1.35; }
+  .details b { display: block; font-size: 11pt; color: var(--pine-d); }
+{% endblock %}
+
+{% block content %}
+<div class="head hero">
+  <div>
+    <p class="eyebrow">New this year</p>
+    <h1>Maker <em>Night.</em></h1>
+    <p class="lead">Buy one of our six Golden Ticket candles and you have a seat at Maker Night. Come pour <b>four candles of your own</b>, in any scents from our library. It&rsquo;s an evening for six.</p>
+    <div class="date"><b>{{ site.makerNightDate }}</b><span>{{ site.makerNightTime }}</span></div>
+  </div>
+  <div class="photo"><img src="/images/maker-night.jpg" alt="" /><span class="tag">An evening for six</span></div>
+</div>
+<div class="body">
+  <div class="label">
+    <img src="/images/scents/golden-ticket.png" alt="Mazie’s Golden Ticket label" />
+    <div>
+      <span class="hand">Ask us for a Golden Ticket.</span>
+      <p>Each one is a <b>${{ site.makerNightDonation }} donation</b>, in a scent we made only for Maker Night. Take it home today. It&rsquo;s your seat.</p>
+    </div>
+  </div>
+
+  <div class="steps">
+    <div class="step" style="--c:var(--marigold)"><span class="num">1</span><h3>Your Golden Ticket</h3><p>Yours today, in a scent made only for Maker Night. Only six exist.</p></div>
+    <div class="step" style="--c:var(--pine)"><span class="num">1</span><h3>A thank-you candle</h3><p>Poured for you ahead of time and waiting when you arrive.</p></div>
+    <div class="step" style="--c:var(--berry)"><span class="num">4</span><h3>Candles you pour</h3><p>Pick any scents and mix and match. We guide every step. Pick them up once they set.</p></div>
+  </div>
+
+  <div class="details">
+    <div><b>Six candles, all told</b>We have the wax, the wicks and everything else, and we&rsquo;ve already made most of the mistakes.</div>
+    <div><b>Where your ${{ site.makerNightDonation }} goes</b>Divided evenly across this year&rsquo;s four causes. 100% goes to good.</div>
+    <div><b>Bring a friend</b>Buy two Golden Tickets and come together. Two is the most one person can buy.</div>
+    <div><b>Where</b>Hosted by the Thingelstad family in Minneapolis. We take your name, email and phone, and send the address before the night.</div>
+  </div>
+</div>
+{% endblock %}

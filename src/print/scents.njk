@@ -1,0 +1,53 @@
+---
+title: Sign — This year's scents — Things 4 Good
+permalink: /print/scents/
+---
+{% extends "print.njk" %}
+
+{#- Every scent in candles.json, in the order of the scent markers at the sale, two columns. Fourteen
+    fit; a much longer lineup would need smaller cards. -#}
+
+{% block style %}
+  .head { display: grid; grid-template-columns: auto 1fr; column-gap: 0.32in; align-items: end; padding: 0.2in 0 0.16in; }
+  .head .eyebrow { grid-column: 1 / -1; }
+  .head h1 { font-size: 40pt; }
+  .lead { margin: 0 0 4px; font-size: 11.5pt; line-height: 1.38; max-width: none; }
+  .scents { flex: 1; display: grid; grid-template-columns: 1fr 1fr; grid-auto-rows: auto; gap: 0.08in 0.16in; }
+  .scent { display: grid; grid-template-columns: 0.92in 1fr; gap: 0.12in; align-items: center; padding: 0.06in 0.1in 0.06in 0.06in; border-radius: 12px; background: var(--paper); border: 1px solid var(--line); }
+  .scent .art { height: 0.6in; background: #fff; border-radius: 8px; border: 1px solid var(--line); padding: 4px; }
+  .scent .art img { display: block; width: 100%; height: 100%; object-fit: contain; }
+  .scent h2 { font-size: 13pt; line-height: 1.1; }
+  .scent p { margin-top: 2px; font-size: 9.5pt; line-height: 1.27; color: var(--ink-soft); }
+  .scent.maker { background: var(--marigold-t); border-color: var(--marigold); }
+  .scent.maker p b { color: var(--marigold-d); }
+  .extras { margin-top: 0.12in; display: grid; grid-template-columns: 1fr 1fr; gap: 0.16in; }
+  .extra { padding: 0.08in 0.14in; border-radius: 12px; background: var(--pine-t); font-size: 10pt; line-height: 1.3; }
+  .extra b { font-size: 11.5pt; }
+  .extra .d { float: right; font-weight: 800; color: var(--pine-d); font-size: 11.5pt; }
+{% endblock %}
+
+{% block content %}
+<div class="head">
+  <p class="eyebrow">{{ candles.scents | length }} scents this year</p>
+  <h1>Pick your <em>scents.</em></h1>
+  <p class="lead">Each is 12&nbsp;oz of 100% virgin soy wax, hand-poured with a wooden wick and wearing a label Mazie drew. Every candle is a <b>${{ site.pricePerCandle }} donation</b>.</p>
+</div>
+<div class="body">
+  <div class="scents">
+    {% for scent in candles.scents %}
+    <div class="scent{% if scent.makerNight %} maker{% endif %}">
+      <div class="art">{% if scent.art %}<img src="{{ scent.art }}" alt="" />{% endif %}</div>
+      <div>
+        <h2>{{ scent.name }}</h2>
+        <p>{{ scent.description }}{% if scent.makerNight %} <b>A ${{ site.makerNightDonation }} donation.</b>{% endif %}</p>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  <div class="extras">
+    {% for extra in candles.extras %}
+    <div class="extra"><span class="d">${{ extra.donation }}</span><b>{{ extra.name }}</b><br />{{ extra.description }}</div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
