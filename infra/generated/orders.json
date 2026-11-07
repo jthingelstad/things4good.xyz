@@ -19,7 +19,7 @@
       "Type": "String",
       "Default": ""
     },
-    "OrdersCandlesOnly": {
+    "OrdersGoldenTicket": {
       "Type": "String",
       "AllowedValues": [
         "true",
@@ -160,8 +160,8 @@
             "ORDERS_CLOSES": {
               "Ref": "OrdersCloses"
             },
-            "ORDERS_CANDLES_ONLY": {
-              "Ref": "OrdersCandlesOnly"
+            "ORDERS_GOLDEN_TICKET": {
+              "Ref": "OrdersGoldenTicket"
             },
             "SECRET_ID": {
               "Ref": "Secret"

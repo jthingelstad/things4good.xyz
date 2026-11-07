@@ -82,8 +82,8 @@ const writesIn = (store) => store.state.calls.filter((call) => WRITES.includes(c
 
 // The clock starts at 1_800_000_000_000 (2027-01-15), well before these windows close.
 const CLOSES = '2027-01-20T23:59:00-06:00';
-const AFTER = { window: 'after', closes: CLOSES };
-const PREORDER = { window: 'preorder', closes: CLOSES, candlesOnly: true };
+const AFTER = { window: 'after', closes: CLOSES, goldenTicket: true };
+const PREORDER = { window: 'preorder', closes: CLOSES };
 const CLOSED = { window: 'closed' };
 
 // Turnstile passes any token but 'bad'; the list adds everyone. Each records what it was asked.
@@ -164,15 +164,14 @@ test('stock after the sale: quantities left, two Golden Tickets an order, nothin
   for (const product of body.products) assert.deepEqual(Object.keys(product).sort(), ['id', 'left', 'limit', 'name', 'price', 'type']);
 });
 
-test('stock before the sale: regular candles have no count, and candlesOnly holds back the rest', async () => {
+test('stock before the sale: regular candles have no count, the rest are capped, and Golden Tickets wait for their switch', async () => {
   const body = parse(await setup({ orders: PREORDER }).service.handle(get()));
   assert.equal(body.window, 'preorder');
   assert.deepEqual(
     body.products.map((p) => [p.name, p.left, p.limit]),
-    [['True North', null, 24], ['Apple Of My Eye', null, 24]]
+    [['True North', null, 24], ['Apple Of My Eye', null, 24], ['Winter Wonderland XL', 1, 1], ['Candle Lid', 68, 24]]
   );
-  // Without candlesOnly the others come back, capped at what is counted.
-  const all = parse(await setup({ orders: { ...PREORDER, candlesOnly: false } }).service.handle(get()));
+  const all = parse(await setup({ orders: { ...PREORDER, goldenTicket: true } }).service.handle(get()));
   assert.deepEqual(
     all.products.map((p) => [p.name, p.left, p.limit]),
     [['True North', null, 24], ['Apple Of My Eye', null, 24], ['Winter Wonderland XL', 1, 1], ['Candle Lid', 68, 24], ['Golden Ticket', 6, 2]]
@@ -264,8 +263,8 @@ test('the last candle goes to one buyer: the next is told it is gone', async () 
   assert.equal(parse(second).short[0].left, 0);
 });
 
-test('a product nobody can buy here is refused: unknown, or held back by candlesOnly', async () => {
-  for (const [orders, product] of [[AFTER, 999], [PREORDER, 15], [PREORDER, 16], [{ ...AFTER, candlesOnly: true }, 13]]) {
+test('a product nobody can buy here is refused: unknown, or a Golden Ticket with its switch off', async () => {
+  for (const [orders, product] of [[AFTER, 999], [PREORDER, 15], [{ ...AFTER, goldenTicket: false }, 15]]) {
     const { service, store } = setup({ orders });
     const response = await service.handle(post(order({ items: [{ product, quantity: 1 }] })));
     assert.equal(response.statusCode, 422);
@@ -285,7 +284,7 @@ test('a preorder takes more candles than are poured, and says so in Order_Type',
 });
 
 test('a preorder caps what is not poured to order', async () => {
-  const { service, store } = setup({ orders: { ...PREORDER, candlesOnly: false } });
+  const { service, store } = setup({ orders: PREORDER });
   const response = await service.handle(post(order({ items: [{ product: 3, quantity: 10 }, { product: 13, quantity: 2 }] })));
   assert.equal(response.statusCode, 409);
   assert.deepEqual(parse(response).short, [{ id: 13, name: 'Winter Wonderland XL', asked: 2, left: 1 }]);
@@ -501,7 +500,7 @@ test('a Grist failure on stock is a retryable 503 and an error in the logs', asy
 });
 
 test('the self-check reads stock and writes nothing, open or closed', async () => {
-  for (const [orders, window, products] of [[CLOSED, 'closed', 5], [PREORDER, 'preorder', 2], [AFTER, 'after', 5]]) {
+  for (const [orders, window, products] of [[CLOSED, 'closed', 4], [PREORDER, 'preorder', 4], [AFTER, 'after', 5]]) {
     const { service, store } = setup({ orders });
     assert.deepEqual(await service.selfCheck(), { ok: true, event: '2026 Candle Sale', window, products });
     assert.deepEqual(writesIn(store), []);

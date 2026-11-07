@@ -69,7 +69,7 @@ if (name === 'site') {
 }
 if (name === 'orders') {
   const { orders } = JSON.parse(readFileSync('src/_data/site.json', 'utf8'));
-  const { window, closes = '', candlesOnly = false } = orders ?? {};
+  const { window, closes = '', goldenTicket = false } = orders ?? {};
   if (!WINDOWS.includes(window)) throw new Error(`site.json orders.window must be one of ${WINDOWS.join(', ')}`);
   // An open window needs a closing time with its offset, so it shuts on its own.
   if (isOpen(window) && !(/[+-]\d{2}:\d{2}$|Z$/.test(closes) && Date.parse(closes) > Date.now()))
@@ -78,9 +78,9 @@ if (name === 'orders') {
     { ParameterKey: 'DistributionId', ParameterValue: config.distributionId },
     { ParameterKey: 'OrdersWindow', ParameterValue: window },
     { ParameterKey: 'OrdersCloses', ParameterValue: closes },
-    { ParameterKey: 'OrdersCandlesOnly', ParameterValue: candlesOnly === true ? 'true' : 'false' }
+    { ParameterKey: 'OrdersGoldenTicket', ParameterValue: goldenTicket === true ? 'true' : 'false' }
   ];
-  console.log(`Orders: ${window}${isOpen(window) ? ` until ${closes}` : ''}${candlesOnly === true ? ', regular candles only' : ''} (site.json orders)`);
+  console.log(`Orders: ${window}${isOpen(window) ? ` until ${closes}` : ''}${goldenTicket === true ? ', Golden Tickets on' : ', Golden Tickets off'} (site.json orders)`);
 }
 if (name === 'delivery') {
   const site = outputs(await describe(config.stacks.site));

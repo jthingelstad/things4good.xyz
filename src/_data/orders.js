@@ -7,6 +7,7 @@
 //   open        preorder or after
 //   saleOn      paused, and the sale isn't over yet (saleEnds)
 //   closesDay   "Sunday, Nov 8", and closesTime "11:59 p.m.", in Central, while open
+//   goldenTicket  Golden Tickets are on the form
 const site = require("./site.json");
 
 const CENTRAL = "America/Chicago";
@@ -36,6 +37,6 @@ module.exports = async () => {
     closesTime: open ? time(orders.closes) : "",
     saleEnds: orders.saleEnds ?? "",
     reopens: orders.reopens ?? "",
-    candlesOnly: orders.candlesOnly === true,
+    goldenTicket: orders.goldenTicket === true,
   };
 };

@@ -139,7 +139,7 @@ description: An evening for six. Buy one of six Golden Ticket candles at the fal
         {% if seatsLeft > 0 %}
         <div class="info-row">
           <div class="k">Can&rsquo;t make the sale?</div>
-          <div class="v">{% if orders.open and not orders.candlesOnly %}Order one online: the Golden Ticket is on our <a href="/order/" data-tinylytics-event="order.link" data-tinylytics-event-value="maker-night-details" style="color:var(--marigold-d);font-weight:600;text-decoration:none">order form</a>, two to an order.{% else %}Preorder one. Email <a href="mailto:{{ site.email }}" style="color:var(--marigold-d);font-weight:600;text-decoration:none">{{ site.email }}</a> and we&rsquo;ll set a Golden Ticket candle aside for you.{% endif %}</div>
+          <div class="v">{% if orders.open and orders.goldenTicket %}Order one online: the Golden Ticket is on our <a href="/order/" data-tinylytics-event="order.link" data-tinylytics-event-value="maker-night-details" style="color:var(--marigold-d);font-weight:600;text-decoration:none">order form</a>, two to an order.{% else %}Preorder one. Email <a href="mailto:{{ site.email }}" style="color:var(--marigold-d);font-weight:600;text-decoration:none">{{ site.email }}</a> and we&rsquo;ll set a Golden Ticket candle aside for you.{% endif %}</div>
         </div>
         {% endif %}
       </div>
@@ -156,7 +156,7 @@ description: An evening for six. Buy one of six Golden Ticket candles at the fal
     <p class="lead" style="margin:18px auto 0;text-align:center">Look for the Golden Ticket candles at the Things 4 Good sale, {{ site.saleDates | safe }}. Each is a ${{ site.makerNightDonation }} donation and a seat at Maker Night, {{ site.makerNightTime }} on {{ site.makerNightDate }}. First come, first served.</p>
     <div class="sub-form" style="max-width:none;gap:12px">
       <a class="btn btn--primary" href="/#sale">See the sale details</a>
-      {% if orders.open and not orders.candlesOnly %}<a class="btn btn--ghost" href="/order/" data-tinylytics-event="order.link" data-tinylytics-event-value="maker-night-reserve">Order online</a>{% else %}<a class="btn btn--ghost" href="mailto:{{ site.email }}?subject=Maker%20Night%20preorder">Preorder by email</a>{% endif %}
+      {% if orders.open and orders.goldenTicket %}<a class="btn btn--ghost" href="/order/" data-tinylytics-event="order.link" data-tinylytics-event-value="maker-night-reserve">Order online</a>{% else %}<a class="btn btn--ghost" href="mailto:{{ site.email }}?subject=Maker%20Night%20preorder">Preorder by email</a>{% endif %}
     </div>
     {% else %}
     <h2 class="t" style="max-width:20ch;margin-inline:auto">All six seats are taken.</h2>

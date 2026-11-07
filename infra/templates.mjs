@@ -462,7 +462,7 @@ export const orders = template(
           Variables: {
             ORDERS_WINDOW: ref('OrdersWindow'),
             ORDERS_CLOSES: ref('OrdersCloses'),
-            ORDERS_CANDLES_ONLY: ref('OrdersCandlesOnly'),
+            ORDERS_GOLDEN_TICKET: ref('OrdersGoldenTicket'),
             SECRET_ID: ref('Secret')
           }
         },
@@ -557,7 +557,7 @@ export const orders = template(
       // site.json's orders, through npm run infra -- orders. See currentWindow in order-service.mjs.
       OrdersWindow: { Type: 'String', AllowedValues: ['preorder', 'paused', 'after', 'closed'], Default: 'closed' },
       OrdersCloses: { Type: 'String', Default: '' },
-      OrdersCandlesOnly: { Type: 'String', AllowedValues: ['true', 'false'], Default: 'false' }
+      OrdersGoldenTicket: { Type: 'String', AllowedValues: ['true', 'false'], Default: 'false' }
     }
   }
 );
