@@ -32,7 +32,7 @@ permalink: /print/pay/
 <div class="head">
   <p class="eyebrow">How to pay</p>
   <h1>Send your <em>donation.</em></h1>
-  <p class="lead">Each candle is a <b>${{ site.pricePerCandle }} donation</b>. Scan a code with your phone&rsquo;s camera, or pay with cash or a check.</p>
+  <p class="lead">Each candle is a <b>${{ site.pricePerCandle }} donation</b>{% set maker = candles.scents | selectattr("makerNight") | first %}{% if maker %} (the {{ maker.name }} is ${{ site.makerNightDonation }}){% endif %}. Scan a code with your phone&rsquo;s camera, or pay with cash or a check.</p>
 </div>
 <div class="body">
   <div class="qrs">

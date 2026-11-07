@@ -30,7 +30,7 @@ permalink: /print/scents/
 <div class="head">
   <p class="eyebrow">{{ candles.scents | length }} scents this year</p>
   <h1>Pick your <em>scents.</em></h1>
-  <p class="lead">Each is 12&nbsp;oz of 100% virgin soy wax, hand-poured with a wooden wick and wearing a label Mazie drew. Every candle is a <b>${{ site.pricePerCandle }} donation</b>.</p>
+  <p class="lead">Each is 12&nbsp;oz of 100% virgin soy wax, hand-poured with a wooden wick and wearing a label Mazie drew. Every candle is a <b>${{ site.pricePerCandle }} donation</b>{% set maker = candles.scents | selectattr("makerNight") | first %}{% if maker %} (the {{ maker.name }} is ${{ site.makerNightDonation }}){% endif %}.</p>
 </div>
 <div class="body">
   <div class="scents">
