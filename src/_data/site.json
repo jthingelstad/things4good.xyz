@@ -4,6 +4,7 @@
   "saleDates": "Nov 7–8, 2026",
   "saleYear": "2026",
   "preorderSheet": "https://forms.gle/ojUBX58sVNTwvLKh8",
+  "orderForm": false,
   "payment": {
     "venmo": "jthingelstad",
     "cashApp": "JThingelstad",

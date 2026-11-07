@@ -24,6 +24,9 @@ The {{ site.saleYear }} sale is {{ site.saleDates | safe }} in Minneapolis. Buye
 - [Pay](https://things4good.xyz/pay/): Venmo, Cash App, Zelle and Apple Pay with pay buttons and QR codes, plus cash and check
 - [Candle care](https://things4good.xyz/care/): how to burn a wooden-wick candle, the same tips as the card that comes home with every candle
 - [FAQ](https://things4good.xyz/faq/): how it works, what it costs and where the money goes
+{%- if site.orderForm %}
+- [Order](https://things4good.xyz/order/): order the candles left after the sale, for pickup or SPS delivery; what is in stock comes from https://things4good.xyz/api/stock
+{%- endif %}
 {%- if site.makerNight %}
 - [Maker Night](https://things4good.xyz/maker-night/): an evening for six on {{ site.makerNightDate }}, {{ site.makerNightTime | safe }}; a seat is one of six Golden Ticket candles, a ${{ site.makerNightDonation }} donation at the sale (or by preorder), at most two per person, divided evenly across the four causes. Guests get a thank-you candle and pour four of their own in any scents from the library. {% set seatsLeft = makerNightSeats.total - makerNightSeats.sold %}{% if seatsLeft > 0 %}{{ seatsLeft }} of {{ makerNightSeats.total }} seats left{% else %}Sold out{% endif %}
 {%- endif %}

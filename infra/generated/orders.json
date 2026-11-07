@@ -1,0 +1,295 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "things4good.xyz candle order service - stock and orders in Grist, behind /api/",
+  "Parameters": {
+    "DistributionId": {
+      "Type": "String"
+    },
+    "OrdersOpen": {
+      "Type": "String",
+      "AllowedValues": [
+        "true",
+        "false"
+      ],
+      "Default": "false"
+    }
+  },
+  "Resources": {
+    "Secret": {
+      "Type": "AWS::SecretsManager::Secret",
+      "DeletionPolicy": "Retain",
+      "UpdateReplacePolicy": "Retain",
+      "Properties": {
+        "Name": "things4good/orders/grist",
+        "Description": "Grist API key and document id for the things4good order service",
+        "GenerateSecretString": {
+          "SecretStringTemplate": "{}",
+          "GenerateStringKey": "placeholder",
+          "PasswordLength": 32,
+          "ExcludePunctuation": true
+        }
+      }
+    },
+    "SecretPolicy": {
+      "Type": "AWS::SecretsManager::ResourcePolicy",
+      "Properties": {
+        "SecretId": {
+          "Ref": "Secret"
+        },
+        "BlockPublicPolicy": true,
+        "ResourcePolicy": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Sid": "OnlyTheOrderFunctionReads",
+              "Effect": "Deny",
+              "Principal": "*",
+              "Action": "secretsmanager:GetSecretValue",
+              "Resource": "*",
+              "Condition": {
+                "StringNotEquals": {
+                  "aws:PrincipalArn": {
+                    "Fn::GetAtt": [
+                      "Role",
+                      "Arn"
+                    ]
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Logs": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/things4good-orders",
+        "RetentionInDays": 90
+      }
+    },
+    "Role": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com"
+              },
+              "Action": "sts:AssumeRole"
+            }
+          ]
+        },
+        "Policies": [
+          {
+            "PolicyName": "OrderService",
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "logs:CreateLogStream",
+                    "logs:PutLogEvents"
+                  ],
+                  "Resource": {
+                    "Fn::Sub": "${Logs.Arn}:*"
+                  }
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": "secretsmanager:GetSecretValue",
+                  "Resource": {
+                    "Ref": "Secret"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "Function": {
+      "Type": "AWS::Lambda::Function",
+      "DependsOn": "Logs",
+      "Properties": {
+        "FunctionName": "things4good-orders",
+        "Description": "Things 4 Good candle orders - stock and orders in Grist",
+        "Runtime": "nodejs24.x",
+        "Architectures": [
+          "arm64"
+        ],
+        "Handler": "index.handler",
+        "MemorySize": 256,
+        "Timeout": 28,
+        "ReservedConcurrentExecutions": 1,
+        "Role": {
+          "Fn::GetAtt": [
+            "Role",
+            "Arn"
+          ]
+        },
+        "LoggingConfig": {
+          "LogFormat": "JSON",
+          "LogGroup": {
+            "Ref": "Logs"
+          }
+        },
+        "Environment": {
+          "Variables": {
+            "ORDERS_OPEN": {
+              "Ref": "OrdersOpen"
+            },
+            "SECRET_ID": {
+              "Ref": "Secret"
+            }
+          }
+        },
+        "Code": {
+          "ZipFile": "exports.handler = async () => ({ statusCode: 503, headers: { 'content-type': 'application/json' }, body: '{\"open\":false}' });"
+        }
+      }
+    },
+    "FunctionUrl": {
+      "Type": "AWS::Lambda::Url",
+      "Properties": {
+        "TargetFunctionArn": {
+          "Ref": "Function"
+        },
+        "AuthType": "AWS_IAM"
+      }
+    },
+    "CloudFrontInvokeUrl": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "Function"
+        },
+        "Action": "lambda:InvokeFunctionUrl",
+        "FunctionUrlAuthType": "AWS_IAM",
+        "Principal": "cloudfront.amazonaws.com",
+        "SourceArn": {
+          "Fn::Sub": "arn:${AWS::Partition}:cloudfront::${AWS::AccountId}:distribution/${DistributionId}"
+        }
+      }
+    },
+    "CloudFrontInvoke": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "Function"
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "cloudfront.amazonaws.com",
+        "SourceArn": {
+          "Fn::Sub": "arn:${AWS::Partition}:cloudfront::${AWS::AccountId}:distribution/${DistributionId}"
+        }
+      }
+    },
+    "ErrorFilter": {
+      "Type": "AWS::Logs::MetricFilter",
+      "Properties": {
+        "LogGroupName": {
+          "Ref": "Logs"
+        },
+        "FilterPattern": "{ $.level = \"ERROR\" }",
+        "MetricTransformations": [
+          {
+            "MetricNamespace": "things4good/orders",
+            "MetricName": "ServiceErrors",
+            "MetricValue": "1"
+          }
+        ]
+      }
+    },
+    "ErrorAlarm": {
+      "Type": "AWS::CloudWatch::Alarm",
+      "Properties": {
+        "AlarmName": "things4good-orders-errors",
+        "AlarmDescription": "The things4good order service failed: a Grist call, a rollback, a timeout or a crash",
+        "ComparisonOperator": "GreaterThanOrEqualToThreshold",
+        "EvaluationPeriods": 1,
+        "Threshold": 1,
+        "TreatMissingData": "notBreaching",
+        "AlarmActions": [
+          {
+            "Fn::Sub": "arn:${AWS::Partition}:sns:${AWS::Region}:${AWS::AccountId}:projects-sysadmin-alarms"
+          }
+        ],
+        "Metrics": [
+          {
+            "Id": "crashes",
+            "ReturnData": false,
+            "MetricStat": {
+              "Metric": {
+                "Namespace": "AWS/Lambda",
+                "MetricName": "Errors",
+                "Dimensions": [
+                  {
+                    "Name": "FunctionName",
+                    "Value": {
+                      "Ref": "Function"
+                    }
+                  }
+                ]
+              },
+              "Period": 300,
+              "Stat": "Sum"
+            }
+          },
+          {
+            "Id": "caught",
+            "ReturnData": false,
+            "MetricStat": {
+              "Metric": {
+                "Namespace": "things4good/orders",
+                "MetricName": "ServiceErrors"
+              },
+              "Period": 300,
+              "Stat": "Sum"
+            }
+          },
+          {
+            "Id": "failures",
+            "Expression": "FILL(crashes, 0) + FILL(caught, 0)",
+            "Label": "Order service failures",
+            "ReturnData": true
+          }
+        ]
+      }
+    }
+  },
+  "Outputs": {
+    "FunctionName": {
+      "Value": {
+        "Ref": "Function"
+      }
+    },
+    "SecretArn": {
+      "Value": {
+        "Ref": "Secret"
+      }
+    },
+    "OrdersOriginDomain": {
+      "Value": {
+        "Fn::Select": [
+          2,
+          {
+            "Fn::Split": [
+              "/",
+              {
+                "Fn::GetAtt": [
+                  "FunctionUrl",
+                  "FunctionUrl"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

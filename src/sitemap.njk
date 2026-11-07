@@ -5,7 +5,8 @@ eleventyExcludeFromCollections: true
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 {%- for page in collections.all %}
-{%- if site.makerNight or page.url != "/maker-night/" %}
+{#- A page whose setting is off has no URL at all (order.njk). -#}
+{%- if page.url and (site.makerNight or page.url != "/maker-night/") %}
   <url>
     <loc>https://things4good.xyz{{ page.url }}</loc>
     <lastmod>{{ page.inputPath | lastmod }}</lastmod>

@@ -27,3 +27,12 @@ test('every sitemap url has a valid lastmod', () => {
     assert.ok(!Number.isNaN(Date.parse(lastmod)));
   }
 });
+
+test('the order page exists only while site.json says so, and the sitemap and llms.txt agree', () => {
+  const fs = require('node:fs');
+  const { orderForm } = JSON.parse(fs.readFileSync('src/_data/site.json', 'utf8'));
+  const on = orderForm === true;
+  assert.equal(fs.existsSync('_site/order/index.html'), on);
+  assert.equal(fs.readFileSync('_site/sitemap.xml', 'utf8').includes('things4good.xyz/order/'), on);
+  assert.equal(fs.readFileSync('_site/llms.txt', 'utf8').includes('things4good.xyz/order/'), on);
+});
