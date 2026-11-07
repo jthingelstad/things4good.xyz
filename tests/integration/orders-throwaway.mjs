@@ -11,6 +11,7 @@
 // `npm test`: it needs a key, and it spends about 80 of the plan's 3,000 API calls a month.
 import { after, before, test } from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import { createService, gristStore } from '../../infra/order-service.mjs';
 
 const API = 'https://docs.getgrist.com/api';
@@ -50,9 +51,10 @@ const setStock = (updates) =>
 // Turnstile and Buttondown have their own unit tests; this file is about Grist.
 const passes = async () => ({ ok: true, codes: [] });
 
-// Windows open well past this run.
-const AFTER = { window: 'after', closes: '2099-01-01T00:00:00-06:00', goldenTicket: true };
-const PREORDER = { window: 'preorder', closes: '2099-01-01T00:00:00-06:00' };
+// Windows open well past this run, with this year's causes as causes.json names them for Grist.
+const CAUSES = JSON.parse(readFileSync(new URL('../../src/_data/causes.json', import.meta.url), 'utf8')).list.map((c) => c.grist);
+const AFTER = { window: 'after', closes: '2099-01-01T00:00:00-06:00', goldenTicket: true, causes: CAUSES };
+const PREORDER = { window: 'preorder', closes: '2099-01-01T00:00:00-06:00', causes: CAUSES };
 
 let offerings; // Product name -> { offering, product, sold }.
 let store;
@@ -189,6 +191,24 @@ test('a new buyer: person, order and lines land as the document expects', async 
   // Stock falls straight away.
   const stock = JSON.parse((await newService().handle(stockEvent)).body).products;
   assert.equal(stock.find((p) => p.name === 'True North').left, 38);
+});
+
+// SQL reads a ChoiceList as its stored JSON text, or null when blank.
+const causesIn = (value) => (typeof value === 'string' && value ? JSON.parse(value) : value ?? []).filter((c) => c !== 'L');
+
+test('causes: every one kept leaves Causes blank, fewer land as Grist choices', async () => {
+  // Each name must be one of the column's choices, or Grist would show it as an error.
+  const { columns } = await grist('GET', `/docs/${copy}/tables/Orders/columns`);
+  const options = columns.find((column) => column.id === 'Causes').fields.widgetOptions;
+  const { choices } = typeof options === 'string' ? JSON.parse(options) : options;
+  for (const cause of CAUSES) assert.ok(choices.includes(cause), `${cause} is not a Causes choice`);
+
+  const item = [{ product: offerings['Tea Time'].product, quantity: 1 }];
+  const all = buyer({ causes: [...CAUSES], items: item });
+  const two = buyer({ causes: [CAUSES[3], CAUSES[1]], items: item });
+  for (const typed of [all, two]) assert.equal((await newService().handle(orderEvent(typed))).statusCode, 200);
+  assert.deepEqual(causesIn((await orderRow(all.requestId)).Causes), []);
+  assert.deepEqual(causesIn((await orderRow(two.requestId)).Causes), [CAUSES[1], CAUSES[3]]);
 });
 
 test('SPS delivery shows on Later delivery', async () => {

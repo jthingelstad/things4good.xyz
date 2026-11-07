@@ -16,6 +16,9 @@
 // shows as a 403 or 404 becomes the site's HTML 404 page (CustomErrorResponses), so this answers only
 // with 200, 400, 405, 409, 413, 422, 429, 500 and 503.
 //
+// Every order goes to all of the year's causes unless the buyer unchecks some (validate). The causes are
+// Grist's names for them, from src/_data/causes.json through npm run infra -- orders.
+//
 // Every order carries a Cloudflare Turnstile token, checked before any call to Grist; a refused token
 // is a 422, never a 403. Each new order then adds the buyer to the family's Buttondown list, without a
 // confirmation email and never over an unsubscribe. A list failure is logged and never fails the order.
@@ -123,7 +126,8 @@ export function toSeats(rows) {
   return { event: ticket.event, total, left: Math.max(0, total - (Number(ticket.sold) || 0)) };
 }
 
-export function validate(body) {
+// `causes` is this year's causes, as Grist names them in Orders.Causes.
+export function validate(body, causes = []) {
   const errors = [];
   const requestId = typeof body.requestId === 'string' ? body.requestId : '';
   if (!UUID.test(requestId)) errors.push('requestId');
@@ -162,6 +166,18 @@ export function validate(body) {
   }
   if (!itemsValid || quantity > LIMITS.orderQuantity) errors.push('items');
 
+  // The page checks every cause and the buyer unchecks any to leave out (Jamie, 2026-11-07). All of them
+  // is written as none: a blank Causes splits evenly across the year's causes, and the pick sheet marks
+  // it ALL, as for every other preorder. Only a narrower pick is written, in this year's order. A page
+  // from before the choice sends no causes, which is all of them.
+  let picked = [];
+  if (body.causes !== undefined) {
+    const sent = Array.isArray(body.causes) ? body.causes : [];
+    const known = new Set(causes);
+    if (!sent.length || new Set(sent).size !== sent.length || !sent.every((cause) => known.has(cause))) errors.push('causes');
+    else if (sent.length < known.size) picked = causes.filter((cause) => sent.includes(cause));
+  }
+
   return errors.length
     ? { errors }
     : {
@@ -172,6 +188,7 @@ export function validate(body) {
           mobile,
           fulfillment: body.fulfillment,
           note,
+          causes: picked,
           items: items.map(({ product, quantity: q }) => ({ product, quantity: q }))
         }
       };
@@ -223,7 +240,8 @@ export function createService({
   },
   // ({ email, ip }) => { outcome: 'added' | 'already' | 'refused' | 'skipped', code }, or throws.
   subscribe = async () => ({ outcome: 'skipped' }),
-  // { window, closes, goldenTicket }: see currentWindow and toStock. Without one, nothing is open.
+  // { window, closes, goldenTicket, causes }: see currentWindow, toStock and validate. Without one,
+  // nothing is open.
   orders = { window: 'closed' },
   now = Date.now,
   sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms)),
@@ -270,7 +288,7 @@ export function createService({
     // field is told it didn't work rather than left thinking it did.
     if (body.website) return { response: json(422, { error: 'invalid', fields: [] }), outcome: 'trap' };
 
-    const { errors, order } = validate(body);
+    const { errors, order } = validate(body, orders.causes ?? []);
     if (errors) return { response: json(422, { error: 'invalid', fields: errors }), outcome: 'invalid' };
 
     for (const [id, at] of verified) if (now() - at >= VERIFIED_FOR) verified.delete(id);
@@ -327,7 +345,7 @@ export function createService({
 
     try {
       // One order per call: several in one call break Sale_Order numbering. Sale_Order is left to its
-      // trigger, and Causes stays blank, which splits the order evenly across the four.
+      // trigger. Causes is left blank for all of them (validate), and is a Grist list ("L") otherwise.
       const orderId = await store.addOrder({
         Event: stock.eventId,
         Person: personId,
@@ -337,6 +355,7 @@ export function createService({
         Fulfillment_Method: order.fulfillment,
         Source_Row: sourceRow,
         Notes: order.note,
+        ...(order.causes.length ? { Causes: ['L', ...order.causes] } : {}),
         // The done screen sends every buyer to /pay/, so the link is sent. Without it a preorder would sit
         // at Stage "Send link", which is for Google Form preorders that still need one.
         Payment_Link_Sent: true,
@@ -636,6 +655,9 @@ const lazySubscribe = async (args) => {
   return buttondownSubscriber({ apiKey: buttondownKey, onDenied: () => (credentials = undefined) })(args);
 };
 
+// Grist's names for this year's causes, joined with "|" (OrdersCauses in infra/templates.mjs).
+const CAUSES = (process.env.ORDERS_CAUSES ?? '').split('|').filter(Boolean);
+
 let service;
 export const handler = async (event) => {
   service ??= createService({
@@ -645,7 +667,8 @@ export const handler = async (event) => {
     orders: {
       window: process.env.ORDERS_WINDOW,
       closes: process.env.ORDERS_CLOSES,
-      goldenTicket: process.env.ORDERS_GOLDEN_TICKET === 'true'
+      goldenTicket: process.env.ORDERS_GOLDEN_TICKET === 'true',
+      causes: CAUSES
     }
   });
   if (event?.selfCheck) {
@@ -653,7 +676,13 @@ export const handler = async (event) => {
       const stock = await service.selfCheck();
       const { turnstileSecret, buttondownKey } = await readCredentials();
       // Which keys are in the secret, never their values.
-      return { ...stock, ok: stock.ok && Boolean(turnstileSecret), turnstile: Boolean(turnstileSecret), list: Boolean(buttondownKey) };
+      return {
+        ...stock,
+        ok: stock.ok && Boolean(turnstileSecret),
+        turnstile: Boolean(turnstileSecret),
+        list: Boolean(buttondownKey),
+        causes: CAUSES.length
+      };
     } catch (error) {
       return { ok: false, step: error.step ?? 'unknown', status: error.status };
     }

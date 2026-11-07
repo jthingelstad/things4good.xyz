@@ -83,8 +83,10 @@ const writesIn = (store) => store.state.calls.filter((call) => WRITES.includes(c
 
 // The clock starts at 1_800_000_000_000 (2027-01-15), well before these windows close.
 const CLOSES = '2027-01-20T23:59:00-06:00';
-const AFTER = { window: 'after', closes: CLOSES, goldenTicket: true };
-const PREORDER = { window: 'preorder', closes: CLOSES };
+// Grist's names for the causes, as causes.json's `grist` gives them.
+const CAUSES = ["Cure Alzheimer's", 'Bridging', 'Wilderness Canoe Base', 'Physicians for NHP'];
+const AFTER = { window: 'after', closes: CLOSES, goldenTicket: true, causes: CAUSES };
+const PREORDER = { window: 'preorder', closes: CLOSES, causes: CAUSES };
 const CLOSED = { window: 'closed' };
 
 // Turnstile passes any token but 'bad'; the list adds everyone. Each records what it was asked.
@@ -240,12 +242,40 @@ test('a new buyer gets a person, one order and its lines, and the total comes fr
   assert.equal(saved.Notes, 'Leave them on the porch');
   assert.equal(saved.Paid, false);
   assert.equal(saved.Ordered_At, 1_800_000_000);
-  // Left to the document: Sale_Order to its trigger, Causes blank for the even split.
+  // Left to the document: Sale_Order to its trigger, and Causes blank for the even split when the
+  // page sends none.
   assert.ok(!('Sale_Order' in saved) && !('Causes' in saved));
   assert.deepEqual(lines, [
     { Order: saved.id, Product: 3, Quantity: 2 },
     { Order: saved.id, Product: 16, Quantity: 1 }
   ]);
+});
+
+test('causes: every one checked leaves Causes blank, fewer are written in this year\'s order', async () => {
+  const cases = [
+    [undefined, undefined], // A page from before the choice.
+    [[...CAUSES].reverse(), undefined],
+    [['Physicians for NHP', 'Bridging'], ['L', 'Bridging', 'Physicians for NHP']],
+    [["Cure Alzheimer's"], ['L', "Cure Alzheimer's"]]
+  ];
+  for (const [causes, written] of cases) {
+    const { service, store } = setup();
+    const response = await service.handle(post(order({ causes })));
+    assert.equal(response.statusCode, 200, JSON.stringify(causes));
+    const [saved] = store.state.orders;
+    assert.deepEqual(saved.Causes, written, JSON.stringify(causes));
+    assert.equal('Causes' in saved, written !== undefined);
+  }
+});
+
+test('causes: with none configured, a pick is refused rather than dropped', async () => {
+  const { service, store } = setup({ orders: { ...AFTER, causes: [] } });
+  const response = await service.handle(post(order({ causes: ['Bridging'] })));
+  assert.equal(response.statusCode, 422);
+  assert.deepEqual(parse(response).fields, ['causes']);
+  assert.deepEqual(store.state.calls, []);
+  // An old page, which sends none, still gets through.
+  assert.equal((await setup({ orders: { ...AFTER, causes: [] } }).service.handle(post(order()))).statusCode, 200);
 });
 
 test('oversold: names what is short and writes nothing', async () => {
@@ -402,6 +432,13 @@ test('input limits', async () => {
     [{ mobile: '+()' }, 'mobile'],
     [{ mobile: '555-01' }, 'mobile'],
     [{ fulfillment: 'Carrier pigeon' }, 'fulfillment'],
+    [{ causes: [] }, 'causes'],
+    [{ causes: 'Bridging' }, 'causes'],
+    [{ causes: null }, 'causes'],
+    [{ causes: ['Bridging', 'Bridging'] }, 'causes'],
+    [{ causes: ['Bridging', 'Save the Snakes'] }, 'causes'],
+    [{ causes: ['bridging'] }, 'causes'],
+    [{ causes: [7] }, 'causes'],
     [{ note: 'x'.repeat(LIMITS.note + 1) }, 'note'],
     [{ items: [] }, 'items'],
     [{ items: 'lots' }, 'items'],

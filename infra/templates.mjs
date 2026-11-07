@@ -463,6 +463,7 @@ export const orders = template(
             ORDERS_WINDOW: ref('OrdersWindow'),
             ORDERS_CLOSES: ref('OrdersCloses'),
             ORDERS_GOLDEN_TICKET: ref('OrdersGoldenTicket'),
+            ORDERS_CAUSES: ref('OrdersCauses'),
             SECRET_ID: ref('Secret')
           }
         },
@@ -557,7 +558,9 @@ export const orders = template(
       // site.json's orders, through npm run infra -- orders. See currentWindow in order-service.mjs.
       OrdersWindow: { Type: 'String', AllowedValues: ['preorder', 'paused', 'after', 'closed'], Default: 'closed' },
       OrdersCloses: { Type: 'String', Default: '' },
-      OrdersGoldenTicket: { Type: 'String', AllowedValues: ['true', 'false'], Default: 'false' }
+      OrdersGoldenTicket: { Type: 'String', AllowedValues: ['true', 'false'], Default: 'false' },
+      // causes.json's Grist names, joined with "|". See validate in order-service.mjs.
+      OrdersCauses: { Type: 'String', Default: '' }
     }
   }
 );
