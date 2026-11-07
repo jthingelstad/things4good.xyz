@@ -293,6 +293,8 @@ test('a preorder: regular candles past what is poured, written as a Preorder', a
   assert.deepEqual(JSON.parse(response.body), { ok: true, total: 600 });
   const row = await orderRow(typed.requestId);
   assert.equal(row.Order_Type, 'Preorder');
+  // Sent to /pay/ by the done screen, so not "Send link", which the Stage formula gives an unsent preorder.
+  assert.equal(row.Stage, 'Waiting on payment');
   assert.equal(row.Total, 600);
   assert.ok(!row.Paid);
 });

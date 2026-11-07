@@ -233,6 +233,7 @@ test('a new buyer gets a person, one order and its lines, and the total comes fr
   assert.equal(saved.Person, people[0].id);
   assert.equal(saved.Name_As_Typed, 'Testy McTest');
   assert.equal(saved.Order_Type, 'After the sale');
+  assert.equal(saved.Payment_Link_Sent, true);
   assert.equal(saved.Fulfillment_Method, 'Pickup');
   assert.equal(saved.Source_Row, `web ${uuid()}`);
   assert.equal(saved.Notes, 'Leave them on the porch');
@@ -280,6 +281,8 @@ test('a preorder takes more candles than are poured, and says so in Order_Type',
   assert.deepEqual(parse(response), { ok: true, total: 500 });
   const [saved] = store.state.orders;
   assert.equal(saved.Order_Type, 'Preorder');
+  // The done screen links to /pay/, so the order is past Stage "Send link".
+  assert.equal(saved.Payment_Link_Sent, true);
   assert.deepEqual(store.state.lines, [{ Order: saved.id, Product: 3, Quantity: 20 }]);
 });
 
