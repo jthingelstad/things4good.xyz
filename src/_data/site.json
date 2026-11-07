@@ -5,6 +5,7 @@
   "saleYear": "2026",
   "preorderSheet": "https://forms.gle/ojUBX58sVNTwvLKh8",
   "orderForm": false,
+  "turnstileSiteKey": "0x4AAAAAAF3cyMZFaHMqAxmY",
   "payment": {
     "venmo": "jthingelstad",
     "cashApp": "JThingelstad",

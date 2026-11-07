@@ -2,7 +2,15 @@
 // against a real throwaway copy of the document (npm run test:orders).
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { createService, formatMobile, gristStore, LIMITS, toStock } from '../infra/order-service.mjs';
+import {
+  buttondownSubscriber,
+  createService,
+  formatMobile,
+  gristStore,
+  LIMITS,
+  toStock,
+  turnstileVerifier
+} from '../infra/order-service.mjs';
 
 const ROWS = [
   { eventId: 7, event: '2026 Candle Sale', id: 3, name: 'True North', type: 'Candle', price: 25, made: 10, adjustment: null, sold: 4 },
@@ -71,13 +79,25 @@ function fakeStore({ people = [], fail = {} } = {}) {
 const WRITES = ['fillPerson', 'addPerson', 'addOrder', 'addLines', 'removeOrder', 'removePerson'];
 const writesIn = (store) => store.state.calls.filter((call) => WRITES.includes(call));
 
-function setup({ open = true, people, fail } = {}) {
+// Turnstile passes any token but 'bad'; the list adds everyone. Each records what it was asked.
+function setup({ open = true, people, fail, verify, subscribe } = {}) {
   const store = fakeStore({ people, fail });
   const logs = [];
   const clock = { time: 1_800_000_000_000 };
   const naps = [];
+  const checks = [];
+  const joins = [];
   const service = createService({
     store,
+    verify: async (args) => {
+      checks.push(args);
+      if (verify) return verify(args);
+      return args.token === 'bad' ? { ok: false, codes: ['invalid-input-response'] } : { ok: true, codes: [] };
+    },
+    subscribe: async (args) => {
+      joins.push(args);
+      return subscribe ? subscribe(args) : { outcome: 'added' };
+    },
     open,
     now: () => clock.time,
     sleep: async (ms) => {
@@ -86,7 +106,7 @@ function setup({ open = true, people, fail } = {}) {
     },
     log: (entry) => logs.push(entry)
   });
-  return { store, service, logs, clock, naps };
+  return { store, service, logs, clock, naps, checks, joins };
 }
 
 const get = (path = '/api/stock') => ({ rawPath: path, requestContext: { http: { method: 'GET' } }, headers: {} });
@@ -354,7 +374,7 @@ test('rate limits: orders per address, tries per address, and orders overall, ea
 
 test('logs carry outcomes only: no buyer details, no address, on any path', async () => {
   const known = [{ id: 7, Name: 'Real Name', Email: 'kept@example.com', Mobile: '' }];
-  const secrets = ['Testy', 'testy@example.com', '555-0100', '555) 0100', 'porch', '198.51.100.10', 'kept@example.com', 'Real Name'];
+  const secrets = ['Testy', 'testy@example.com', '555-0100', '555) 0100', 'porch', '198.51.100.10', 'kept@example.com', 'Real Name', 'tok-sekrit'];
   const runs = [
     setup({ people: known }),
     setup({ fail: { addLines: true } }),
@@ -363,7 +383,7 @@ test('logs carry outcomes only: no buyer details, no address, on any path', asyn
   ];
   for (const { service, logs } of runs) {
     await service.handle(get());
-    await service.handle(post(order()));
+    await service.handle(post(order({ turnstile: 'tok-sekrit' })));
     await service.handle(post(order({ requestId: uuid(2), email: 'kept@example.com' })));
     await service.handle(post(order({ requestId: uuid(3), items: [{ product: 3, quantity: 24 }] })));
     await service.handle(post(order({ requestId: uuid(4), website: 'spam' })));
@@ -434,4 +454,174 @@ test('the Grist store passes values as arguments and tells the key from a failur
   status = 500;
   await assert.rejects(store.readStock());
   assert.equal(denied, 1);
+});
+
+test('a refused or missing Turnstile token is a 422 before any call to Grist, with the codes logged', async () => {
+  const { service, store, logs } = setup();
+  const response = await service.handle(post(order({ turnstile: 'bad' })));
+  assert.equal(response.statusCode, 422);
+  assert.deepEqual(parse(response), { error: 'turnstile' });
+  assert.deepEqual(store.state.calls, []);
+  assert.deepEqual(logs.at(-1).codes, ['invalid-input-response']);
+});
+
+test('the token is checked after the form is, so a typo costs no token', async () => {
+  const { service, checks } = setup();
+  await service.handle(post(order({ email: 'nope', turnstile: 'token' })));
+  await service.handle(post(order({ website: 'spam', turnstile: 'token' })));
+  assert.deepEqual(checks, []);
+  await service.handle(post(order({ turnstile: 'token' })));
+  assert.deepEqual(checks, [{ token: 'token' }]);
+});
+
+test('Turnstile unreachable is a retryable 503 and an error; the retry is checked again', async () => {
+  let down = true;
+  const { service, store, logs, checks } = setup({
+    verify: async () => {
+      if (down) throw Object.assign(new Error('timeout'), { step: 'turnstile' });
+      return { ok: true, codes: [] };
+    }
+  });
+  const response = await service.handle(post(order({ turnstile: 'token' })));
+  assert.equal(response.statusCode, 503);
+  assert.deepEqual(store.state.calls, []);
+  assert.ok(logs.some((entry) => entry.level === 'error' && entry.outcome === 'turnstile-failed'));
+  down = false;
+  assert.equal((await service.handle(post(order({ turnstile: 'token' })))).statusCode, 200);
+  assert.equal(checks.length, 2);
+});
+
+test('a retry of a proven order is not checked again: its token is spent', async () => {
+  const { service, checks } = setup({ fail: { addLines: true } });
+  assert.equal((await service.handle(post(order({ turnstile: 'one' })))).statusCode, 503);
+  assert.equal(checks.length, 1);
+  // Same request id, same spent token, as the page resends it.
+  await service.handle(post(order({ turnstile: 'one' })));
+  assert.equal(checks.length, 1);
+});
+
+test('a proven request id is forgotten after a while', async () => {
+  const { service, checks, clock } = setup({ fail: { addLines: true } });
+  await service.handle(post(order({ turnstile: 'one' })));
+  clock.time += 16 * 60_000;
+  await service.handle(post(order({ turnstile: 'two' })));
+  assert.deepEqual(checks, [{ token: 'one' }, { token: 'two' }]);
+});
+
+test('a new order adds the buyer to the list once; a duplicate does not add them again', async () => {
+  const { service, joins, logs } = setup();
+  assert.equal((await service.handle(post(order()))).statusCode, 200);
+  assert.deepEqual(joins, [{ email: 'testy@example.com', ip: '198.51.100.10' }]);
+  assert.equal(logs.at(-1).list, 'added');
+  assert.equal((await service.handle(post(order()))).statusCode, 200);
+  assert.equal(joins.length, 1);
+});
+
+test('nobody is added when the order fails, is short, or is refused', async () => {
+  for (const run of [
+    { setup: setup({ fail: { addLines: true } }), body: order() },
+    { setup: setup(), body: order({ items: [{ product: 13, quantity: 2 }] }) },
+    { setup: setup(), body: order({ turnstile: 'bad' }) }
+  ]) {
+    await run.setup.service.handle(post(run.body));
+    assert.deepEqual(run.setup.joins, []);
+  }
+});
+
+test('a list that fails or refuses never costs the order', async () => {
+  const broken = setup({
+    subscribe: async () => {
+      throw Object.assign(new Error('down'), { step: 'buttondown', status: 500 });
+    }
+  });
+  const response = await broken.service.handle(post(order()));
+  assert.equal(response.statusCode, 200);
+  assert.equal(parse(response).ok, true);
+  assert.ok(broken.logs.some((entry) => entry.level === 'error' && entry.outcome === 'list-failed'));
+  assert.equal(broken.logs.at(-1).list, 'failed');
+
+  const refused = setup({ subscribe: async () => ({ outcome: 'refused', code: 'ip_address_spammy' }) });
+  assert.equal((await refused.service.handle(post(order()))).statusCode, 200);
+  assert.ok(refused.logs.some((entry) => entry.level === 'warn' && entry.code === 'ip_address_spammy'));
+  assert.ok(!refused.logs.some((entry) => entry.level === 'error'));
+});
+
+test('without a verifier no order gets in', async () => {
+  const service = createService({ store: fakeStore(), open: true, floorMs: 0, log: () => {} });
+  assert.equal((await service.handle(post(order()))).statusCode, 503);
+});
+
+const answer = (status, body) => ({ ok: status < 300, status, json: async () => body });
+
+test('siteverify: the token goes with the secret; host, action and spent tokens are checked', async () => {
+  const seen = [];
+  let reply = answer(200, { success: true, hostname: 'things4good.xyz', action: 'order' });
+  let denied = 0;
+  const verify = turnstileVerifier({
+    secret: 'shh',
+    onDenied: () => denied++,
+    fetch: async (url, init) => {
+      seen.push({ url, body: JSON.parse(init.body) });
+      return reply;
+    }
+  });
+  assert.deepEqual(await verify({ token: 'tok' }), { ok: true, codes: [] });
+  assert.equal(seen[0].url, 'https://challenges.cloudflare.com/turnstile/v0/siteverify');
+  assert.deepEqual(seen[0].body, { secret: 'shh', response: 'tok' });
+
+  for (const [token, codes] of [[undefined, ['missing-input-response']], ['', ['missing-input-response']], ['x'.repeat(2049), ['missing-input-response']]])
+    assert.deepEqual(await verify({ token }), { ok: false, codes });
+  assert.equal(seen.length, 1); // None of those reached Cloudflare.
+
+  reply = answer(200, { success: true, hostname: 'evil.example', action: 'order' });
+  assert.deepEqual(await verify({ token: 'tok' }), { ok: false, codes: ['wrong-hostname'] });
+  reply = answer(200, { success: true, hostname: 'www.things4good.xyz', action: 'login' });
+  assert.deepEqual(await verify({ token: 'tok' }), { ok: false, codes: ['wrong-action'] });
+  reply = answer(200, { success: false, 'error-codes': ['timeout-or-duplicate'] });
+  assert.deepEqual(await verify({ token: 'tok' }), { ok: false, codes: ['timeout-or-duplicate'] });
+
+  reply = answer(200, { success: false, 'error-codes': ['invalid-input-secret'] });
+  await assert.rejects(verify({ token: 'tok' }), (error) => error.step === 'turnstile' && error.codes.includes('invalid-input-secret'));
+  assert.equal(denied, 1);
+  reply = answer(502, {});
+  await assert.rejects(verify({ token: 'tok' }), (error) => error.step === 'turnstile' && error.status === 502);
+  const offline = turnstileVerifier({ secret: 'shh', fetch: async () => { throw new Error('offline'); } });
+  await assert.rejects(offline({ token: 'tok' }), (error) => error.step === 'turnstile');
+});
+
+test('Buttondown: added without a confirmation email, never resubscribed, refusals told from failures', async () => {
+  const seen = [];
+  let reply = answer(201, { id: 'sub' });
+  let denied = 0;
+  const subscribe = buttondownSubscriber({
+    apiKey: 'key',
+    onDenied: () => denied++,
+    fetch: async (url, init) => {
+      seen.push({ url, headers: init.headers, body: JSON.parse(init.body) });
+      return reply;
+    }
+  });
+  assert.deepEqual(await subscribe({ email: 'a@example.com', ip: '198.51.100.10' }), { outcome: 'added' });
+  assert.equal(seen[0].url, 'https://api.buttondown.com/v1/subscribers');
+  assert.equal(seen[0].headers.Authorization, 'Token key');
+  assert.ok(!Object.keys(seen[0].headers).some((name) => /collision|bypass/i.test(name)));
+  assert.deepEqual(seen[0].body, { email_address: 'a@example.com', type: 'regular', notes: 'Added by the order form', ip_address: '198.51.100.10' });
+
+  await subscribe({ email: 'a@example.com', ip: 'unknown' });
+  assert.ok(!('ip_address' in seen[1].body));
+
+  for (const code of ['email_already_exists', 'subscriber_already_exists', 'subscriber_suppressed', 'subscriber_blocked']) {
+    reply = answer(400, { code, detail: 'x' });
+    assert.deepEqual(await subscribe({ email: 'a@example.com', ip: 'unknown' }), { outcome: 'already' });
+  }
+  reply = answer(400, { code: 'email_invalid', detail: 'x' });
+  assert.deepEqual(await subscribe({ email: 'a@example.com', ip: 'unknown' }), { outcome: 'refused', code: 'email_invalid' });
+  reply = answer(429, {});
+  assert.deepEqual(await subscribe({ email: 'a@example.com', ip: 'unknown' }), { outcome: 'refused', code: 'status-429' });
+
+  reply = answer(401, { detail: 'bad key' });
+  await assert.rejects(subscribe({ email: 'a@example.com', ip: 'unknown' }), (error) => error.step === 'buttondown' && error.status === 401);
+  assert.equal(denied, 1);
+  reply = answer(500, {});
+  await assert.rejects(subscribe({ email: 'a@example.com', ip: 'unknown' }), (error) => error.status === 500);
 });

@@ -56,9 +56,12 @@ description: Order the Things 4 Good candles left after the sale, for pickup or 
           <label>Leave this empty <input name="website" type="text" tabindex="-1" autocomplete="off" /></label>
         </div>
 
+        {# Cloudflare Turnstile. It shows itself only when it needs a click. #}
+        <div class="order-check" id="order-check"></div>
         <p class="order-error" id="order-error" role="alert" hidden></p>
         <button class="btn btn--primary order-submit" id="order-submit" type="submit" disabled>Place order</button>
         <p class="order-fine">Your order holds these candles right away. Please send your donation soon after you order, because we may release an order that stays unpaid.</p>
+        <p class="order-fine">We&rsquo;ll add you to our family&rsquo;s email list. Unsubscribe anytime.</p>
       </aside>
     </form>
 
@@ -82,6 +85,7 @@ description: Order the Things 4 Good candles left after the sale, for pickup or 
   const ART = { {% for scent in candles.scents %}{{ scent.name | dump | safe }}: {{ scent.art | dump | safe }}{% if not loop.last %}, {% endif %}{% endfor %} };
   const GROUPS = [["Candle", "Candles"], ["XL candle", "XL candles"], ["Lid", "Candle lids"]];
   const EMAIL = {{ site.email | dump | safe }};
+  const CHECK_KEY = {{ site.turnstileSiteKey | dump | safe }};
   const LINE_MAX = 24, ORDER_MAX = 30;
 
   const $ = (id) => document.getElementById(id);
@@ -97,6 +101,8 @@ description: Order the Things 4 Good candles left after the sale, for pickup or 
 
   let products = [];
   let sending = false;
+  // The Turnstile widget, its latest token, and whether its script failed to load.
+  let check = null, token = "", checkBroken = false;
   const cart = new Map();
 
   const say = (text) => { status.textContent = text; status.hidden = !text; };
@@ -189,6 +195,39 @@ description: Order the Things 4 Good candles left after the sale, for pickup or 
     say("");
     form.hidden = false;
     draw();
+    loadCheck();
+  }
+
+  // Loaded only once there is something to order. A token is good once and for five minutes; the widget
+  // gets a fresh one on its own when one expires, and after reset().
+  function loadCheck() {
+    window.onOrderCheck = () => {
+      check = turnstile.render("#order-check", {
+        sitekey: CHECK_KEY,
+        action: "order",
+        appearance: "interaction-only",
+        theme: "light",
+        size: "flexible",
+        callback: (t) => { token = t; },
+        "expired-callback": () => { token = ""; },
+        "error-callback": () => { token = ""; },
+      });
+    };
+    const script = document.createElement("script");
+    script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onOrderCheck";
+    script.async = true;
+    script.onerror = () => { checkBroken = true; };
+    document.head.append(script);
+  }
+
+  async function checkToken() {
+    for (let i = 0; i < 60 && !token && !checkBroken; i++) await sleep(250);
+    return token;
+  }
+
+  function resetCheck() {
+    token = "";
+    if (check !== null) turnstile.reset(check);
   }
 
   // A retry with the same answers keeps its id, so the service can't take the order twice. Changed
@@ -258,12 +297,23 @@ description: Order the Things 4 Good candles left after the sale, for pickup or 
     sending = true;
     refresh();
     submit.textContent = "Placing your order…";
-    const { response, data } = await send(JSON.stringify({ ...answers, requestId }));
+    // The token rides along but isn't one of the answers, so a fresh token keeps the same order.
+    const proof = await checkToken();
+    const { response, data } = proof
+      ? await send(JSON.stringify({ ...answers, requestId, turnstile: proof }))
+      : { response: null, data: { error: "no-check" } };
     sending = false;
     submit.textContent = "Place order";
     refresh();
 
     if (response && response.ok && data.ok) return showDone(answers, items, data.total);
+    if (proof) resetCheck();
+    if (data.error === "no-check") {
+      return sayError(checkBroken
+        ? `Our spam check didn’t load. Reload the page, or email ${EMAIL}.`
+        : "Our spam check isn’t done yet. If a box shows above the button, check it, then press Place order again.");
+    }
+    if (data.error === "turnstile") return sayError("Our spam check didn’t go through. Wait a moment, then press Place order again.");
     if (data.open === false) return closed();
     if (response && response.status === 409 && data.short) {
       for (const short of data.short) {
