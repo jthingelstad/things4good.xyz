@@ -309,7 +309,15 @@ export function createService({
         const wait = floorMs - (now() - started);
         if (wait > 0) await sleep(wait);
       }
-      log({ level: 'info', route: result.route, outcome: result.outcome, status: result.response.statusCode, ms: now() - started });
+      // Whether the viewer's address arrived, so a broken rate limit shows, never the address itself.
+      log({
+        level: 'info',
+        route: result.route,
+        outcome: result.outcome,
+        status: result.response.statusCode,
+        ms: now() - started,
+        hasAddress: viewerIp(event.headers) !== 'unknown'
+      });
       return result.response;
     }
   };

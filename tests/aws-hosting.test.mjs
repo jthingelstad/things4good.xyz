@@ -90,10 +90,9 @@ test("/api/ goes to the order service, without the slash function and without th
   const origin = config.Origins.find((o) => o.Id === "orders");
   assert.deepEqual(origin.OriginAccessControlId, { Ref: "OrderOriginAccess" });
   assert.equal(site.Resources.OrderOriginAccess.Properties.OriginAccessControlConfig.OriginAccessControlOriginType, "lambda");
-  // The signature needs the body's hash, and must be for the function URL's name, not the site's.
-  const { Headers } = site.Resources.OrderOriginRequest.Properties.OriginRequestPolicyConfig.HeadersConfig;
-  assert.ok(Headers.includes("x-amz-content-sha256"));
-  assert.ok(!Headers.map((h) => h.toLowerCase()).includes("host"));
+  // AllViewerExceptHostHeader: the body's hash reaches the origin, and the signature is for the function
+  // URL's name, not the site's.
+  assert.equal(behavior.OriginRequestPolicyId, "b689b0a8-53d0-40ab-baf2-68738e2966ac");
 });
 
 test("the order function runs one at a time, behind IAM, and only it can read the key", () => {

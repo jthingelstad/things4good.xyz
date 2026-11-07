@@ -19,5 +19,6 @@
   "distributionId": "E2JXK2XX23KJDB",
   "cloudfrontDomain": "d2eanpst6detk1.cloudfront.net",
   "deploymentRoleArn": "arn:aws:iam::999153317627:role/things4good-delivery-DeploymentRole-J1Ov3XbFJjSu",
-  "certificateArn": "arn:aws:acm:us-east-1:999153317627:certificate/1b07ecfc-ae87-438b-b7ae-623602756271"
+  "certificateArn": "arn:aws:acm:us-east-1:999153317627:certificate/1b07ecfc-ae87-438b-b7ae-623602756271",
+  "ordersOriginDomain": "srqxaahe677ck77fky6775yw2i0ctwmp.lambda-url.us-east-1.on.aws"
 }

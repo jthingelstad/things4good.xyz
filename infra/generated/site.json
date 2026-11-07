@@ -185,30 +185,6 @@
         }
       }
     },
-    "OrderOriginRequest": {
-      "Type": "AWS::CloudFront::OriginRequestPolicy",
-      "Properties": {
-        "OriginRequestPolicyConfig": {
-          "Name": {
-            "Fn::Sub": "${AWS::StackName}-orders"
-          },
-          "CookiesConfig": {
-            "CookieBehavior": "none"
-          },
-          "QueryStringsConfig": {
-            "QueryStringBehavior": "none"
-          },
-          "HeadersConfig": {
-            "HeaderBehavior": "whitelist",
-            "Headers": [
-              "Content-Type",
-              "x-amz-content-sha256",
-              "CloudFront-Viewer-Address"
-            ]
-          }
-        }
-      }
-    },
     "OrderHeaders": {
       "Type": "AWS::CloudFront::ResponseHeadersPolicy",
       "Properties": {
@@ -357,9 +333,7 @@
               ],
               "Compress": true,
               "CachePolicyId": "658327ea-f89d-4fab-a63d-7e88639e58f6",
-              "OriginRequestPolicyId": {
-                "Ref": "OrderOriginRequest"
-              },
+              "OriginRequestPolicyId": "b689b0a8-53d0-40ab-baf2-68738e2966ac",
               "ResponseHeadersPolicyId": {
                 "Ref": "OrderHeaders"
               }

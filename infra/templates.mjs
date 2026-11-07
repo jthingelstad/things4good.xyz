@@ -23,6 +23,10 @@ const custom = (a, b) => ({ 'Fn::If': ['CustomDomain', a, b] });
 // AWS managed CachingOptimized: no cookies, headers or query strings in the key, so ?ref= and ?v= variants
 // share one cached copy; it honours the Cache-Control each object is uploaded with.
 const CACHING_OPTIMIZED = '658327ea-f89d-4fab-a63d-7e88639e58f6';
+// AWS managed AllViewerExceptHostHeader, meant for function URLs: the signature has to be for the URL's own
+// name, so no viewer Host. It carries x-amz-content-sha256, which a policy of our own can't list, and
+// CloudFront-Viewer-Address, used only for the service's rate limit and never logged.
+const ALL_VIEWER_EXCEPT_HOST = 'b689b0a8-53d0-40ab-baf2-68738e2966ac';
 
 const template = (Description, Resources, Outputs, extra = {}) => ({
   AWSTemplateFormatVersion: '2010-09-09',
@@ -152,22 +156,6 @@ export const site = template(
         }
       }
     },
-    // No Host: the signature has to be for the function URL's own name. The viewer's address is only for
-    // the service's rate limit, and it is never logged.
-    OrderOriginRequest: {
-      Type: 'AWS::CloudFront::OriginRequestPolicy',
-      Properties: {
-        OriginRequestPolicyConfig: {
-          Name: sub('${AWS::StackName}-orders'),
-          CookiesConfig: { CookieBehavior: 'none' },
-          QueryStringsConfig: { QueryStringBehavior: 'none' },
-          HeadersConfig: {
-            HeaderBehavior: 'whitelist',
-            Headers: ['Content-Type', 'x-amz-content-sha256', 'CloudFront-Viewer-Address']
-          }
-        }
-      }
-    },
     // The security headers without the site's open CORS: only the site's own page uses this API.
     OrderHeaders: {
       Type: 'AWS::CloudFront::ResponseHeadersPolicy',
@@ -230,7 +218,7 @@ export const site = template(
               CachedMethods: ['GET', 'HEAD'],
               Compress: true,
               CachePolicyId: CACHING_OPTIMIZED,
-              OriginRequestPolicyId: ref('OrderOriginRequest'),
+              OriginRequestPolicyId: ALL_VIEWER_EXCEPT_HOST,
               ResponseHeadersPolicyId: ref('OrderHeaders')
             }
           ],
