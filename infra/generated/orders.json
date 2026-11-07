@@ -26,6 +26,10 @@
         "false"
       ],
       "Default": "false"
+    },
+    "OrdersCauses": {
+      "Type": "String",
+      "Default": ""
     }
   },
   "Resources": {
@@ -162,6 +166,9 @@
             },
             "ORDERS_GOLDEN_TICKET": {
               "Ref": "OrdersGoldenTicket"
+            },
+            "ORDERS_CAUSES": {
+              "Ref": "OrdersCauses"
             },
             "SECRET_ID": {
               "Ref": "Secret"

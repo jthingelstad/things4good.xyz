@@ -74,13 +74,19 @@ if (name === 'orders') {
   // An open window needs a closing time with its offset, so it shuts on its own.
   if (isOpen(window) && !(/[+-]\d{2}:\d{2}$|Z$/.test(closes) && Date.parse(closes) > Date.now()))
     throw new Error(`site.json orders.closes must be a future time with its offset, like 2026-11-15T23:59:00-06:00`);
+  // The order form's checkboxes send these names, and the service takes only these.
+  const causes = JSON.parse(readFileSync('src/_data/causes.json', 'utf8')).list.map((cause) => cause.grist);
+  if (causes.some((name) => typeof name !== 'string' || !name || name.includes('|')))
+    throw new Error('Every cause in causes.json needs `grist`, its name in the Orders.Causes list, with no "|" in it');
   parameters = [
     { ParameterKey: 'DistributionId', ParameterValue: config.distributionId },
     { ParameterKey: 'OrdersWindow', ParameterValue: window },
     { ParameterKey: 'OrdersCloses', ParameterValue: closes },
-    { ParameterKey: 'OrdersGoldenTicket', ParameterValue: goldenTicket === true ? 'true' : 'false' }
+    { ParameterKey: 'OrdersGoldenTicket', ParameterValue: goldenTicket === true ? 'true' : 'false' },
+    { ParameterKey: 'OrdersCauses', ParameterValue: causes.join('|') }
   ];
   console.log(`Orders: ${window}${isOpen(window) ? ` until ${closes}` : ''}${goldenTicket === true ? ', Golden Tickets on' : ', Golden Tickets off'} (site.json orders)`);
+  console.log(`Causes: ${causes.join(', ')} (causes.json)`);
 }
 if (name === 'delivery') {
   const site = outputs(await describe(config.stacks.site));
