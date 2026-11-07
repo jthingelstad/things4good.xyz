@@ -30,10 +30,10 @@ The {{ site.saleYear }} sale is {{ site.saleDates | safe }} in Minneapolis. Buye
 
 ## The {{ site.saleYear }} candles
 
-Each scent is a ${{ site.pricePerCandle }} donation.
+Each scent is a ${{ site.pricePerCandle }} donation unless noted.
 
 {% for scent in candles.scents -%}
-- {{ scent.name | safe }}{% if scent.xl %} (also XL, ${{ candles.xlDonation }}){% endif %}: {{ scent.description | safe }}
+- {{ scent.name | safe }}{% if scent.xl %} (also XL, ${{ candles.xlDonation }}){% endif %}{% if scent.makerNight %} (${{ site.makerNightDonation }}, with a Maker Night seat){% endif %}: {{ scent.description | safe }}
 {% endfor %}
 {%- if candles.secretScents %}- A couple of new scents are held back until the sale.
 {% endif -%}
