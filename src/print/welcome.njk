@@ -20,6 +20,15 @@ permalink: /print/welcome/
   .labels { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.12in; }
   .labels div { height: 1.02in; background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 6px; }
   .labels img { display: block; width: 100%; height: 100%; object-fit: contain; }
+  /* Printed, the biggest pieces scale with the page height (100vh is the page area in print), so a
+     browser that prints with wider margins than ours still gets the whole sign on one page. */
+  @media print {
+    .hello .hand { font-size: min(130pt, 17vh); }
+    .line { padding-top: min(0.2in, 1.9vh); padding-bottom: min(0.2in, 1.9vh); }
+    .line .n { width: min(0.95in, 9.2vh); height: min(0.95in, 9.2vh); }
+    .line h2 { font-size: min(40pt, 5.4vh); }
+    .labels div { height: min(1.02in, 9.6vh); }
+  }
   .cap { margin-top: 0.08in; text-align: center; font-size: 17pt; color: var(--pine-d); }
 {% endblock %}
 

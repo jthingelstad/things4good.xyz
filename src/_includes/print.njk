@@ -39,7 +39,9 @@
   @media print {
     body { background: none; }
     .tip { display: none; }
-    .page { width: auto; height: 10.05in; margin: 0; padding: 0; box-shadow: none; }
+    /* 100vh is the page area when printing, so the sheet fits whatever margins the browser or
+       printer uses rather than assuming ours; every sign is checked at 0.4, 0.6 and 0.75in. */
+    .page { width: auto; height: 100vh; margin: 0; padding: 0; box-shadow: none; overflow: hidden; }
   }
 
   .head { padding: 0 0 0.22in; }
