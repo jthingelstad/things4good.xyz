@@ -9,6 +9,7 @@ import {
   formatMobile,
   gristStore,
   LIMITS,
+  toSeats,
   toStock,
   turnstileVerifier
 } from '../infra/order-service.mjs';
@@ -396,6 +397,10 @@ test('input limits', async () => {
     [{ email: `${'x'.repeat(LIMITS.email)}@example.com` }, 'email'],
     [{ mobile: 'call me maybe' }, 'mobile'],
     [{ mobile: '1'.repeat(LIMITS.mobile + 1) }, 'mobile'],
+    [{ mobile: '' }, 'mobile'],
+    [{ mobile: undefined }, 'mobile'],
+    [{ mobile: '+()' }, 'mobile'],
+    [{ mobile: '555-01' }, 'mobile'],
     [{ fulfillment: 'Carrier pigeon' }, 'fulfillment'],
     [{ note: 'x'.repeat(LIMITS.note + 1) }, 'note'],
     [{ items: [] }, 'items'],
@@ -488,7 +493,8 @@ test('anything else is a 405, never a 403 or 404 that CloudFront would turn into
     get('/api/nope'),
     get('/api/order'),
     { rawPath: '/api/stock', requestContext: { http: { method: 'POST' } }, headers: {}, body: '{}' },
-    { rawPath: '/api/order', requestContext: { http: { method: 'OPTIONS' } }, headers: {} }
+    { rawPath: '/api/order', requestContext: { http: { method: 'OPTIONS' } }, headers: {} },
+    { rawPath: '/api/seats', requestContext: { http: { method: 'POST' } }, headers: {}, body: '{}' }
   ])
     assert.equal((await service.handle(event)).statusCode, 405);
 });
@@ -500,6 +506,38 @@ test('a Grist failure on stock is a retryable 503 and an error in the logs', asy
   assert.equal(response.headers['cache-control'], 'no-store');
   assert.ok(logs.some((entry) => entry.level === 'error'));
   assert.deepEqual(naps, []); // Only an order waits out the floor.
+});
+
+test('seats: the Golden Ticket count in every window, cached a few minutes, nothing about any buyer', async () => {
+  for (const orders of [CLOSED, PREORDER, AFTER, { window: 'paused' }]) {
+    const { service, store } = setup({ orders });
+    const response = await service.handle(get('/api/seats'));
+    assert.equal(response.statusCode, 200);
+    assert.deepEqual(parse(response), { event: '2026 Candle Sale', total: 6, left: 6 });
+    assert.match(response.headers['cache-control'], /s-maxage=300/);
+    assert.deepEqual(store.state.calls, ['readStock']);
+  }
+  // An order for two takes two seats: the count is the one the form sells against.
+  const { service } = setup();
+  await service.handle(post(order({ items: [{ product: 15, quantity: 2 }] })));
+  assert.deepEqual(parse(await service.handle(get('/api/seats'))), { event: '2026 Candle Sale', total: 6, left: 4 });
+});
+
+test('seats: Made + Adjustment is the total, never below zero left, and none without a Golden Ticket', () => {
+  const ticket = ROWS.find((row) => row.type === 'Maker Night candle');
+  assert.deepEqual(toSeats([{ ...ticket, adjustment: -1, sold: 2 }]), { event: '2026 Candle Sale', total: 5, left: 3 });
+  assert.deepEqual(toSeats([{ ...ticket, sold: 9 }]), { event: '2026 Candle Sale', total: 6, left: 0 });
+  assert.deepEqual(toSeats(ROWS.filter((row) => row !== ticket)), { event: '2026 Candle Sale', total: null, left: null });
+  assert.deepEqual(toSeats([]), { event: null, total: null, left: null });
+  assert.throws(() => toSeats([ticket, { ...ticket, id: 99 }]), /more than one Golden Ticket/);
+});
+
+test('a Grist failure on seats is a retryable 503, never cached', async () => {
+  const { service, logs } = setup({ fail: { readStock: true } });
+  const response = await service.handle(get('/api/seats'));
+  assert.equal(response.statusCode, 503);
+  assert.equal(response.headers['cache-control'], 'no-store');
+  assert.ok(logs.some((entry) => entry.level === 'error'));
 });
 
 test('the self-check reads stock and writes nothing, open or closed', async () => {

@@ -4,6 +4,8 @@
 //   GET  /api/stock   the order window, and what can be ordered at the current event: products, prices,
 //                     quantities. No buyer data.
 //   POST /api/order   validate, re-read stock from Grist, write the order, return the total.
+//   GET  /api/seats   Maker Night seats left (the Golden Ticket's count), in every window, for the
+//                     workflow that keeps the Maker Night page's count. No buyer data.
 //
 // The order windows (Jamie, 2026-11-07) make the sale two weeks long. Orders open about a week before
 // the sale and take candles ahead of what is poured; they pause while the sale runs, because counts
@@ -83,9 +85,9 @@ export function currentWindow({ window, closes } = {}, at = Date.now()) {
   return at < Date.parse(closes) ? window : AFTERWARDS[window];
 }
 
-// The form sells everything the current event offers (Jamie, 2026-11-07: "a full sales order method"),
-// except the Golden Ticket until goldenTicket is on, because the Maker Night page's seat count doesn't
-// follow Grist yet. Left is Made + Adjustment - Sold, never below zero. `limit` is the most one order can
+// The form sells everything the current event offers (Jamie, 2026-11-07: "a full sales order method").
+// The Golden Ticket is behind goldenTicket, which went on once the Maker Night page's seat count followed
+// Grist (toSeats). Left is Made + Adjustment - Sold, never below zero. `limit` is the most one order can
 // take: what is left, at most 24, and at most two Golden Tickets. A preorder candle has no count (left is
 // null), since it is poured to order. Nothing about any buyer is in here: Sold is one number per product.
 export function toStock(rows, { window = 'after', goldenTicket = false } = {}) {
@@ -109,6 +111,18 @@ export function toStock(rows, { window = 'after', goldenTicket = false } = {}) {
   return { eventId: rows[0]?.eventId ?? null, event: rows[0]?.event ?? null, products };
 }
 
+// The Maker Night seat count, for the page that shows it: the Golden Ticket's Left, the same number the
+// form sells against, and Made + Adjustment as the total. Null when the current event has no Golden Ticket.
+// Never more than one row, so the page can't add up two by mistake.
+export function toSeats(rows) {
+  const tickets = rows.filter((row) => row.type === MAKER_NIGHT);
+  if (tickets.length > 1) throw new StepError('seats', 'more than one Golden Ticket');
+  const [ticket] = tickets;
+  if (!ticket) return { event: rows[0]?.event ?? null, total: null, left: null };
+  const total = (Number(ticket.made) || 0) + (Number(ticket.adjustment) || 0);
+  return { event: ticket.event, total, left: Math.max(0, total - (Number(ticket.sold) || 0)) };
+}
+
 export function validate(body) {
   const errors = [];
   const requestId = typeof body.requestId === 'string' ? body.requestId : '';
@@ -118,7 +132,10 @@ export function validate(body) {
   const email = clean(body.email).toLowerCase();
   if (email.length > LIMITS.email || !EMAIL.test(email)) errors.push('email');
   const mobile = formatMobile(body.mobile);
-  if (mobile.length > LIMITS.mobile || (mobile && !/^[\d\s()+.-]+$/.test(mobile))) errors.push('mobile');
+  // Required, so the family can follow up (Jamie, 2026-11-07: "helpful for followup"). Seven
+  // digits at least, so a stray "+" or "()" isn't taken for a number.
+  if (mobile.length > LIMITS.mobile || !/^[\d\s()+.-]+$/.test(mobile) || mobile.replace(/\D/g, '').length < 7)
+    errors.push('mobile');
   if (!FULFILLMENT.has(body.fulfillment)) errors.push('fulfillment');
   const note = clean(body.note);
   if (note.length > LIMITS.note) errors.push('note');
@@ -366,7 +383,11 @@ export function createService({
     const path = event.rawPath;
     const isStock = path === '/api/stock' && (method === 'GET' || method === 'HEAD');
     const isOrder = path === '/api/order' && method === 'POST';
-    if (!isStock && !isOrder) return { response: json(405, { error: 'not-allowed' }), route: 'other', outcome: 'not-allowed' };
+    const isSeats = path === '/api/seats' && (method === 'GET' || method === 'HEAD');
+    if (!isStock && !isOrder && !isSeats) return { response: json(405, { error: 'not-allowed' }), route: 'other', outcome: 'not-allowed' };
+    // Seats answer in every window: the Maker Night page counts them down long after orders shut, and
+    // the count is one number with nothing about any buyer.
+    if (isSeats) return { response: json(200, toSeats(await store.readStock()), STOCK_CACHE), route: 'seats', outcome: 'ok' };
     // Read per request, so a window closes on time with no deploy. Closed answers before any call to Grist.
     const window = currentWindow(orders, now());
     if (!isOpen(window)) return { response: json(503, { open: false, window }), route: isStock ? 'stock' : 'order', outcome: 'closed' };
@@ -393,7 +414,8 @@ export function createService({
         const outcome = error.step === 'turnstile' ? 'turnstile-failed' : 'grist-failed';
         log({ level: 'error', outcome, step: error.step ?? 'unknown', status: error.status, codes: error.codes });
         const isOrder = event.requestContext?.http?.method === 'POST';
-        result = { response: json(503, { error: 'try-again' }), route: isOrder ? 'order' : 'stock', outcome, floor: isOrder };
+        const failed = isOrder ? 'order' : event.rawPath === '/api/seats' ? 'seats' : 'stock';
+        result = { response: json(503, { error: 'try-again' }), route: failed, outcome, floor: isOrder };
       }
       if (result.floor) {
         const wait = floorMs - (now() - started);

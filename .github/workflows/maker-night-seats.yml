@@ -1,17 +1,16 @@
-name: Maker Night seats sold
+name: Maker Night seats from Grist
 
-# Jamie runs this from the GitHub app or github.com whenever a Maker Night candle sells: pick the
-# number sold so far, and it updates src/_data/makerNightSeats.json on main and redeploys the site.
-# A push made with GITHUB_TOKEN does not start other workflows, so this one starts the deploy itself.
+# The Maker Night page counts seats down from src/_data/makerNightSeats.json, and since 2026-11-07 that
+# count follows Grist (Jamie: "make the Maker Night seat count follow Grist"). Every 15 minutes this reads
+# the Golden Ticket's count from the order service (GET /api/seats, the same Left the order form sells
+# against) with scripts/maker-night-seats.mjs. When it has changed, it commits the file to main and starts
+# the deploy itself, because a push made with GITHUB_TOKEN starts no other workflow. Run it by hand to
+# sync now. A sale on a paper sheet counts once the sheet is entered in Grist.
 
 on:
+  schedule:
+    - cron: '7,22,37,52 * * * *'
   workflow_dispatch:
-    inputs:
-      sold:
-        description: "Maker Night seats sold so far"
-        required: true
-        type: choice
-        options: ["0", "1", "2", "3", "4", "5", "6"]
 
 permissions:
   contents: write
@@ -22,43 +21,31 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  set-seats:
+  sync:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v7
         with:
           ref: main
-      - name: Write the count
-        env:
-          SOLD: ${{ inputs.sold }}
-        run: |
-          node -e '
-            const fs = require("node:fs");
-            const file = "src/_data/makerNightSeats.json";
-            const data = JSON.parse(fs.readFileSync(file, "utf8"));
-            const sold = Number(process.env.SOLD);
-            if (!Number.isInteger(sold) || sold < 0 || sold > data.total) throw new Error(`sold must be 0 to ${data.total}, got ${process.env.SOLD}`);
-            data.sold = sold;
-            fs.writeFileSync(file, JSON.stringify(data, null, 2) + "\n");
-            console.log(`Maker Night: ${sold} of ${data.total} sold, ${data.total - sold} left`);
-          '
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+      - name: Read the count from Grist
+        id: seats
+        run: node scripts/maker-night-seats.mjs
       - name: Commit and push
         id: push
+        if: steps.seats.outputs.changed == 'true'
         run: |
-          if git diff --quiet; then
-            echo "Already at ${{ inputs.sold }} sold; nothing to change."
-            echo "changed=false" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
+          left=$(node -p 'const s = require("./src/_data/makerNightSeats.json"); s.total - s.sold')
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit -am "Maker Night: ${{ inputs.sold }} seats sold"
+          git commit -am "Maker Night: ${left} seats left, from Grist"
           git pull --rebase origin main
           git push origin HEAD:main
-          echo "changed=true" >> "$GITHUB_OUTPUT"
       - name: Deploy
-        if: steps.push.outputs.changed == 'true'
+        if: steps.seats.outputs.changed == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh workflow run deploy.yml --ref main --repo "${{ github.repository }}"
