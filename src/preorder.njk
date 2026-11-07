@@ -1,10 +1,10 @@
 ---
 title: Preorder & Pickup — Things 4 Good
-description: Preorder six or more Things 4 Good candles and pick them up anytime at the sale. Fill out the form and Jamie emails you a payment link.
+description: Order Things 4 Good candles online before the sale and pick them up anytime at the sale, or have them delivered at SPS. How ordering, pickup and payment work.
 card:
   kicker: "Sale logistics"
   name: "Preorder, pickup, and payment."
-  summary: "Ordering six or more? Reserve them, pick them up at the sale, and pay however is easiest."
+  summary: "Order online before the sale, pick them up at the sale, and pay however is easiest."
   photo: preorder
 ---
 {% extends "base.njk" %}
@@ -18,7 +18,7 @@ card:
     <a class="back-link" href="/">&larr; Things 4 Good</a>
     <p class="eyebrow">Sale logistics</p>
     <h1 style="font-family:var(--serif);font-weight:500;font-size:clamp(2.4rem,5.4vw,4rem);letter-spacing:-.02em;line-height:1.02;max-width:18ch">Preorder, pickup, and payment.</h1>
-    <p class="lead" style="margin-top:18px">{% if site.preorderSheet %}The {{ site.saleYear }} preorder form is open. Pick your scents, and Jamie will email you a payment link once your order is in.{% else %}When the {{ site.saleYear }} candle lineup is ready, we&rsquo;ll send preorder timing, pickup notes and payment options to Candle Fundraiser subscribers first.{% endif %}</p>
+    <p class="lead" style="margin-top:18px">{% if orders.preorder %}Online orders for the {{ site.saleYear }} sale are open through {{ orders.closesDay }}. Pick your scents, send your donation, and pick them up at the sale.{% elif orders.after %}The {{ site.saleYear }} sale is over, and the candles we have left are online through {{ orders.closesDay }}.{% elif orders.paused %}Online orders are paused while we run the sale and count what&rsquo;s left. They reopen {{ orders.reopens or "soon" }} with whatever we have.{% else %}Online orders open about a week before the fall sale. Candle Fundraiser subscribers hear first.{% endif %}</p>
   </div>
 </section>
 
@@ -26,18 +26,18 @@ card:
 <section class="section" id="preorder" style="padding-top:clamp(20px,3vw,32px)">
   <div class="wrap">
     <div class="sec-head reveal">
-      <p class="eyebrow">Preorder &middot; six or more</p>
-      <h2 class="t">Planning a bigger order?</h2>
-      <p class="lead">Many people buy candles as gifts, so we tend to see some larger orders. Ordering <b style="color:var(--ink)">six or more</b>? {% if site.preorderSheet %}The <a href="{{ site.preorderSheet }}" data-tinylytics-event="preorder.sheet" data-tinylytics-event-value="preorder-head" target="_blank" rel="noopener" style="color:var(--marigold-d);font-weight:600;text-decoration:none">preorder form</a> is open.{% else %}The preorder sheet opens closer to the sale, and subscribers get it first.{% endif %} Just getting a couple? Come by the sale, no preorder needed. XL candles and the new scents we&rsquo;re saving are only at the sale.</p>
+      <p class="eyebrow">Order ahead</p>
+      <h2 class="t">Order before the sale.</h2>
+      <p class="lead">Lots of people buy candles as gifts, and ordering ahead sets your scents aside before anything sells out. {% if orders.preorder %}The <a href="/order/" data-tinylytics-event="order.link" data-tinylytics-event-value="preorder-head" style="color:var(--marigold-d);font-weight:600;text-decoration:none">order form</a> is open through {{ orders.closesDay }}.{% else %}Online orders open about a week before the sale, and subscribers hear first.{% endif %} Just getting a couple? Come by the sale, no order needed.{% if orders.candlesOnly %} XL candles, lids and the Golden Ticket are only at the sale.{% endif %}</p>
     </div>
 
     <div class="steps">
       <div class="step reveal">
         <div class="num">1</div>
-        {% if site.preorderSheet %}<h3>Fill out the form</h3>
-        <p>Choose your scents and how many of each, and leave your name, email and phone. Maker Night candles are at the bottom.</p>
-        {% else %}<h3>Watch for the sheet</h3>
-        <p>We&rsquo;ll send the preorder sheet to subscribers once scents, hours, and pickup details are locked in.</p>{% endif %}
+        {% if orders.preorder %}<h3>Order online</h3>
+        <p>Choose your scents and how many of each, and leave your name and email. Then send your donation the way that&rsquo;s easiest.</p>
+        {% else %}<h3>Watch for the email</h3>
+        <p>We&rsquo;ll tell Candle Fundraiser subscribers when online orders open, about a week before the sale.</p>{% endif %}
       </div>
       <div class="step alt reveal">
         <div class="num">2</div>
@@ -47,22 +47,22 @@ card:
       <div class="step reveal">
         <div class="num">3</div>
         <h3>Pick up at the sale</h3>
-        <p>Collect your preorder anytime during the sale, <b>{{ site.saleDates | safe }}</b>. The form stays open until the sale ends. Preorder donations are divided evenly across the four causes. {% if site.preorderSheet %}Jamie emails you a payment link once your order is confirmed.{% else %}Payment options are confirmed with the sale details.{% endif %}</p>
+        <p>Collect your order anytime during the sale, <b>{{ site.saleDates | safe }}</b>, or have it delivered at work if you&rsquo;re on the SPS team. Online orders are divided evenly across the four causes.</p>
       </div>
     </div>
 
     <div class="mn-band reveal" style="margin-top:clamp(28px,4vw,40px)">
       <div class="glow" aria-hidden="true"></div>
       <div class="mn-copy">
-        <span class="tag">{% if site.preorderSheet %}Preorder form &middot; open now{% else %}Preorder sheet{% endif %}</span>
+        <span class="tag">{% if orders.open %}Order form &middot; open through {{ orders.closesDay }}{% else %}Order form{% endif %}</span>
         <h3>Ready to order?</h3>
-        <p>{% if site.preorderSheet %}Pick your scents, and we&rsquo;ll email a payment link.{% else %}The sheet opens closer to the sale and goes out to Candle Fundraiser subscribers first.{% endif %} Best for six or more, picked up anytime at the sale.</p>
+        <p>{% if orders.preorder %}Pick your scents and send your donation, and we&rsquo;ll have them ready at the sale.{% elif orders.after %}The candles left from the sale are online, for pickup or SPS delivery.{% else %}Online orders open about a week before the sale and for a week after it. Subscribers hear first.{% endif %}</p>
       </div>
       <div class="mn-act">
-        {% if site.preorderSheet %}
-        <a class="btn btn--primary" href="{{ site.preorderSheet }}" data-tinylytics-event="preorder.sheet" data-tinylytics-event-value="preorder-steps" target="_blank" rel="noopener">Open the preorder form <span class="arr">&rarr;</span></a>
+        {% if orders.open %}
+        <a class="btn btn--primary" href="/order/" data-tinylytics-event="order.link" data-tinylytics-event-value="preorder-steps">Open the order form <span class="arr">&rarr;</span></a>
         {% else %}
-        <a class="btn btn--primary" href="{{ site.updatesUrl }}" data-tinylytics-event="updates.click" data-tinylytics-event-value="preorder-steps" target="_blank" rel="noopener">Get preorder updates <span class="arr">&rarr;</span></a>
+        <a class="btn btn--primary" href="{{ site.updatesUrl }}" data-tinylytics-event="updates.click" data-tinylytics-event-value="preorder-steps" target="_blank" rel="noopener">Get order updates <span class="arr">&rarr;</span></a>
         {% endif %}
         <span class="small">Or email <a href="mailto:{{ site.email }}" style="color:var(--marigold);font-weight:700">{{ site.email }}</a></span>
       </div>
@@ -76,14 +76,14 @@ card:
     <div class="sec-head reveal">
       <p class="eyebrow">How to pay</p>
       <h2 class="t">Send your donation.</h2>
-      <p class="lead">Each candle is a <b style="color:var(--ink)">$25 donation</b>. Pay whatever way is easiest. Venmo is the most popular. On a phone, tap to open the app. On a computer, scan a code. Preorders pay once Jamie confirms the order.</p>
+      <p class="lead">Each candle is a <b style="color:var(--ink)">$25 donation</b>. Pay whatever way is easiest. Venmo is the most popular. On a phone, tap to open the app. On a computer, scan a code. For an online order, please send it soon after you order.</p>
     </div>
 
     {% include "payment-methods.njk" %}
 
     <div class="good-note reveal" style="margin-top:clamp(28px,4vw,40px)">
       <span class="hand" style="font-size:1.7rem">100% &mdash; for real.</span>
-      <span style="font-weight:500;color:var(--pine-d)">We pay for the materials ourselves, so everything you send becomes a donation. Preorders are divided evenly across this year&rsquo;s four causes. Choosing your own split is for purchases at the sale.</span>
+      <span style="font-weight:500;color:var(--pine-d)">We pay for the materials ourselves, so everything you send becomes a donation. Online orders are divided evenly across this year&rsquo;s four causes. Choosing your own split is for purchases at the sale.</span>
     </div>
 
     <div class="sumstrip reveal" style="margin-top:clamp(22px,3vw,32px)">

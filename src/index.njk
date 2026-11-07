@@ -22,7 +22,7 @@ card:
         <br /><span class="pine">100% for good.</span></h1>
       <p class="lead">Every fall our family pours hundreds of wooden-wick candles and sells them over one weekend to raise money for good causes. We&rsquo;ve done this since 2021. Each candle is a <b style="color:var(--ink)">$25 donation</b> and all of it goes to the non-profits!</p>
       <div class="hero-cta">
-        {% if site.preorderSheet %}<a class="btn btn--primary" href="{{ site.preorderSheet }}" data-tinylytics-event="preorder.sheet" data-tinylytics-event-value="home-hero" target="_blank" rel="noopener">Preorder candles <span class="arr">&rarr;</span></a>
+        {% if orders.open %}<a class="btn btn--primary" href="/order/" data-tinylytics-event="order.link" data-tinylytics-event-value="home-hero">{{ "Preorder candles" if orders.preorder else "Order candles" }} <span class="arr">&rarr;</span></a>
         <a class="btn btn--ghost" href="/candles/">See the scents</a>{% else %}<a class="btn btn--primary" href="{{ site.updatesUrl }}" data-tinylytics-event="updates.click" data-tinylytics-event-value="home-hero" target="_blank" rel="noopener">Get sale updates <span class="arr">&rarr;</span></a>
         <a class="btn btn--ghost" href="#good">See the impact</a>{% endif %}
       </div>
@@ -146,8 +146,8 @@ card:
           </div>
         </div>
         <div class="info-row">
-          <div class="k">Preorders</div>
-          <div class="v">Ordering <b>six or more</b>? {% if site.preorderSheet %}Fill out our <a href="{{ site.preorderSheet }}" data-tinylytics-event="preorder.sheet" data-tinylytics-event-value="home-next" target="_blank" rel="noopener" style="color:var(--marigold-d);font-weight:600;text-decoration:none">preorder form</a> and we&rsquo;ll have them ready to pick up anytime during the sale.{% else %}The preorder sheet opens closer to the sale and goes to subscribers first. <a href="/preorder/" style="color:var(--marigold-d);font-weight:600;text-decoration:none">See preorder &amp; pickup notes</a>.{% endif %}</div>
+          <div class="k">{{ "Order online" if orders.after else "Preorders" }}</div>
+          <div class="v">{% if orders.preorder %}Buying for gifts, or want your scents set aside? <a href="/order/" data-tinylytics-event="order.link" data-tinylytics-event-value="home-next" style="color:var(--marigold-d);font-weight:600;text-decoration:none">Order online</a> through {{ orders.closesDay }} and we&rsquo;ll have them ready to pick up anytime during the sale.{% elif orders.after %}The sale is over, and the candles we have left are <a href="/order/" data-tinylytics-event="order.link" data-tinylytics-event-value="home-next" style="color:var(--marigold-d);font-weight:600;text-decoration:none">online</a> through {{ orders.closesDay }}.{% else %}Online orders open about a week before the sale, and subscribers hear first. <a href="/preorder/" style="color:var(--marigold-d);font-weight:600;text-decoration:none">See how ordering works</a>.{% endif %}</div>
         </div>
         <div class="info-row">
           <div class="k">Scents</div>
@@ -298,7 +298,7 @@ card:
       <a class="path-card reveal" href="/preorder/">
         <span class="kicker">Preorder</span>
         <h3>Preorder and pickup.</h3>
-        <p>Ordering six or more? Here&rsquo;s how preorders, pickup and payment work.</p>
+        <p>How ordering ahead, pickup and payment work.</p>
         <span class="go">Pickup details <span class="arr">&rarr;</span></span>
       </a>
       <a class="path-card reveal" href="/faq/">

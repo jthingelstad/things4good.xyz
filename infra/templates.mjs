@@ -458,7 +458,14 @@ export const orders = template(
         ReservedConcurrentExecutions: 1,
         Role: get('Role', 'Arn'),
         LoggingConfig: { LogFormat: 'JSON', LogGroup: ref('Logs') },
-        Environment: { Variables: { ORDERS_OPEN: ref('OrdersOpen'), SECRET_ID: ref('Secret') } },
+        Environment: {
+          Variables: {
+            ORDERS_WINDOW: ref('OrdersWindow'),
+            ORDERS_CLOSES: ref('OrdersCloses'),
+            ORDERS_CANDLES_ONLY: ref('OrdersCandlesOnly'),
+            SECRET_ID: ref('Secret')
+          }
+        },
         // A stub until `npm run infra -- orders` uploads the code. CloudFormation leaves the uploaded code
         // alone as long as this text does not change.
         Code: {
@@ -547,7 +554,10 @@ export const orders = template(
   {
     Parameters: {
       DistributionId: { Type: 'String' },
-      OrdersOpen: { Type: 'String', AllowedValues: ['true', 'false'], Default: 'false' }
+      // site.json's orders, through npm run infra -- orders. See currentWindow in order-service.mjs.
+      OrdersWindow: { Type: 'String', AllowedValues: ['preorder', 'paused', 'after', 'closed'], Default: 'closed' },
+      OrdersCloses: { Type: 'String', Default: '' },
+      OrdersCandlesOnly: { Type: 'String', AllowedValues: ['true', 'false'], Default: 'false' }
     }
   }
 );

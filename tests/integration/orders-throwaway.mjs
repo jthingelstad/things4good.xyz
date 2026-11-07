@@ -50,10 +50,14 @@ const setStock = (updates) =>
 // Turnstile and Buttondown have their own unit tests; this file is about Grist.
 const passes = async () => ({ ok: true, codes: [] });
 
+// Windows open well past this run.
+const AFTER = { window: 'after', closes: '2099-01-01T00:00:00-06:00' };
+const PREORDER = { window: 'preorder', closes: '2099-01-01T00:00:00-06:00', candlesOnly: true };
+
 let offerings; // Product name -> { offering, product, sold }.
 let store;
 const newService = (overrides = {}) =>
-  createService({ store, verify: passes, open: true, floorMs: 0, sleep: async () => {}, log: () => {}, ...overrides });
+  createService({ store, verify: passes, orders: AFTER, floorMs: 0, sleep: async () => {}, log: () => {}, ...overrides });
 
 const stockEvent = { rawPath: '/api/stock', requestContext: { http: { method: 'GET' } }, headers: {} };
 let address = 0;
@@ -129,7 +133,7 @@ test('the copy really is a copy, and the guard would stop a write to the live do
   await assert.rejects(guardedFetch(`${API}/docs/${LIVE_DOC}/tables/Orders/records`, { method: 'POST', body: '{}' }), /live document/);
 });
 
-test('stock has no buyer data, and leaves out the Golden Ticket and anything with none left', async () => {
+test('stock after the sale has no buyer data, caps Golden Tickets at two an order, and leaves out anything with none left', async () => {
   const response = await newService().handle(stockEvent);
   assert.equal(response.statusCode, 200);
   assert.match(response.headers['cache-control'], /s-maxage=/);
@@ -137,12 +141,15 @@ test('stock has no buyer data, and leaves out the Golden Ticket and anything wit
   assert.match(event, /Candle Sale/);
   const names = products.map((p) => p.name);
   assert.ok(names.includes('True North'));
-  assert.ok(!names.includes('Golden Ticket'));
+  assert.deepEqual(
+    (({ left, limit }) => ({ left, limit }))(products.find((p) => p.name === 'Golden Ticket')),
+    { left: 6, limit: 2 }
+  );
   assert.ok(!names.includes('Charcoal Rose XL'));
   assert.equal(products.find((p) => p.name === 'Winter Wonderland XL').left, 1);
   assert.equal(products.find((p) => p.name === 'True North').left, 40);
   assert.equal(products.find((p) => p.name === 'True North').price, 25);
-  for (const product of products) assert.deepEqual(Object.keys(product).sort(), ['id', 'left', 'name', 'price', 'type']);
+  for (const product of products) assert.deepEqual(Object.keys(product).sort(), ['id', 'left', 'limit', 'name', 'price', 'type']);
   // Nothing in it matches an email address or a phone number.
   assert.ok(!/@|\(\d{3}\)/.test(response.body));
 });
@@ -255,14 +262,30 @@ test('the spam trap writes nothing', async () => {
   assert.deepEqual(await counts(), before);
 });
 
-test('an unknown product and the Golden Ticket are refused, and nothing is written', async () => {
+test('an unknown product, and the Golden Ticket under candlesOnly, are refused, and nothing is written', async () => {
   const before = await counts();
-  for (const product of [999999, offerings['Golden Ticket'].product]) {
-    const response = await newService().handle(orderEvent(buyer({ items: [{ product, quantity: 1 }] })));
+  for (const [orders, product] of [[AFTER, 999999], [PREORDER, offerings['Golden Ticket'].product]]) {
+    const response = await newService({ orders }).handle(orderEvent(buyer({ items: [{ product, quantity: 1 }] })));
     assert.equal(response.statusCode, 422);
     assert.equal(JSON.parse(response.body).error, 'unknown-product');
   }
   assert.deepEqual(await counts(), before);
+});
+
+test('a preorder: regular candles past what is poured, written as a Preorder', async () => {
+  const service = newService({ orders: PREORDER });
+  const stock = JSON.parse((await service.handle(stockEvent)).body);
+  assert.equal(stock.window, 'preorder');
+  assert.ok(stock.products.length > 0 && stock.products.every((p) => p.type === 'Candle' && p.left === null && p.limit === 24));
+  // Tea Time has 20 left on the copy.
+  const typed = buyer({ items: [{ product: offerings['Tea Time'].product, quantity: 24 }] });
+  const response = await service.handle(orderEvent(typed));
+  assert.equal(response.statusCode, 200);
+  assert.deepEqual(JSON.parse(response.body), { ok: true, total: 600 });
+  const row = await orderRow(typed.requestId);
+  assert.equal(row.Order_Type, 'Preorder');
+  assert.equal(row.Total, 600);
+  assert.ok(!row.Paid);
 });
 
 test('a known email: linked, details kept, blanks filled, and the answer looks just like a new one', async () => {
@@ -293,7 +316,7 @@ test('when the lines fail the order and the new person come back out', async () 
   const before = await counts();
   const failing = { ...store, addLines: async () => { throw Object.assign(new Error('boom'), { step: 'add-lines' }); } };
   const logged = [];
-  const service = createService({ store: failing, verify: passes, open: true, floorMs: 0, sleep: async () => {}, log: (entry) => logged.push(entry) });
+  const service = createService({ store: failing, verify: passes, orders: AFTER, floorMs: 0, sleep: async () => {}, log: (entry) => logged.push(entry) });
   const typed = buyer({ items: [{ product: offerings['True North'].product, quantity: 1 }] });
   const response = await service.handle(orderEvent(typed));
   assert.equal(response.statusCode, 503);

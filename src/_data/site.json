@@ -3,8 +3,13 @@
   "email": "jamie@thingelstad.com",
   "saleDates": "Nov 7–8, 2026",
   "saleYear": "2026",
-  "preorderSheet": "https://forms.gle/ojUBX58sVNTwvLKh8",
-  "orderForm": false,
+  "orders": {
+    "window": "preorder",
+    "closes": "2026-11-08T23:59:00-06:00",
+    "candlesOnly": true,
+    "saleEnds": "2026-11-08T23:59:00-06:00",
+    "reopens": ""
+  },
   "turnstileSiteKey": "0x4AAAAAAF3cyMZFaHMqAxmY",
   "payment": {
     "venmo": "jthingelstad",

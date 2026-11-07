@@ -1,10 +1,10 @@
 ---
 title: Order candles — Things 4 Good
-description: Order the Things 4 Good candles left after the sale, for pickup or SPS delivery. 100% goes to this year's four causes.
+description: Order Things 4 Good candles online, for pickup or SPS delivery. Before the sale, order ahead; after it, order what's left. 100% goes to this year's four causes.
 ---
 {% extends "base.njk" %}
 
-{# Hidden until Jamie turns it on: site.json's orderForm gates this page (order.11tydata.js gives it no URL when off) and the service behind it (npm run infra -- orders). Stock and prices come from /api/stock, never from this file. #}
+{# site.json's orders sets the window for this page (orders.js) and for the service behind it (npm run infra -- orders). Shut, the page says why and never calls the service. Open, it asks /api/stock, and believes the service's window over this build's: a window closes at its minute, before any rebuild. Stock and prices come only from /api/stock. #}
 
 {% block content %}
 
@@ -12,16 +12,46 @@ description: Order the Things 4 Good candles left after the sale, for pickup or 
   <div class="hero-glow" aria-hidden="true"></div>
   <div class="wrap">
     <a class="back-link" href="/">&larr; Things 4 Good</a>
-    <p class="eyebrow">After the sale</p>
-    <h1 style="font-family:var(--serif);font-weight:500;font-size:clamp(2.4rem,5.4vw,4rem);letter-spacing:-.02em;line-height:1.02;max-width:18ch">Order the candles we have left.</h1>
-    <p class="lead" style="margin-top:18px">The {{ site.saleYear }} sale is over and we still have some candles. Pick what you&rsquo;d like, then pick them up or, if you&rsquo;re on the SPS team, have them delivered at work. Online orders are divided evenly across <a href="/{{ causes.year }}/" style="color:var(--marigold-d);font-weight:600;text-decoration:none">this year&rsquo;s four causes</a>.</p>
+    {% set h1 = 'style="font-family:var(--serif);font-weight:500;font-size:clamp(2.4rem,5.4vw,4rem);letter-spacing:-.02em;line-height:1.02;max-width:18ch"' %}
+    {% set causesLink %}<a href="/{{ causes.year }}/" style="color:var(--marigold-d);font-weight:600;text-decoration:none">this year&rsquo;s four causes</a>{% endset %}
+    {% set shown = ("paused-sale" if orders.saleOn else "paused-count") if orders.paused else orders.window %}
+    <div data-window="preorder"{% if shown != "preorder" %} hidden{% endif %}>
+      <p class="eyebrow">Order ahead</p>
+      <h1 {{ h1 | safe }}>Order your candles before the sale.</h1>
+      <p class="lead" style="margin-top:18px">The {{ site.saleYear }} sale is {{ site.saleDates | safe }}. Order now and we&rsquo;ll have your candles ready. We&rsquo;re still pouring, so if a scent runs short we&rsquo;ll make more for you. Pick them up anytime during the sale, or have them delivered at SPS. Online orders are divided evenly across {{ causesLink | safe }}.{% if orders.preorder %} Open through {{ orders.closesDay }} at {{ orders.closesTime }} Central.{% endif %}</p>
+    </div>
+    <div data-window="after"{% if shown != "after" %} hidden{% endif %}>
+      <p class="eyebrow">After the sale</p>
+      <h1 {{ h1 | safe }}>Order the candles we have left.</h1>
+      <p class="lead" style="margin-top:18px">The {{ site.saleYear }} sale is over and we still have some candles. Pick what you&rsquo;d like, then pick them up or, if you&rsquo;re on the SPS team, have them delivered at work. Online orders are divided evenly across {{ causesLink | safe }}.{% if orders.after %} Open through {{ orders.closesDay }} at {{ orders.closesTime }} Central.{% endif %}</p>
+    </div>
+    <div data-window="paused-sale"{% if shown != "paused-sale" %} hidden{% endif %}>
+      <p class="eyebrow">Sale weekend</p>
+      <h1 {{ h1 | safe }}>Come see us at the sale.</h1>
+      <p class="lead" style="margin-top:18px">Online orders are paused while the sale is on, because we can&rsquo;t keep the counts right with candles going out the door. They reopen {{ orders.reopens or "after the sale" }} with whatever&rsquo;s left.</p>
+    </div>
+    <div data-window="paused-count"{% if shown != "paused-count" %} hidden{% endif %}>
+      <p class="eyebrow">After the sale</p>
+      <h1 {{ h1 | safe }}>We&rsquo;re counting what&rsquo;s left.</h1>
+      <p class="lead" style="margin-top:18px">The {{ site.saleYear }} sale is over. Thank you! Online orders are paused while we count, and they reopen {{ orders.reopens or "soon" }} for a week with whatever candles we have.</p>
+    </div>
+    <div data-window="closed"{% if shown != "closed" %} hidden{% endif %}>
+      <p class="eyebrow">Online orders</p>
+      <h1 {{ h1 | safe }}>Online orders are closed.</h1>
+      <p class="lead" style="margin-top:18px">We open them about a week before the fall sale, and again for a week after it. Get sale updates and you&rsquo;ll hear first.</p>
+    </div>
+    <div class="ev-cta" id="order-shut"{% if orders.open %} hidden{% endif %}>
+      {% if orders.saleOn %}<a class="btn btn--primary" href="/{{ site.saleYear }}/">See the sale <span class="arr">&rarr;</span></a>{% endif %}
+      <a class="btn {{ 'btn--ghost' if orders.saleOn else 'btn--primary' }}" href="{{ site.updatesUrl }}" data-tinylytics-event="updates.click" data-tinylytics-event-value="order-shut" target="_blank" rel="noopener">Get sale updates{% if not orders.saleOn %} <span class="arr">&rarr;</span>{% endif %}</a>
+      <a class="btn btn--ghost" href="mailto:{{ site.email }}">Email us</a>
+    </div>
   </div>
 </section>
 
 <section class="section" id="order" style="padding-top:clamp(20px,3vw,32px)">
   <div class="wrap">
     <noscript><p class="order-message">This form needs JavaScript. Email <a href="mailto:{{ site.email }}">{{ site.email }}</a> and we&rsquo;ll take your order that way.</p></noscript>
-    <p class="order-message" id="order-status" role="status" aria-live="polite">Checking what we have left&hellip;</p>
+    <p class="order-message" id="order-status" role="status" aria-live="polite"{% if not orders.open %} hidden{% endif %}>{{ "Loading the scents&hellip;" if orders.preorder else "Checking what we have left&hellip;" }}</p>
 
     <form class="order-grid" id="order-form" hidden novalidate>
       <div id="order-products"></div>
@@ -43,7 +73,7 @@ description: Order the Things 4 Good candles left after the sale, for pickup or 
 
         <fieldset class="order-field order-choice">
           <legend>How should we get them to you?</legend>
-          <label><input type="radio" name="fulfillment" value="Pickup" checked /> <span><b>Pickup</b> Jamie will email you the details.</span></label>
+          <label><input type="radio" name="fulfillment" value="Pickup" checked /> <span><b>Pickup</b> {% if orders.preorder %}Anytime during the sale. {% endif %}Jamie will email you the details.</span></label>
           <label><input type="radio" name="fulfillment" value="SPS delivery" /> <span><b>SPS delivery</b> For SPS team members, delivered at work.</span></label>
         </fieldset>
 
@@ -60,7 +90,7 @@ description: Order the Things 4 Good candles left after the sale, for pickup or 
         <div class="order-check" id="order-check"></div>
         <p class="order-error" id="order-error" role="alert" hidden></p>
         <button class="btn btn--primary order-submit" id="order-submit" type="submit" disabled>Place order</button>
-        <p class="order-fine">Your order holds these candles right away. Please send your donation soon after you order, because we may release an order that stays unpaid.</p>
+        <p class="order-fine">{% if orders.preorder %}We set your candles aside, and pour more if a scent runs short.{% else %}Your order holds these candles right away.{% endif %} Please send your donation soon after you order, because we may release an order that stays unpaid.</p>
         <p class="order-fine">We&rsquo;ll add you to our family&rsquo;s email list. Unsubscribe anytime.</p>
       </aside>
     </form>
@@ -87,6 +117,9 @@ description: Order the Things 4 Good candles left after the sale, for pickup or 
   const EMAIL = {{ site.email | dump | safe }};
   const CHECK_KEY = {{ site.turnstileSiteKey | dump | safe }};
   const LINE_MAX = 24, ORDER_MAX = 30;
+  // The window this page was built in, and when the sale ends, for the paused message.
+  const BUILT = {{ orders.window | dump | safe }};
+  const SALE_ENDS = Date.parse({{ orders.saleEnds | dump | safe }});
 
   const $ = (id) => document.getElementById(id);
   const form = $("order-form"), status = $("order-status"), errorBox = $("order-error"), submit = $("order-submit");
@@ -100,6 +133,7 @@ description: Order the Things 4 Good candles left after the sale, for pickup or 
   };
 
   let products = [];
+  let current = BUILT; // A local name: `window` is the browser's.
   let sending = false;
   // The Turnstile widget, its latest token, and whether its script failed to load.
   let check = null, token = "", checkBroken = false;
@@ -107,7 +141,18 @@ description: Order the Things 4 Good candles left after the sale, for pickup or 
 
   const say = (text) => { status.textContent = text; status.hidden = !text; };
   const sayError = (text) => { errorBox.textContent = text; errorBox.hidden = !text; };
-  const closed = () => { form.hidden = true; say(`Online orders aren’t open right now. Email ${EMAIL} and we’ll sort it out.`); };
+  // The service's window wins over the build's: it shuts at its minute, and the pages catch up overnight.
+  function showWindow(next) {
+    current = next;
+    const shown = next === "paused" ? (Date.now() < SALE_ENDS ? "paused-sale" : "paused-count") : next;
+    for (const head of document.querySelectorAll("[data-window]")) head.hidden = head.dataset.window !== shown;
+  }
+  const closed = (next) => {
+    form.hidden = true;
+    say("");
+    showWindow(["paused", "closed"].includes(next) ? next : "closed");
+    $("order-shut").hidden = false;
+  };
 
   const chosen = () => products.filter((p) => cart.get(p.id) > 0).map((p) => ({ ...p, quantity: cart.get(p.id) }));
   const count = () => chosen().reduce((sum, p) => sum + p.quantity, 0);
@@ -132,9 +177,12 @@ description: Order the Things 4 Good candles left after the sale, for pickup or 
       if (!row) continue;
       row.querySelector("output").textContent = q;
       row.querySelector("[data-less]").disabled = sending || q === 0;
-      row.querySelector("[data-more]").disabled = sending || atMax || q >= Math.min(p.left, LINE_MAX);
-      row.querySelector(".order-left").textContent = p.left > 0 ? `${p.left} left` : "All gone";
-      row.classList.toggle("is-out", p.left === 0);
+      // A preorder candle is poured to order: no count, only the per-line cap.
+      const most = p.limit ?? Math.min(p.left ?? LINE_MAX, LINE_MAX);
+      row.querySelector("[data-more]").disabled = sending || atMax || q >= most;
+      const each = p.left !== null && most > 0 && most < Math.min(p.left, LINE_MAX) ? ` · ${most} per order` : "";
+      row.querySelector(".order-left").textContent = p.left === null ? "" : p.left > 0 ? `${p.left} left${each}` : "All gone";
+      row.classList.toggle("is-out", most === 0);
     }
     if (atMax && !errorBox.textContent) sayError(`Online orders top out at ${ORDER_MAX}. For a bigger one, email ${EMAIL}.`);
     if (!atMax && errorBox.textContent.startsWith("Online orders top out")) sayError("");
@@ -160,7 +208,7 @@ description: Order the Things 4 Good candles left after the sale, for pickup or 
           pic.append(img);
         }
         const about = el("div", "order-about");
-        about.append(el("b", "", p.name), el("span", "", `${money(p.price)} donation · `), el("span", "order-left"));
+        about.append(el("b", "", p.name), el("span", "", `${money(p.price)} donation${p.left === null ? "" : " · "}`), el("span", "order-left"));
         const stepper = el("div", "order-stepper");
         const less = el("button", "", "−"), qty = el("output"), more = el("button", "", "+");
         less.type = more.type = "button";
@@ -186,10 +234,11 @@ description: Order the Things 4 Good candles left after the sale, for pickup or 
     }
     if (response && response.status === 503) {
       const body = await response.json().catch(() => ({}));
-      if (body.open === false) return closed();
+      if (body.open === false) return closed(body.window);
     }
-    if (!response || !response.ok) return say(`We couldn’t load what we have left. Try again in a minute, or email ${EMAIL}.`);
+    if (!response || !response.ok) return say(`We couldn’t load the candles. Try again in a minute, or email ${EMAIL}.`);
     const stock = await response.json();
+    if (stock.window && stock.window !== current) showWindow(stock.window);
     products = stock.products;
     if (!products.length) return say("We’re all sold out. Thank you, everyone!");
     say("");
@@ -262,7 +311,9 @@ description: Order the Things 4 Good candles left after the sale, for pickup or 
     fillSummary($("order-done-items"), items);
     $("order-done-next").textContent = answers.fulfillment === "SPS delivery"
       ? "Jamie will get them to you at work."
-      : "Jamie will email you the pickup details.";
+      : current === "preorder"
+        ? "Pick them up anytime during the sale. Jamie will email you the details."
+        : "Jamie will email you the pickup details.";
     const done = $("order-done");
     done.hidden = false;
     done.focus();
@@ -314,11 +365,14 @@ description: Order the Things 4 Good candles left after the sale, for pickup or 
         : "Our spam check isn’t done yet. If a box shows above the button, check it, then press Place order again.");
     }
     if (data.error === "turnstile") return sayError("Our spam check didn’t go through. Wait a moment, then press Place order again.");
-    if (data.open === false) return closed();
+    if (data.open === false) return closed(data.window);
     if (response && response.status === 409 && data.short) {
       for (const short of data.short) {
         const p = products.find((x) => x.id === short.id);
-        if (p) p.left = short.left;
+        if (p) {
+          p.left = short.left;
+          p.limit = Math.min(p.limit ?? LINE_MAX, short.left);
+        }
         cart.set(short.id, Math.min(cart.get(short.id) || 0, short.left));
       }
       refresh();
@@ -335,7 +389,7 @@ description: Order the Things 4 Good candles left after the sale, for pickup or 
     sayError(`Something went wrong on our end. Press Place order again: it won’t double up. Or email ${EMAIL}.`);
   });
 
-  loadStock();
+  if (BUILT === "preorder" || BUILT === "after") loadStock();
 })();
 </script>
 {% endblock %}
