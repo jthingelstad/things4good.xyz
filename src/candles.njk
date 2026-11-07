@@ -1,6 +1,6 @@
 ---
 title: The Candles — Things 4 Good
-description: This year’s Things 4 Good scents, from Just Crackle to Burnt Cinnamon. Every hand-poured, wooden-wick candle is a donation, and 100% goes to good.
+description: This year’s Things 4 Good scents, from Just Crackle to Golden Ticket. Every hand-poured, wooden-wick candle is a donation, and 100% goes to good.
 ---
 {% extends "base.njk" %}
 
@@ -29,7 +29,8 @@ description: This year’s Things 4 Good scents, from Just Crackle to Burnt Cinn
           <h2>{{ scent.name }}</h2>
           <p>{{ scent.description }}</p>
           <div class="lineup-foot">
-            <span>${{ site.pricePerCandle }} donation</span>
+            <span>${{ site.makerNightDonation if scent.makerNight else site.pricePerCandle }} donation</span>
+            {% if scent.makerNight %}<span><a href="/maker-night/" style="color:var(--marigold-d);font-weight:600;text-decoration:none">About Maker Night &rarr;</a></span>{% endif %}
             {% if scent.xl %}<span class="lineup-xl">Also in XL &middot; ${{ candles.xlDonation }}</span>{% endif %}
           </div>
         </div>
