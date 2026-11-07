@@ -42,11 +42,7 @@
     .page { width: auto; height: 10.05in; margin: 0; padding: 0; box-shadow: none; }
   }
 
-  .top { display: flex; justify-content: space-between; align-items: baseline; padding-bottom: 10px; border-bottom: 2px solid var(--marigold); }
-  .brand { font-family: var(--serif); font-weight: 600; font-size: 17pt; letter-spacing: -.01em; }
-  .brand .four { color: var(--marigold); font-style: italic; }
-  .top .when { font-weight: 700; font-size: 10pt; letter-spacing: .08em; text-transform: uppercase; color: var(--pine-d); }
-  .head { padding: 0.28in 0 0.22in; }
+  .head { padding: 0 0 0.22in; }
   .eyebrow { font-weight: 800; font-size: 10pt; letter-spacing: .12em; text-transform: uppercase; color: var(--marigold-d); }
   .head h1 { font-size: 46pt; margin-top: 6px; }
   .head h1 em { color: var(--pine); }
@@ -54,9 +50,6 @@
   .lead b { color: var(--ink); }
   .hand { font-family: var(--hand); font-weight: 700; }
   .body { flex: 1; min-height: 0; display: flex; flex-direction: column; }
-  .foot { margin-top: auto; padding-top: 10px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; align-items: baseline; font-size: 10pt; color: var(--ink-soft); }
-  .foot .hand { font-size: 17pt; color: var(--pine-d); }
-  .foot b { color: var(--ink); }
   /* A QR code to the page with more, captioned with the short address for anyone without a camera. */
   .more { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 0.08in 0.12in 0.07in; border-radius: 14px; background: #fff; border: 2px solid var(--pine); }
   .more svg { display: block; width: 1.1in; height: 1.1in; }
@@ -68,15 +61,7 @@
 <body>
 <p class="tip">A sign for the sale. <b>Print in color on Letter paper, portrait, at 100% scale</b>, with background graphics on.</p>
 <div class="page"><div class="sheet">
-  <div class="top">
-    <span class="brand">Things <span class="four">4</span> Good</span>
-    <span class="when">{{ site.saleYear }} candle sale</span>
-  </div>
   {% block content %}{% endblock %}
-  <div class="foot">
-    <span class="hand">100% goes to good.</span>
-    <span>{% block footNote %}We pay for the materials ourselves. <b>things4good.xyz</b>{% endblock %}</span>
-  </div>
 </div></div>
 </body>
 </html>
