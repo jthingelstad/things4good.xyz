@@ -81,10 +81,10 @@ description: This year’s Things 4 Good scents, from Just Crackle to Golden Tic
       <div class="mn-copy">
         <span class="tag">{{ site.saleDates | safe }} &middot; Minneapolis</span>
         <h3>Come smell them in person.</h3>
-        <p>Pick your scents at the sale and choose where your donation goes. Ordering six or more? Preorder and pick them up at the sale.</p>
+        <p>Pick your scents at the sale and choose where your donation goes, or order ahead and pick them up there.</p>
       </div>
       <div class="mn-act">
-        <a class="btn btn--primary" href="/preorder/">Preorder &amp; pickup <span class="arr">&rarr;</span></a>
+        {% if orders.open %}<a class="btn btn--primary" href="/order/" data-tinylytics-event="order.link" data-tinylytics-event-value="candles">{{ "Preorder candles" if orders.preorder else "Order candles" }} <span class="arr">&rarr;</span></a>{% else %}<a class="btn btn--primary" href="/preorder/">Preorder &amp; pickup <span class="arr">&rarr;</span></a>{% endif %}
         <span class="small">Or email <a href="mailto:{{ site.email }}" style="color:var(--marigold);font-weight:700">{{ site.email }}</a></span>
       </div>
     </div>

@@ -23,7 +23,7 @@
     {% if ev.upcoming %}
     <p class="lead" style="margin-top:18px">The sale is <b style="color:var(--ink)">{{ site.saleDates | safe }}</b> in Minneapolis. Every candle is a <b style="color:var(--ink)">${{ site.pricePerCandle }} donation</b>. At the sale you can split yours however you like across these four (preorders are divided evenly). We pay for the materials ourselves, so every dollar goes along.</p>
     <div class="ev-cta">
-      {% if site.preorderSheet %}<a class="btn btn--primary" href="{{ site.preorderSheet }}" data-tinylytics-event="preorder.sheet" data-tinylytics-event-value="event-head" target="_blank" rel="noopener">Preorder candles <span class="arr">&rarr;</span></a>{% endif %}
+      {% if orders.open %}<a class="btn btn--primary" href="/order/" data-tinylytics-event="order.link" data-tinylytics-event-value="event-head">{{ "Preorder candles" if orders.preorder else "Order candles" }} <span class="arr">&rarr;</span></a>{% endif %}
       <a class="btn btn--ghost" href="/candles/">See the scents</a>
     </div>
     <p class="ev-note">Pick up preorders anytime during the sale. Hours and the address come by email: join the <a href="{{ site.updatesUrl }}" data-tinylytics-event="updates.click" data-tinylytics-event-value="event-head" target="_blank" rel="noopener">Candle Fundraiser list</a>, or <a href="mailto:{{ site.email }}">email Jamie</a>.</p>
@@ -73,7 +73,7 @@
     </div>
     {% if ev.upcoming %}
     <p class="ev-after reveal">After the sale, the results and Jamie&rsquo;s write-up land on this page.</p>
-    {% if site.preorderSheet %}<div class="ev-cta reveal"><a class="btn btn--primary" href="{{ site.preorderSheet }}" data-tinylytics-event="preorder.sheet" data-tinylytics-event-value="event-close" target="_blank" rel="noopener">Preorder candles <span class="arr">&rarr;</span></a></div>{% endif %}
+    {% if orders.open %}<div class="ev-cta reveal"><a class="btn btn--primary" href="/order/" data-tinylytics-event="order.link" data-tinylytics-event-value="event-close">{{ "Preorder candles" if orders.preorder else "Order candles" }} <span class="arr">&rarr;</span></a></div>{% endif %}
     {% endif %}
   </div>
 </section>

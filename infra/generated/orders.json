@@ -5,7 +5,21 @@
     "DistributionId": {
       "Type": "String"
     },
-    "OrdersOpen": {
+    "OrdersWindow": {
+      "Type": "String",
+      "AllowedValues": [
+        "preorder",
+        "paused",
+        "after",
+        "closed"
+      ],
+      "Default": "closed"
+    },
+    "OrdersCloses": {
+      "Type": "String",
+      "Default": ""
+    },
+    "OrdersCandlesOnly": {
       "Type": "String",
       "AllowedValues": [
         "true",
@@ -140,8 +154,14 @@
         },
         "Environment": {
           "Variables": {
-            "ORDERS_OPEN": {
-              "Ref": "OrdersOpen"
+            "ORDERS_WINDOW": {
+              "Ref": "OrdersWindow"
+            },
+            "ORDERS_CLOSES": {
+              "Ref": "OrdersCloses"
+            },
+            "ORDERS_CANDLES_ONLY": {
+              "Ref": "OrdersCandlesOnly"
             },
             "SECRET_ID": {
               "Ref": "Secret"

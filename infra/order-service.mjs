@@ -1,8 +1,14 @@
 // The candle order service behind things4good.xyz/api/: one Lambda function, reserved concurrency 1, so
 // a stock check and the write that follows never overlap and two buyers can't get the last candle.
 //
-//   GET  /api/stock   what is left at the current event: products, prices, quantities. No buyer data.
+//   GET  /api/stock   the order window, and what can be ordered at the current event: products, prices,
+//                     quantities. No buyer data.
 //   POST /api/order   validate, re-read stock from Grist, write the order, return the total.
+//
+// The order windows (Jamie, 2026-11-07) make the sale two weeks long. Orders open about a week before
+// the sale and take candles ahead of what is poured; they pause while the sale runs, because counts
+// can't stay right with candles going out the door, and until the paper sheets are in and recounted;
+// then they open for a week with whatever is left. See currentWindow.
 //
 // Prices and availability come only from Grist, never from the browser. Everything the distribution
 // shows as a 403 or 404 becomes the site's HTML 404 page (CustomErrorResponses), so this answers only
@@ -16,7 +22,9 @@
 // is in this public repo. Logs carry outcomes only: no name, email, phone, note or IP, and never the text
 // of a Grist error.
 
-const MAKER_NIGHT = 'Maker Night candle'; // Golden Ticket: sold at the fall sale or by preorder, never here.
+const CANDLE = 'Candle';
+const MAKER_NIGHT = 'Maker Night candle'; // The Golden Ticket: a seat at Maker Night, two to an order.
+const MAKER_NIGHT_PER_ORDER = 2;
 
 export const LIMITS = Object.freeze({
   bodyBytes: 8 * 1024,
@@ -35,7 +43,7 @@ const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const HOUR = 3_600_000;
 const FULFILLMENT = new Set(['Pickup', 'SPS delivery']);
-const ORDER_TYPE = 'After the sale';
+const ORDER_TYPE = { preorder: 'Preorder', after: 'After the sale' };
 const STOCK_CACHE = 'public, max-age=60, s-maxage=300';
 
 // The widget is set to these hosts in Cloudflare; a token solved anywhere else is refused here too.
@@ -59,20 +67,44 @@ export function formatMobile(value) {
   return digits.length === 10 ? `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}` : typed;
 }
 
-// Left is Made + Adjustment - Sold, never below zero. Golden Ticket and anything sold out stay off the
-// list. Nothing about any buyer is in here: Sold is one number per product.
-export function toStock(rows) {
+//   preorder  open until `closes`, then paused. Regular candles have no cap: the family pours to fill
+//             them, and Left going below zero in Grist is the list to pour. Everything else is capped.
+//   paused    the sale is on, or its paper sheets and recount are not in yet. Opened again by hand.
+//   after     the leftovers week: open until `closes`, then closed. Everything is capped at what is left.
+//   closed    the rest of the year.
+// An open window whose closing time is missing or unreadable is not open.
+export const WINDOWS = Object.freeze(['preorder', 'paused', 'after', 'closed']);
+const AFTERWARDS = { preorder: 'paused', after: 'closed' };
+export const isOpen = (window) => Object.hasOwn(ORDER_TYPE, window);
+
+export function currentWindow({ window, closes } = {}, at = Date.now()) {
+  if (!WINDOWS.includes(window)) return 'closed';
+  if (!isOpen(window)) return window;
+  return at < Date.parse(closes) ? window : AFTERWARDS[window];
+}
+
+// Left is Made + Adjustment - Sold, never below zero. `limit` is the most one order can take: what is
+// left, at most 24, and at most two Golden Tickets. A preorder candle has no count (left is null), since
+// it is poured to order. candlesOnly holds back everything but regular candles: lids, XL candles and the
+// Golden Ticket. Nothing about any buyer is in here: Sold is one number per product.
+export function toStock(rows, { window = 'after', candlesOnly = false } = {}) {
   const events = new Set(rows.map((row) => row.event));
   if (events.size > 1) throw new StepError('stock', 'more than one current event');
   const products = rows
-    .filter((row) => row.type !== MAKER_NIGHT)
-    .map((row) => ({
-      id: row.id,
-      name: row.name,
-      type: row.type,
-      price: Number(row.price) || 0,
-      left: Math.max(0, (Number(row.made) || 0) + (Number(row.adjustment) || 0) - (Number(row.sold) || 0))
-    }));
+    .filter((row) => !candlesOnly || row.type === CANDLE)
+    .map((row) => {
+      const poured = window === 'preorder' && row.type === CANDLE;
+      const left = Math.max(0, (Number(row.made) || 0) + (Number(row.adjustment) || 0) - (Number(row.sold) || 0));
+      const most = row.type === MAKER_NIGHT ? MAKER_NIGHT_PER_ORDER : LIMITS.lineQuantity;
+      return {
+        id: row.id,
+        name: row.name,
+        type: row.type,
+        price: Number(row.price) || 0,
+        left: poured ? null : left,
+        limit: poured ? most : Math.min(left, most)
+      };
+    });
   return { eventId: rows[0]?.eventId ?? null, event: rows[0]?.event ?? null, products };
 }
 
@@ -173,7 +205,8 @@ export function createService({
   },
   // ({ email, ip }) => { outcome: 'added' | 'already' | 'refused' | 'skipped', code }, or throws.
   subscribe = async () => ({ outcome: 'skipped' }),
-  open = false,
+  // { window, closes, candlesOnly }: see currentWindow. Without one, nothing is open.
+  orders = { window: 'closed' },
   now = Date.now,
   sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms)),
   log = (entry) => (LOGGERS[entry.level] ?? console.log)(entry),
@@ -184,16 +217,18 @@ export function createService({
   const limiter = rateLimiter(now);
   const verified = new Map(); // requestId -> when its token passed.
 
-  const stockResponse = async () => {
-    const { event, products } = toStock(await store.readStock());
+  const rules = (window) => ({ window, candlesOnly: orders.candlesOnly === true });
+
+  const stockResponse = async (window) => {
+    const { event, products } = toStock(await store.readStock(), rules(window));
     return json(
       200,
-      { open: true, event, products: products.filter((product) => product.left > 0) },
+      { open: true, window, closes: orders.closes, event, products: products.filter((product) => product.limit > 0) },
       STOCK_CACHE
     );
   };
 
-  const placeOrder = async (event) => {
+  const placeOrder = async (event, window) => {
     const raw = event.isBase64Encoded ? Buffer.from(event.body ?? '', 'base64').toString('utf8') : event.body ?? '';
     if (Buffer.byteLength(raw) > LIMITS.bodyBytes) return { response: json(413, { error: 'too-large' }), outcome: 'too-large' };
     if (!/^application\/json\b/i.test(event.headers?.['content-type'] ?? ''))
@@ -237,7 +272,7 @@ export function createService({
     // An attempt that died between the order and its lines left an empty order behind.
     if (previous) await store.removeOrder(previous.id);
 
-    const stock = toStock(await store.readStock());
+    const stock = toStock(await store.readStock(), rules(window));
     if (!stock.eventId) throw new StepError('stock', 'no current event');
     const known = new Map(stock.products.map((product) => [product.id, product]));
     if (order.items.some((item) => !known.has(item.product)))
@@ -245,9 +280,12 @@ export function createService({
 
     const short = order.items
       .map((item) => ({ item, product: known.get(item.product) }))
-      .filter(({ item, product }) => item.quantity > product.left)
+      .filter(({ item, product }) => product.left !== null && item.quantity > product.left)
       .map(({ item, product }) => ({ id: product.id, name: product.name, asked: item.quantity, left: product.left }));
     if (short.length) return { response: json(409, { error: 'short', short }), outcome: 'short' };
+    // More than one order may take, with enough left: only a third Golden Ticket, which the page never sends.
+    if (order.items.some((item) => item.quantity > known.get(item.product).limit))
+      return { response: json(422, { error: 'invalid', fields: ['items'] }), outcome: 'invalid' };
 
     const person = await store.findPerson(order.email);
     let personId = person?.id;
@@ -276,7 +314,7 @@ export function createService({
         Event: stock.eventId,
         Person: personId,
         Name_As_Typed: order.name,
-        Order_Type: ORDER_TYPE,
+        Order_Type: ORDER_TYPE[window],
         Ordered_At: Math.floor(now() / 1000),
         Fulfillment_Method: order.fulfillment,
         Source_Row: sourceRow,
@@ -325,18 +363,21 @@ export function createService({
     const isStock = path === '/api/stock' && (method === 'GET' || method === 'HEAD');
     const isOrder = path === '/api/order' && method === 'POST';
     if (!isStock && !isOrder) return { response: json(405, { error: 'not-allowed' }), route: 'other', outcome: 'not-allowed' };
-    // Closed answers before any call to Grist.
-    if (!open) return { response: json(503, { open: false }), route: isStock ? 'stock' : 'order', outcome: 'closed' };
-    if (isStock) return { response: await stockResponse(), route: 'stock', outcome: 'ok' };
-    return { ...(await placeOrder(event)), route: 'order' };
+    // Read per request, so a window closes on time with no deploy. Closed answers before any call to Grist.
+    const window = currentWindow(orders, now());
+    if (!isOpen(window)) return { response: json(503, { open: false, window }), route: isStock ? 'stock' : 'order', outcome: 'closed' };
+    if (isStock) return { response: await stockResponse(window), route: 'stock', outcome: 'ok' };
+    return { ...(await placeOrder(event, window)), route: 'order' };
   };
 
   return {
     // Reached only by a direct invoke (npm run infra -- orders): a function URL event always carries
     // requestContext. Read only.
     async selfCheck() {
-      const { event, products } = toStock(await store.readStock());
-      return { ok: Boolean(event), event, products: products.filter((product) => product.left > 0).length };
+      const window = currentWindow(orders, now());
+      // A shut window counts what the leftovers week would offer.
+      const { event, products } = toStock(await store.readStock(), rules(isOpen(window) ? window : 'after'));
+      return { ok: Boolean(event), event, window, products: products.filter((product) => product.limit > 0).length };
     },
 
     async handle(event) {
@@ -575,7 +616,11 @@ export const handler = async (event) => {
     store: lazyStore,
     verify: lazyVerify,
     subscribe: lazySubscribe,
-    open: process.env.ORDERS_OPEN === 'true'
+    orders: {
+      window: process.env.ORDERS_WINDOW,
+      closes: process.env.ORDERS_CLOSES,
+      candlesOnly: process.env.ORDERS_CANDLES_ONLY === 'true'
+    }
   });
   if (event?.selfCheck) {
     try {

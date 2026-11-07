@@ -28,11 +28,19 @@ test('every sitemap url has a valid lastmod', () => {
   }
 });
 
-test('the order page exists only while site.json says so, and the sitemap and llms.txt agree', () => {
+test('the order page is always there, shows the window it was built in, and only it calls the service', async () => {
   const fs = require('node:fs');
-  const { orderForm } = JSON.parse(fs.readFileSync('src/_data/site.json', 'utf8'));
-  const on = orderForm === true;
-  assert.equal(fs.existsSync('_site/order/index.html'), on);
-  assert.equal(fs.readFileSync('_site/sitemap.xml', 'utf8').includes('things4good.xyz/order/'), on);
-  assert.equal(fs.readFileSync('_site/llms.txt', 'utf8').includes('things4good.xyz/order/'), on);
+  const orders = await require('../../src/_data/orders.js')();
+  const page = fs.readFileSync('_site/order/index.html', 'utf8');
+  assert.ok(fs.readFileSync('_site/sitemap.xml', 'utf8').includes('things4good.xyz/order/'));
+  assert.ok(fs.readFileSync('_site/llms.txt', 'utf8').includes('things4good.xyz/order/'));
+  const shown = [...page.matchAll(/data-window="([a-z-]+)"(?! hidden)/g)].map((match) => match[1]);
+  const expected = orders.paused ? (orders.saleOn ? 'paused-sale' : 'paused-count') : orders.window;
+  assert.deepEqual(shown, [expected]);
+  assert.match(page, new RegExp(`const BUILT = "${orders.window}"`));
+  // The nav follows the window: the order form while open, never the retired Google Form.
+  const home = fs.readFileSync('_site/index.html', 'utf8');
+  assert.equal(home.includes('class="btn btn--primary nav-cta" href="/order/"'), orders.open);
+  for (const file of ['index.html', 'preorder/index.html', 'faq/index.html', 'candles/index.html', 'maker-night/index.html', 'llms.txt'])
+    assert.ok(!/forms\.gle|docs\.google\.com\/forms|six or more/.test(fs.readFileSync(`_site/${file}`, 'utf8')), file);
 });

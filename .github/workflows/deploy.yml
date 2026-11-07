@@ -3,12 +3,18 @@ name: Build and deploy to S3 and CloudFront
 # Tests and builds the site on every pull request and push; a push to main publishes the build to S3
 # behind CloudFront (infra/, scripts/deploy-aws.mjs). GitHub Pages served the site until the DNS moved
 # to CloudFront on 2026-10-27.
+#
+# It also rebuilds main every night just after midnight Central (06:07 UTC; 01:07 in daylight time), so
+# the pages follow an order window that closed at 11:59 p.m. (src/_data/orders.js). The order service
+# itself shuts on the minute; this only brings the nav and the other pages along.
 
 on:
   push:
     branches: [main]
   pull_request:
   workflow_dispatch:
+  schedule:
+    - cron: '7 6 * * *'
 
 permissions:
   contents: read

@@ -9,7 +9,7 @@ eleventyExcludeFromCollections: true
 
 > Things 4 Good is the Thingelstad family's annual handmade-candle fundraiser in Minneapolis. Since {{ metrics.perYear[0].year }} the family has hand-poured wooden-wick candles for a fall sale; every candle is a ${{ site.pricePerCandle }} donation, and 100% goes to the non-profits the four family members pick each year. That has added up to ${{ metrics.grandTotalDisplay | safe }} for {{ metrics.orgCount }} organizations.
 
-The {{ site.saleYear }} sale is {{ site.saleDates | safe }} in Minneapolis. Buyers at the sale split their donation across that year's four causes (preorders are divided evenly); the family covers the materials. Preorders, meant for orders of six or more, stay open until the sale ends and are picked up anytime during it. Hours and the address are sent by email, never posted. {% if causes.list.length %}This year's four causes{% if causes.list.length < 4 %} so far{% endif %}: {% for c in causes.list %}[{{ c.name | safe }}]({{ c.url }}) ({{ c.who }}){% if not loop.last %}, {% endif %}{% endfor %}.{% if causes.list.length < 4 %} The rest are coming soon.{% endif %}{% else %}This year's four causes are announced {{ causes.announce }}.{% endif %} Per-non-profit amounts on the site are estimates; each sale's total is exact.
+The {{ site.saleYear }} sale is {{ site.saleDates | safe }} in Minneapolis. Buyers at the sale split their donation across that year's four causes (preorders are divided evenly); the family covers the materials. Online orders open about a week before the sale and are picked up anytime during it, or delivered at SPS; after the sale they open again for a week with whatever is left. {% if orders.open %}Online orders are open now, through {{ orders.closesDay }} at {{ orders.closesTime }} Central.{% else %}Online orders are closed right now.{% endif %} Hours and the address are sent by email, never posted. {% if causes.list.length %}This year's four causes{% if causes.list.length < 4 %} so far{% endif %}: {% for c in causes.list %}[{{ c.name | safe }}]({{ c.url }}) ({{ c.who }}){% if not loop.last %}, {% endif %}{% endfor %}.{% if causes.list.length < 4 %} The rest are coming soon.{% endif %}{% else %}This year's four causes are announced {{ causes.announce }}.{% endif %} Per-non-profit amounts on the site are estimates; each sale's total is exact.
 
 ## Pages
 
@@ -20,15 +20,13 @@ The {{ site.saleYear }} sale is {{ site.saleDates | safe }} in Minneapolis. Buye
 - [The {{ causes.year }} sale](https://things4good.xyz/{{ causes.year }}/): this year's causes, who picked each one and why; each past sale has its own page too, listed under Sales
 {%- endif %}
 - [Numbers](https://things4good.xyz/stats/): dollars raised, candles sold, growth by year and candle math
-- [Preorder](https://things4good.xyz/preorder/): preorder steps, pickup and payment methods
+- [Preorder](https://things4good.xyz/preorder/): ordering ahead, pickup and payment methods
 - [Pay](https://things4good.xyz/pay/): Venmo, Cash App, Zelle and Apple Pay with pay buttons and QR codes, plus cash and check
 - [Candle care](https://things4good.xyz/care/): how to burn a wooden-wick candle, the same tips as the card that comes home with every candle
 - [FAQ](https://things4good.xyz/faq/): how it works, what it costs and where the money goes
-{%- if site.orderForm %}
-- [Order](https://things4good.xyz/order/): order the candles left after the sale, for pickup or SPS delivery; what is in stock comes from https://things4good.xyz/api/stock
-{%- endif %}
+- [Order](https://things4good.xyz/order/): {% if orders.preorder %}order candles ahead of the sale, open through {{ orders.closesDay }}{% elif orders.after %}order the candles left after the sale, open through {{ orders.closesDay }}{% else %}online orders, closed right now{% endif %}; for pickup or SPS delivery, and what can be ordered comes from https://things4good.xyz/api/stock
 {%- if site.makerNight %}
-- [Maker Night](https://things4good.xyz/maker-night/): an evening for six on {{ site.makerNightDate }}, {{ site.makerNightTime | safe }}; a seat is one of six Golden Ticket candles, a ${{ site.makerNightDonation }} donation at the sale (or by preorder), at most two per person, divided evenly across the four causes. Guests get a thank-you candle and pour four of their own in any scents from the library. {% set seatsLeft = makerNightSeats.total - makerNightSeats.sold %}{% if seatsLeft > 0 %}{{ seatsLeft }} of {{ makerNightSeats.total }} seats left{% else %}Sold out{% endif %}
+- [Maker Night](https://things4good.xyz/maker-night/): an evening for six on {{ site.makerNightDate }}, {{ site.makerNightTime | safe }}; a seat is one of six Golden Ticket candles, a ${{ site.makerNightDonation }} donation at the sale{% if orders.open and not orders.candlesOnly %} or online{% else %} (or set aside by email){% endif %}, at most two per person, divided evenly across the four causes. Guests get a thank-you candle and pour four of their own in any scents from the library. {% set seatsLeft = makerNightSeats.total - makerNightSeats.sold %}{% if seatsLeft > 0 %}{{ seatsLeft }} of {{ makerNightSeats.total }} seats left{% else %}Sold out{% endif %}
 {%- endif %}
 
 ## The {{ site.saleYear }} candles

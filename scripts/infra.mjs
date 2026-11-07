@@ -7,8 +7,8 @@
 //                                  www.things4good.xyz once the certificate is ISSUED
 //   npm run infra -- delivery      the role CI assumes; print its ARN for the AWS_DEPLOY_ROLE_ARN variable
 //   npm run infra -- orders        the order service: its stack, then its code (infra/order-service.mjs),
-//                                  then a read-only check that it reaches Grist. Open or closed follows
-//                                  site.json's orderForm
+//                                  then a read-only check that it reaches Grist. The order window follows
+//                                  site.json's orders
 //   add --plan to print the change set and stop
 //
 // Each run records the stack's outputs in infra/deployment.json.
@@ -32,6 +32,7 @@ import { copyFileSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from '
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { setTimeout as delay } from 'node:timers/promises';
+import { isOpen, WINDOWS } from '../infra/order-service.mjs';
 
 const CONFIG = 'infra/deployment.json';
 const config = JSON.parse(readFileSync(CONFIG, 'utf8'));
@@ -67,12 +68,19 @@ if (name === 'site') {
   ];
 }
 if (name === 'orders') {
-  const { orderForm } = JSON.parse(readFileSync('src/_data/site.json', 'utf8'));
+  const { orders } = JSON.parse(readFileSync('src/_data/site.json', 'utf8'));
+  const { window, closes = '', candlesOnly = false } = orders ?? {};
+  if (!WINDOWS.includes(window)) throw new Error(`site.json orders.window must be one of ${WINDOWS.join(', ')}`);
+  // An open window needs a closing time with its offset, so it shuts on its own.
+  if (isOpen(window) && !(/[+-]\d{2}:\d{2}$|Z$/.test(closes) && Date.parse(closes) > Date.now()))
+    throw new Error(`site.json orders.closes must be a future time with its offset, like 2026-11-15T23:59:00-06:00`);
   parameters = [
     { ParameterKey: 'DistributionId', ParameterValue: config.distributionId },
-    { ParameterKey: 'OrdersOpen', ParameterValue: orderForm === true ? 'true' : 'false' }
+    { ParameterKey: 'OrdersWindow', ParameterValue: window },
+    { ParameterKey: 'OrdersCloses', ParameterValue: closes },
+    { ParameterKey: 'OrdersCandlesOnly', ParameterValue: candlesOnly === true ? 'true' : 'false' }
   ];
-  console.log(`Orders ${orderForm === true ? 'OPEN' : 'closed'} (site.json orderForm)`);
+  console.log(`Orders: ${window}${isOpen(window) ? ` until ${closes}` : ''}${candlesOnly === true ? ', regular candles only' : ''} (site.json orders)`);
 }
 if (name === 'delivery') {
   const site = outputs(await describe(config.stacks.site));
