@@ -1,5 +1,5 @@
 {
-  "_note": "This year's lineup for /candles/, in the order of the scent markers at the sale. Each scent is site.pricePerCandle; xl: true adds the XL size at xlDonation. art is the label drawing in src/images/scents/. secretScents: true shows an \"under wraps\" card for the new scents held back until the sale; set it false once they are revealed (and add them to scents). A scent with no art yet shows a New frame until its label is ready.",
+  "_note": "This year's lineup for /candles/, in the order of the scent markers at the sale. Each scent is site.pricePerCandle; xl: true adds the XL size at xlDonation. art is the label drawing in src/images/scents/. secretScents: true shows an \"under wraps\" card for the new scents held back until the sale; set it false once they are revealed (and add them to scents). A scent with no art yet shows a New frame until its label is ready. makerNight: true prices a card at site.makerNightDonation and links it to Maker Night.",
   "xlDonation": 50,
   "secretScents": false,
   "scents": [
@@ -25,10 +25,12 @@
       "description": "Spice up your life (and your living room) with a scent that’s less holiday tea party, more seasonal soirée." },
     { "slug": "old-fashioned", "name": "Old Fashioned", "art": "/images/scents/old-fashioned.png",
       "description": "Smells like your favorite speakeasy decided to moonlight as a candlemaker — sweet, rich, and socially refined." },
-    { "slug": "sweet-tooth", "name": "Sweet Tooth",
+    { "slug": "sweet-tooth", "name": "Sweet Tooth", "art": "/images/scents/sweet-tooth.png",
       "description": "New this year. Come smell it at the sale." },
-    { "slug": "burnt-cinnamon", "name": "Burnt Cinnamon",
-      "description": "New this year. Come smell it at the sale." }
+    { "slug": "burnt-cinnamon", "name": "Burnt Cinnamon", "art": "/images/scents/burnt-cinnamon.png",
+      "description": "New this year. Come smell it at the sale." },
+    { "slug": "golden-ticket", "name": "Golden Ticket", "art": "/images/scents/golden-ticket.png", "makerNight": true,
+      "description": "Our gold Maker Night candle. There are just six, in a scent we made only for them, and each one is your seat at Maker Night." }
   ],
   "extras": [
     { "slug": "candle-lid", "name": "Candle Lid", "donation": 10,
