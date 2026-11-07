@@ -1,0 +1,44 @@
+---
+title: Sign — Welcome — Things 4 Good
+permalink: /print/welcome/
+---
+{% extends "print.njk" %}
+
+{#- For the front door during the sale: big enough to read from the walk. Eight of Mazie's labels
+    along the bottom, in the order of candles.json. -#}
+
+{% block style %}
+  .body { justify-content: space-evenly; padding: 0.1in 0; }
+  .hello { text-align: center; }
+  .hello .hand { display: block; font-size: 116pt; line-height: .9; color: var(--marigold-d); }
+  .hello p { margin-top: 0.08in; font-family: var(--serif); font-size: 24pt; color: var(--ink-soft); }
+  .lines { display: flex; flex-direction: column; gap: 0.16in; }
+  .line { display: grid; grid-template-columns: 0.85in 1fr; align-items: center; gap: 0.26in; padding: 0.16in 0.3in 0.16in 0.2in; border-radius: 18px; background: var(--c-t); }
+  .line .n { width: 0.85in; height: 0.85in; border-radius: 50%; background: var(--c); color: #fff; display: grid; place-items: center; font-family: var(--hand); font-weight: 700; font-size: 40pt; line-height: 1; }
+  .line h2 { font-size: 38pt; line-height: 1; }
+  .line p { margin-top: 6px; font-size: 14pt; line-height: 1.3; color: var(--ink-soft); }
+  .labels { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.12in; }
+  .labels div { height: 0.92in; background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 6px; }
+  .labels img { display: block; width: 100%; height: 100%; object-fit: contain; }
+  .cap { margin-top: 0.08in; text-align: center; font-size: 17pt; color: var(--pine-d); }
+{% endblock %}
+
+{% block content %}
+<div class="body">
+  <div class="hello">
+    <span class="hand">Welcome!</span>
+    <p>We&rsquo;re so glad you&rsquo;re here.</p>
+  </div>
+  <div class="lines">
+    <div class="line" style="--c:var(--marigold);--c-t:var(--marigold-t)"><span class="n">1</span><div><h2>Come on in.</h2><p>No need to knock.</p></div></div>
+    <div class="line" style="--c:var(--pine);--c-t:var(--pine-t)"><span class="n">2</span><div><h2>Leave your shoes on.</h2><p>Really, it&rsquo;s fine.</p></div></div>
+    <div class="line" style="--c:var(--berry);--c-t:var(--berry-t)"><span class="n">3</span><div><h2>Check out the candles.</h2><p>{{ candles.scents | length }} scents. Every candle is a donation to this year&rsquo;s four causes.</p></div></div>
+  </div>
+  <div>
+    <div class="labels">
+      {% for scent in candles.scents %}{% if loop.index <= 8 and scent.art %}<div><img src="{{ scent.art }}" alt="" /></div>{% endif %}{% endfor %}
+    </div>
+    <p class="cap hand">Every label drawn by Mazie.</p>
+  </div>
+</div>
+{% endblock %}
