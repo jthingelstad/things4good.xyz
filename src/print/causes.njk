@@ -7,8 +7,8 @@ permalink: /print/causes/
 {% block style %}
   .head { display: grid; grid-template-columns: 1fr auto; gap: 0.28in; align-items: center; padding: 0 0 0.2in; }
   .head h1 { font-size: 40pt; }
-  /* Printed with wider margins than ours, the heading shrinks with the page width to stay on one line. */
-  @media print { .head h1 { font-size: min(40pt, 7vw); } }
+  /* On a narrower sheet (Safari prints larger) the heading shrinks with it to stay on one line. */
+  .head h1 { font-size: min(40pt, 7cqw); }
   .lead { font-size: 12.5pt; }
   .causes { flex: 1; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: minmax(0, 1fr) minmax(0, 1fr); min-height: 0; gap: 0.2in; padding-bottom: 0.22in; }
   .cause { --c: var(--marigold); --c-d: var(--marigold-d); --c-t: var(--marigold-t); border: 2px solid var(--c); border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; background: #fff; }
