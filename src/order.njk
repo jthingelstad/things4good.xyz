@@ -99,6 +99,7 @@ description: Order Things 4 Good candles online, for pickup or SPS delivery. Bef
 
         {# Cloudflare Turnstile. It shows itself only when it needs a click. #}
         <div class="order-check" id="order-check"></div>
+        <p class="order-hint" id="order-check-hint" role="status"></p>
         <p class="order-error" id="order-error" role="alert" hidden></p>
         <button class="btn btn--primary order-submit" id="order-submit" type="submit" disabled>Place order</button>
         <p class="order-fine">{% if orders.preorder %}We set your candles aside, and pour more if a scent runs short.{% else %}Your order holds these candles right away.{% endif %} Please send your donation soon after you order, because we may release an order that stays unpaid.</p>
@@ -284,6 +285,8 @@ description: Order Things 4 Good candles online, for pickup or SPS delivery. Bef
       // The box itself is empty (hidden) until Turnstile fills it, so measure the panel it sits in.
       const panel = $("order-check").parentElement, pad = getComputedStyle(panel);
       const room = panel.clientWidth - parseFloat(pad.paddingLeft) - parseFloat(pad.paddingRight);
+      // interaction-only shows the box only when Turnstile wants a click, so say what it is for.
+      const hint = (text) => { $("order-check-hint").textContent = text; };
       check = turnstile.render("#order-check", {
         sitekey: CHECK_KEY,
         action: "order",
@@ -291,9 +294,10 @@ description: Order Things 4 Good candles online, for pickup or SPS delivery. Bef
         theme: "light",
         // The flexible widget is 300px at least, wider than the panel on a 320px phone.
         size: room < 300 ? "compact" : "flexible",
-        callback: (t) => { token = t; },
+        "before-interactive-callback": () => { hint("Check the box above so we know you’re not a bot."); },
+        callback: (t) => { token = t; hint(""); },
         "expired-callback": () => { token = ""; },
-        "error-callback": () => { token = ""; },
+        "error-callback": () => { token = ""; hint(""); },
       });
     };
     const script = document.createElement("script");
