@@ -141,6 +141,17 @@ description: Order Things 4 Good candles online, for pickup or SPS delivery. Bef
   const form = $("order-form"), status = $("order-status"), errorBox = $("order-error"), submit = $("order-submit");
   const money = (n) => "$" + n.toLocaleString("en-US", { maximumFractionDigits: 2 });
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+  // The page also runs on older phones, so no newer API without a fallback (cross-browser check,
+  // 2026-11-07): replaceChildren is Safari 14, crypto.randomUUID Safari 15.4, Intl.ListFormat Safari 14.1,
+  // and `??` doesn't even parse before Safari 13.1. Each one broke ordering without a word.
+  const fillWith = (node, kids) => { node.textContent = ""; node.append(...kids); };
+  const newId = () => (crypto.randomUUID
+    ? crypto.randomUUID()
+    : "10000000-1000-4000-8000-100000000000".replace(/[018]/g, (c) => (c ^ (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))).toString(16)));
+  const listOf = (names) => (typeof Intl.ListFormat === "function"
+    ? new Intl.ListFormat("en", { type: "conjunction" }).format(names)
+    : names.length < 3 ? names.join(" and ") : `${names.slice(0, -1).join(", ")}, and ${names[names.length - 1]}`);
+  const orElse = (value, fallback) => (value === null || value === undefined ? fallback : value);
   const el = (tag, className, text) => {
     const node = document.createElement(tag);
     if (className) node.className = className;
@@ -174,7 +185,7 @@ description: Order Things 4 Good candles online, for pickup or SPS delivery. Bef
   const count = () => chosen().reduce((sum, p) => sum + p.quantity, 0);
 
   function fillSummary(list, items) {
-    list.replaceChildren(...items.map((p) => {
+    fillWith(list, items.map((p) => {
       const row = el("li");
       row.append(el("span", "", `${p.quantity} × ${p.name}`), el("span", "", money(p.quantity * p.price)));
       return row;
@@ -194,7 +205,7 @@ description: Order Things 4 Good candles online, for pickup or SPS delivery. Bef
       row.querySelector("output").textContent = q;
       row.querySelector("[data-less]").disabled = sending || q === 0;
       // A preorder candle is poured to order: no count, only the per-line cap.
-      const most = p.limit ?? Math.min(p.left ?? LINE_MAX, LINE_MAX);
+      const most = orElse(p.limit, Math.min(orElse(p.left, LINE_MAX), LINE_MAX));
       row.querySelector("[data-more]").disabled = sending || atMax || q >= most;
       const notes = [];
       if (p.left === 0) notes.push("All gone");
@@ -209,7 +220,7 @@ description: Order Things 4 Good candles online, for pickup or SPS delivery. Bef
 
   function draw() {
     const box = $("order-products");
-    box.replaceChildren();
+    box.textContent = "";
     const known = GROUPS.map(([type]) => type);
     const groups = [...GROUPS, ...[...new Set(products.map((p) => p.type))].filter((t) => !known.includes(t)).map((t) => [t, t])];
     for (const [type, title] of groups) {
@@ -270,12 +281,16 @@ description: Order Things 4 Good candles online, for pickup or SPS delivery. Bef
   // gets a fresh one on its own when one expires, and after reset().
   function loadCheck() {
     window.onOrderCheck = () => {
+      // The box itself is empty (hidden) until Turnstile fills it, so measure the panel it sits in.
+      const panel = $("order-check").parentElement, pad = getComputedStyle(panel);
+      const room = panel.clientWidth - parseFloat(pad.paddingLeft) - parseFloat(pad.paddingRight);
       check = turnstile.render("#order-check", {
         sitekey: CHECK_KEY,
         action: "order",
         appearance: "interaction-only",
         theme: "light",
-        size: "flexible",
+        // The flexible widget is 300px at least, wider than the panel on a 320px phone.
+        size: room < 300 ? "compact" : "flexible",
         callback: (t) => { token = t; },
         "expired-callback": () => { token = ""; },
         "error-callback": () => { token = ""; },
@@ -336,7 +351,7 @@ description: Order Things 4 Good candles online, for pickup or SPS delivery. Bef
       ? "It’s divided evenly across this year’s causes."
       : picked.length === 1
         ? `It all goes to ${CAUSES[picked[0]]}.`
-        : `It’s divided evenly across ${new Intl.ListFormat("en", { type: "conjunction" }).format(picked.map((c) => CAUSES[c]))}.`;
+        : `It’s divided evenly across ${listOf(picked.map((c) => CAUSES[c]))}.`;
     $("order-done-next").textContent = answers.fulfillment === "SPS delivery"
       ? "Jamie will get them to you at work."
       : current === "preorder"
@@ -350,9 +365,21 @@ description: Order Things 4 Good candles online, for pickup or SPS delivery. Bef
 
   const FIELD_WORDS = { name: "your name", email: "your email", mobile: "your mobile number", note: "your note", fulfillment: "how to get them to you", causes: "the causes you picked", items: "the candles in your order" };
 
-  form.addEventListener("submit", async (event) => {
+  form.addEventListener("submit", (event) => {
     event.preventDefault();
     if (sending) return;
+    // Nothing a buyer presses should fail silently. A resend keeps its request id, so it can't double up.
+    placeOrder().catch(() => {
+      sending = false;
+      submit.textContent = "Place order";
+      $("order-done").hidden = true;
+      form.hidden = false;
+      refresh();
+      sayError(`Something went wrong on our end. Press Place order again: it won’t double up. Or email ${EMAIL}.`);
+    });
+  });
+
+  async function placeOrder() {
     sayError("");
     const values = new FormData(form);
     const answers = {
@@ -373,7 +400,7 @@ description: Order Things 4 Good candles online, for pickup or SPS delivery. Bef
     if (answers.causes && !answers.causes.length) return sayError("Leave at least one cause checked.");
 
     const text = JSON.stringify(answers);
-    if (text !== lastAnswers) { lastAnswers = text; requestId = crypto.randomUUID(); }
+    if (text !== lastAnswers) { lastAnswers = text; requestId = newId(); }
     const items = chosen();
 
     // Nothing changes while an order is on its way: a changed quantity would be a new order.
@@ -403,7 +430,7 @@ description: Order Things 4 Good candles online, for pickup or SPS delivery. Bef
         const p = products.find((x) => x.id === short.id);
         if (p) {
           p.left = short.left;
-          p.limit = Math.min(p.limit ?? LINE_MAX, short.left);
+          p.limit = Math.min(orElse(p.limit, LINE_MAX), short.left);
         }
         cart.set(short.id, Math.min(cart.get(short.id) || 0, short.left));
       }
@@ -419,9 +446,14 @@ description: Order Things 4 Good candles online, for pickup or SPS delivery. Bef
     if (data.error === "invalid") return sayError(`We couldn’t take that order. Please email ${EMAIL}.`);
     if (data.error === "slow-down") return sayError(`That’s a lot of orders in a short time. Try again in a while, or email ${EMAIL}.`);
     sayError(`Something went wrong on our end. Press Place order again: it won’t double up. Or email ${EMAIL}.`);
-  });
+  }
 
-  if (BUILT === "preorder" || BUILT === "after") loadStock();
+  if (BUILT === "preorder" || BUILT === "after") {
+    loadStock().catch(() => {
+      form.hidden = true;
+      say(`We couldn’t load the candles. Try again in a minute, or email ${EMAIL}.`);
+    });
+  }
 })();
 </script>
 {% endblock %}
