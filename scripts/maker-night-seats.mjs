@@ -2,8 +2,8 @@
 // count follow Grist"). The Maker Night page, the home teaser and llms.txt count seats down from that
 // file at build time; this reads the Golden Ticket's count from the order service (GET /api/seats, the
 // same Left the order form sells against) and rewrites `sold` when it has changed. The workflow
-// maker-night-seats.yml runs it every 15 minutes and deploys after a change. A sale on a paper sheet
-// counts once the sheet is entered in Grist.
+// maker-night-seats.yml runs it, started hourly by otto-ops' Dagu job sync-maker-night-seats, and
+// deploys after a change. A sale on a paper sheet counts once the sheet is entered in Grist.
 //
 //   node scripts/maker-night-seats.mjs           sync, and say whether the file changed
 //   SEATS_URL=... node scripts/...               read another service (the default is the live site)
