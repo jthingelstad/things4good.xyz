@@ -1,15 +1,17 @@
 name: Maker Night seats from Grist
 
 # The Maker Night page counts seats down from src/_data/makerNightSeats.json, and since 2026-11-07 that
-# count follows Grist (Jamie: "make the Maker Night seat count follow Grist"). Every 15 minutes this reads
+# count follows Grist (Jamie: "make the Maker Night seat count follow Grist"). Once an hour this reads
 # the Golden Ticket's count from the order service (GET /api/seats, the same Left the order form sells
 # against) with scripts/maker-night-seats.mjs. When it has changed, it commits the file to main and starts
 # the deploy itself, because a push made with GITHUB_TOKEN starts no other workflow. Run it by hand to
 # sync now. A sale on a paper sheet counts once the sheet is entered in Grist.
+#
+# The clock is otto-ops' Dagu job sync-maker-night-seats, at :37 past every hour, which starts this and
+# waits for it (Jamie, 2026-11-07: "move the Maker Night seat sync to an hourly Dagu job on Otto"). The
+# GitHub schedule it replaced, every 15 minutes, fired twice in about seven hours that day.
 
 on:
-  schedule:
-    - cron: '7,22,37,52 * * * *'
   workflow_dispatch:
 
 permissions:
