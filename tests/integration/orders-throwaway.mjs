@@ -172,7 +172,7 @@ test('a new buyer: person, order and lines land as the document expects', async 
 
   const row = await orderRow(typed.requestId);
   assert.equal(row.Total, 60);
-  assert.equal(row.Order_Type, 'After the sale');
+  assert.equal(row.Order_Type, 'Post event');
   assert.equal(row.Fulfillment_Method, 'Pickup');
   assert.equal(row.Stage, 'Waiting on payment');
   assert.ok(!row.Later, 'pickup is not Later delivery');
@@ -265,7 +265,7 @@ test('a double submit writes one order and answers the same total', async () => 
 test('an order left with no lines by a dead attempt is replaced', async () => {
   const typed = buyer({ items: [{ product: offerings['True North'].product, quantity: 1 }] });
   await grist('POST', `/docs/${copy}/tables/Orders/records`, {
-    records: [{ fields: { Source_Row: `web ${typed.requestId}`, Name_As_Typed: 'Dead attempt', Order_Type: 'After the sale' } }]
+    records: [{ fields: { Source_Row: `web ${typed.requestId}`, Name_As_Typed: 'Dead attempt', Order_Type: 'Post event' } }]
   });
   const response = await newService().handle(orderEvent(typed));
   assert.equal(response.statusCode, 200);
@@ -293,7 +293,7 @@ test('an unknown product, and a Golden Ticket with its switch off, are refused, 
   assert.deepEqual(await counts(), before);
 });
 
-test('a preorder: regular candles past what is poured, written as a Preorder', async () => {
+test('a preorder: regular candles past what is poured, written as Pre event', async () => {
   const service = newService({ orders: PREORDER });
   const stock = JSON.parse((await service.handle(stockEvent)).body);
   assert.equal(stock.window, 'preorder');
@@ -313,7 +313,7 @@ test('a preorder: regular candles past what is poured, written as a Preorder', a
   assert.equal(response.statusCode, 200);
   assert.deepEqual(JSON.parse(response.body), { ok: true, total: 600 });
   const row = await orderRow(typed.requestId);
-  assert.equal(row.Order_Type, 'Preorder');
+  assert.equal(row.Order_Type, 'Pre event');
   // Sent to /pay/ by the done screen, so not "Send link", which the Stage formula gives an unsent preorder.
   assert.equal(row.Stage, 'Waiting on payment');
   assert.equal(row.Total, 600);
