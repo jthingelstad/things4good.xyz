@@ -181,7 +181,7 @@ test('stock before the sale: regular candles have no count, the rest are capped,
   );
 });
 
-test('a window shuts on time with no deploy: preorders pause, the leftovers week closes', async () => {
+test('a window shuts on time with no deploy: preorders pause, the post-event week closes', async () => {
   for (const [orders, next] of [[PREORDER, 'paused'], [AFTER, 'closed']]) {
     const { service, store, clock } = setup({ orders });
     assert.equal((await service.handle(get())).statusCode, 200);

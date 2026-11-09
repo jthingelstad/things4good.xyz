@@ -75,7 +75,7 @@ export function formatMobile(value) {
 //   preorder  open until `closes`, then paused. Regular candles have no cap: the family pours to fill
 //             them, and Left going below zero in Grist is the list to pour. Everything else is capped.
 //   paused    the sale is on, or its paper sheets and recount are not in yet. Opened again by hand.
-//   after     the leftovers week: open until `closes`, then closed. Everything is capped at what is left.
+//   after     post event: open until `closes`, then closed. Everything is capped at what is left.
 //   closed    the rest of the year.
 // An open window whose closing time is missing or unreadable is not open.
 export const WINDOWS = Object.freeze(['preorder', 'paused', 'after', 'closed']);
@@ -419,7 +419,7 @@ export function createService({
     // requestContext. Read only.
     async selfCheck() {
       const window = currentWindow(orders, now());
-      // A shut window counts what the leftovers week would offer.
+      // A shut window counts what the post-event week would offer.
       const { event, products } = toStock(await store.readStock(), rules(isOpen(window) ? window : 'after'));
       return { ok: Boolean(event), event, window, products: products.filter((product) => product.limit > 0).length };
     },

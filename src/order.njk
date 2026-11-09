@@ -137,7 +137,7 @@ description: Order Things 4 Good candles online, for pickup or SPS delivery. Bef
   const CAUSES = { {% for c in causes.list %}{{ c.grist | dump | safe }}: {{ c.name | dump | safe }}{% if not loop.last %}, {% endif %}{% endfor %} };
   const CHECK_KEY = {{ site.turnstileSiteKey | dump | safe }};
   const LINE_MAX = 24, ORDER_MAX = 30;
-  // In the leftovers week every counted line says how many are left (Jamie, 2026-11-09: a line with no
+  // In the post-event week every counted line says how many are left (Jamie, 2026-11-09: a line with no
   // count read as "just a donation"). Before the sale, only once it's under a dozen (Jamie, 2026-11-07).
   const LOW = 12;
   // The window this page was built in, and when the sale ends, for the paused message.
