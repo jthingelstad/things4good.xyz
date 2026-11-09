@@ -113,7 +113,11 @@ description: Order Things 4 Good candles online, for pickup or SPS delivery. Bef
       <p class="order-done-total">Your total is <b id="order-done-total"></b>.</p>
       <p id="order-done-causes" hidden></p>
       <ul class="order-summary" id="order-done-items"></ul>
-      <a class="btn btn--primary" href="/pay/">Send your donation <span class="arr">&rarr;</span></a>
+      {# Venmo's own payment link (venmo.com/paymentlinks): opens the app on a phone with the payee, amount and note filled in, and the website elsewhere. showDone sets the amount. The note stays the same on every order so the payment notices are easy to spot. #}
+      <div class="ev-cta order-done-pay">
+        <a class="btn btn--primary order-venmo" id="order-done-venmo" href="https://venmo.com/{{ site.payment.venmo }}?txn=pay" target="_blank" rel="noopener" data-tinylytics-event="pay.open" data-tinylytics-event-value="venmo-order"><span>Pay <span id="order-done-venmo-amount"></span> with Venmo</span> <span class="arr">&rarr;</span></a>
+        <a class="btn btn--ghost" href="/pay/" data-tinylytics-event="pay.other" data-tinylytics-event-value="order-done">Other ways to pay <span class="arr">&rarr;</span></a>
+      </div>
       <p id="order-done-next"></p>
       <p>This page is your confirmation, so nothing is emailed automatically. Questions? Email <a href="mailto:{{ site.email }}">{{ site.email }}</a>.</p>
     </div>
@@ -129,6 +133,7 @@ description: Order Things 4 Good candles online, for pickup or SPS delivery. Bef
   const GROUPS = [["Candle", "Candles"], ["XL candle", "XL candles"], ["Lid", "Candle lids"], ["Maker Night candle", "Maker Night"]];
   const EMAIL = {{ site.email | dump | safe }};
   // Grist's name for each cause, which the form sends, and the name the page shows.
+  const VENMO = {{ site.payment.venmo | dump | safe }};
   const CAUSES = { {% for c in causes.list %}{{ c.grist | dump | safe }}: {{ c.name | dump | safe }}{% if not loop.last %}, {% endif %}{% endfor %} };
   const CHECK_KEY = {{ site.turnstileSiteKey | dump | safe }};
   const LINE_MAX = 24, ORDER_MAX = 30;
@@ -346,6 +351,8 @@ description: Order Things 4 Good candles online, for pickup or SPS delivery. Bef
     say("");
     $("order-done-title").textContent = `Your order is in, ${answers.name}.`;
     $("order-done-total").textContent = money(total);
+    $("order-done-venmo-amount").textContent = money(total);
+    $("order-done-venmo").href = `https://venmo.com/${VENMO}?txn=pay&amount=${encodeURIComponent(total)}&note=${encodeURIComponent("Things 4 Good candles")}`;
     fillSummary($("order-done-items"), items);
     // Every cause checked is the even split across all of them.
     const picked = answers.causes || [];
