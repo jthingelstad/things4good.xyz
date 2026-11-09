@@ -235,7 +235,7 @@ test('a new buyer gets a person, one order and its lines, and the total comes fr
   assert.equal(saved.Event, 7);
   assert.equal(saved.Person, people[0].id);
   assert.equal(saved.Name_As_Typed, 'Testy McTest');
-  assert.equal(saved.Order_Type, 'After the sale');
+  assert.equal(saved.Order_Type, 'Post event');
   assert.equal(saved.Payment_Link_Sent, true);
   assert.equal(saved.Fulfillment_Method, 'Pickup');
   assert.equal(saved.Source_Row, `web ${uuid()}`);
@@ -311,7 +311,7 @@ test('a preorder takes more candles than are poured, and says so in Order_Type',
   assert.equal(response.statusCode, 200);
   assert.deepEqual(parse(response), { ok: true, total: 500 });
   const [saved] = store.state.orders;
-  assert.equal(saved.Order_Type, 'Preorder');
+  assert.equal(saved.Order_Type, 'Pre event');
   // The done screen links to /pay/, so the order is past Stage "Send link".
   assert.equal(saved.Payment_Link_Sent, true);
   assert.deepEqual(store.state.lines, [{ Order: saved.id, Product: 3, Quantity: 20 }]);
@@ -334,7 +334,7 @@ test('Golden Tickets sell two to an order while seats remain', async () => {
   const two = await service.handle(post(order({ requestId: uuid(2), items: [{ product: 15, quantity: 2 }] })));
   assert.equal(two.statusCode, 200);
   assert.deepEqual(parse(two), { ok: true, total: 500 });
-  assert.equal(store.state.orders[0].Order_Type, 'After the sale');
+  assert.equal(store.state.orders[0].Order_Type, 'Post event');
 });
 
 test('the spam trap refuses generically, before any call to Grist', async () => {

@@ -48,7 +48,8 @@ const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const HOUR = 3_600_000;
 const FULFILLMENT = new Set(['Pickup', 'SPS delivery']);
-const ORDER_TYPE = { preorder: 'Preorder', after: 'After the sale' };
+// Grist's Order type names the phase (Jamie, 2026-11-09): Pre event, Event (the default, sale-day rows), Post event.
+const ORDER_TYPE = { preorder: 'Pre event', after: 'Post event' };
 const STOCK_CACHE = 'public, max-age=60, s-maxage=300';
 
 // The widget is set to these hosts in Cloudflare; a token solved anywhere else is refused here too.
