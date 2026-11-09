@@ -268,6 +268,7 @@ S.limits = { stock: stockOf((s) => { const xl = s.products.find((p) => p.id === 
   x.eq('preorder candle, no note', (await x.note(ID.trueNorth)).trim(), '');
   await x.more(ID.golden, 2);
   x.expect('golden ticket stops at 2', await x.moreDisabled(ID.golden), 'still enabled at 2');
+  x.eq('golden ticket count follows the cart', (await x.note(ID.golden)).trim(), '· 2 available · 2 per order');
   await x.more(ID.trueNorth, 24);
   x.eq('line stops at 24', await x.qty(ID.trueNorth), '24');
   x.expect('+ disabled at 24', await x.moreDisabled(ID.trueNorth), 'enabled');
@@ -391,10 +392,24 @@ S.soldOut = { stock: stockOf((s) => { s.products = []; }), async run(x, page) {
   x.eq('status', await page.textContent('#order-status'), 'We’re all sold out. Thank you, everyone!');
 } };
 
-S.afterWindow = { stock: stockOf((s) => { s.window = 'after'; }), order: [ok({ ok: true, total: 25 })], async run(x, page) {
+S.afterWindow = { stock: stockOf((s) => { s.window = 'after'; for (const p of s.products) if (p.left === null) { p.left = 13; p.limit = 13; } }), order: [ok({ ok: true, total: 25 })], async run(x, page) {
   await x.ready();
   const shown = await page.$$eval('[data-window]', (h) => h.filter((e) => !e.hidden).map((e) => e.dataset.window));
   x.eq('service window wins', shown, ['after']);
+  // Every counted line shows its count after the sale, a dozen or more included.
+  x.eq('after: 13-left candle shows its count', (await x.note(ID.apple)).trim(), '· 13 available');
+  x.eq('after: 68 lids show their count', (await x.note(ID.lid)).trim(), '· 68 available');
+  x.eq('after: 9 XL', (await x.note(ID.wwXL)).trim(), '· 9 available');
+  // The count follows the cart, on the page only.
+  await x.more(ID.wwXL, 2);
+  x.eq('after: count follows the cart', (await x.note(ID.wwXL)).trim(), '· 7 available');
+  await page.click(`[data-product="${ID.wwXL}"] [data-less]`);
+  x.eq('after: and comes back on minus', (await x.note(ID.wwXL)).trim(), '· 8 available');
+  await page.click(`[data-product="${ID.wwXL}"] [data-less]`);
+  await x.more(ID.tnXL);
+  x.eq('after: the last one in the cart says 0', (await x.note(ID.tnXL)).trim(), '· 0 available');
+  x.expect('after: last one in the cart is not greyed', !(await page.$eval(`[data-product="${ID.tnXL}"]`, (r) => r.classList.contains('is-out'))), 'greyed');
+  await page.click(`[data-product="${ID.tnXL}"] [data-less]`);
   await x.more(ID.apple); await x.fill(); await page.click('#order-submit');
   x.expect('done', await x.waitDone(), await x.errorText());
   x.eq('after-window pickup words', (await x.doneInfo()).next, MSG.nextAfter);

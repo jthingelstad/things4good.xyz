@@ -137,7 +137,8 @@ description: Order Things 4 Good candles online, for pickup or SPS delivery. Bef
   const CAUSES = { {% for c in causes.list %}{{ c.grist | dump | safe }}: {{ c.name | dump | safe }}{% if not loop.last %}, {% endif %}{% endfor %} };
   const CHECK_KEY = {{ site.turnstileSiteKey | dump | safe }};
   const LINE_MAX = 24, ORDER_MAX = 30;
-  // A counted line says how many are left only once it's under a dozen (Jamie, 2026-11-07).
+  // In the leftovers week every counted line says how many are left (Jamie, 2026-11-09: a line with no
+  // count read as "just a donation"). Before the sale, only once it's under a dozen (Jamie, 2026-11-07).
   const LOW = 12;
   // The window this page was built in, and when the sale ends, for the paused message.
   const BUILT = {{ orders.window | dump | safe }};
@@ -215,7 +216,8 @@ description: Order Things 4 Good candles online, for pickup or SPS delivery. Bef
       row.querySelector("[data-more]").disabled = sending || atMax || q >= most;
       const notes = [];
       if (p.left === 0) notes.push("All gone");
-      else if (p.left !== null && p.left < LOW) notes.push(`${p.left} available`);
+      // Counts down as the buyer adds to the cart, on this page only (Jamie, 2026-11-09).
+      else if (p.left !== null && (current === "after" || p.left - q < LOW)) notes.push(`${p.left - q} available`);
       if (p.left !== null && most > 0 && most < Math.min(p.left, LINE_MAX)) notes.push(`${most} per order`);
       row.querySelector(".order-left").textContent = notes.map((note) => ` · ${note}`).join("");
       row.classList.toggle("is-out", most === 0);
