@@ -1194,6 +1194,8 @@ em.it { font-style: italic; }
 .order-done .order-summary { margin-bottom: 18px; }
 .order-done p { color: var(--ink-soft); margin: 14px 0 0; }
 .order-done a:not(.btn) { color: var(--marigold-d); font-weight: 600; }
+.order-done-pay { margin-top: 18px; }
+.order-venmo, .order-venmo:hover { background: #0074DE; border-color: #0074DE; color: #fff; }
 @media (max-width: 860px) {
   .order-grid { grid-template-columns: minmax(0, 1fr); }
   .order-panel { position: static; }
