@@ -113,9 +113,9 @@ description: Order Things 4 Good candles online, for pickup or SPS delivery. Bef
       <p class="order-done-total">Your total is <b id="order-done-total"></b>.</p>
       <p id="order-done-causes" hidden></p>
       <ul class="order-summary" id="order-done-items"></ul>
-      {# Venmo's own payment link (venmo.com/paymentlinks): opens the app on a phone with the payee, amount and note filled in, and the website elsewhere. showDone sets the amount. The note stays the same on every order so the payment notices are easy to spot. #}
+      {# The profile link (venmo.com/u/…), the same one /pay/ uses. Not the bare venmo.com/<user>?txn=pay payment link: on an iPhone Venmo answers that with a redirect to venmo://, which fails without the app and dropped a buyer back on an empty form (2026-11-09). The profile page works with or without the app. showDone adds the amount and note, which the app may fill in; the button shows the amount either way. #}
       <div class="ev-cta order-done-pay">
-        <a class="btn btn--primary order-venmo" id="order-done-venmo" href="https://venmo.com/{{ site.payment.venmo }}?txn=pay" target="_blank" rel="noopener" data-tinylytics-event="pay.open" data-tinylytics-event-value="venmo-order"><span>Pay <span id="order-done-venmo-amount"></span> with Venmo</span> <span class="arr">&rarr;</span></a>
+        <a class="btn btn--primary order-venmo" id="order-done-venmo" href="https://venmo.com/u/{{ site.payment.venmo }}" target="_blank" rel="noopener" data-tinylytics-event="pay.open" data-tinylytics-event-value="venmo-order"><span>Pay <span id="order-done-venmo-amount"></span> with Venmo</span> <span class="arr">&rarr;</span></a>
         <a class="btn btn--ghost" href="/pay/" data-tinylytics-event="pay.other" data-tinylytics-event-value="order-done">Other ways to pay <span class="arr">&rarr;</span></a>
       </div>
       <p id="order-done-next"></p>
@@ -354,7 +354,7 @@ description: Order Things 4 Good candles online, for pickup or SPS delivery. Bef
     $("order-done-title").textContent = `Your order is in, ${answers.name}.`;
     $("order-done-total").textContent = money(total);
     $("order-done-venmo-amount").textContent = money(total);
-    $("order-done-venmo").href = `https://venmo.com/${VENMO}?txn=pay&amount=${encodeURIComponent(total)}&note=${encodeURIComponent("Things 4 Good candles")}`;
+    $("order-done-venmo").href = `https://venmo.com/u/${VENMO}?txn=pay&amount=${encodeURIComponent(total)}&note=${encodeURIComponent("Things 4 Good candles")}`;
     fillSummary($("order-done-items"), items);
     // Every cause checked is the even split across all of them.
     const picked = answers.causes || [];

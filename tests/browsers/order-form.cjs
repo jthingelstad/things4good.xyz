@@ -182,7 +182,7 @@ S.happy = { order: [ok({ ok: true, total: 110 })], async run(x, page) {
   const d = await x.doneInfo();
   x.eq('done title', d.title, 'Your order is in, Testy McTest.');
   x.eq('done total', d.total, '$110');
-  x.eq('venmo link fills payee, amount and note', d.venmo, 'https://venmo.com/jthingelstad?txn=pay&amount=110&note=Things%204%20Good%20candles');
+  x.eq('venmo link fills payee, amount and note', d.venmo, 'https://venmo.com/u/jthingelstad?txn=pay&amount=110&note=Things%204%20Good%20candles');
   x.eq('venmo button names the total', d.venmoLabel, 'Pay $110 with Venmo →');
   if (CAUSES.length) x.eq('done causes', d.causes, MSG.allCauses);
   x.eq('done next', d.next, MSG.nextSps);
