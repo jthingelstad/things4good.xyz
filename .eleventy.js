@@ -11,14 +11,29 @@ module.exports = function (eleventyConfig) {
   // from the page's `card` front matter and the site's sale facts, and the
   // `v` that names that drawing, the first 10 hex of the SHA-256 of those
   // fields as JSON. base.njk publishes the fields as the page's h-entry.
-  eleventyConfig.addFilter("cardFields", (card, site) => ({
-    kicker: card.kicker,
-    name: card.name,
-    accent: card.accent || "",
-    summary: card.summary || "",
-    photo: `https://things4good.xyz/images/cards/${card.photo}.jpg`,
-    facts: card.saleFacts ? [site.saleDates, "Minneapolis", `$${site.pricePerCandle} a candle`] : [],
-  }));
+  //
+  // A card with `windows` (the order page) says what the page says in the
+  // order window of this build (orders.js), keyed as order.njk keys its
+  // heads: preorder, after, paused-sale, paused-count, closed. `orderFacts`
+  // puts the order's own facts in the pills while it is open: the day it
+  // closes, the price, and how the candles reach you.
+  eleventyConfig.addFilter("cardFields", (card, site, orders) => {
+    const shown = orders && orders.paused ? (orders.saleOn ? "paused-sale" : "paused-count") : orders && orders.window;
+    const c = card.windows ? { photo: card.photo, ...card.windows[shown] } : card;
+    const facts = c.saleFacts
+      ? [site.saleDates, "Minneapolis", `$${site.pricePerCandle} a candle`]
+      : c.orderFacts && orders.open
+        ? [`Order by ${orders.closesDay}`, `$${site.pricePerCandle} a candle`, "Pickup or SPS delivery"]
+        : [];
+    return {
+      kicker: c.kicker,
+      name: c.name,
+      accent: c.accent || "",
+      summary: c.summary || "",
+      photo: `https://things4good.xyz/images/cards/${c.photo}.jpg`,
+      facts,
+    };
+  });
   eleventyConfig.addFilter("cardVersion", (f) =>
     createHash("sha256")
       .update(JSON.stringify([f.kicker, f.name, f.accent, f.summary, f.photo, ...f.facts]))
