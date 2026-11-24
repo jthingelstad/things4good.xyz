@@ -5,7 +5,7 @@
   "saleYear": "2026",
   "orders": {
     "window": "after",
-    "closes": "2026-11-16T23:59:00-06:00",
+    "closes": "2026-11-30T23:59:00-06:00",
     "goldenTicket": true,
     "saleEnds": "2026-11-08T23:59:00-06:00",
     "reopens": ""
