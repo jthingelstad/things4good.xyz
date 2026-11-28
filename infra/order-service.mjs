@@ -265,7 +265,8 @@ export function createService({
     );
   };
 
-  const placeOrder = async (event, window) => {
+  // trace collects what the final log line says beyond the outcome, and survives a throw.
+  const placeOrder = async (event, window, trace) => {
     const raw = event.isBase64Encoded ? Buffer.from(event.body ?? '', 'base64').toString('utf8') : event.body ?? '';
     if (Buffer.byteLength(raw) > LIMITS.bodyBytes) return { response: json(413, { error: 'too-large' }), outcome: 'too-large' };
     if (!/^application\/json\b/i.test(event.headers?.['content-type'] ?? ''))
@@ -293,10 +294,15 @@ export function createService({
     if (errors) return { response: json(422, { error: 'invalid', fields: errors }), outcome: 'invalid' };
 
     for (const [id, at] of verified) if (now() - at >= VERIFIED_FOR) verified.delete(id);
-    if (!verified.has(order.requestId)) {
+    // The log says which way the check went: a fresh token that siteverify passed, or the bypass for a
+    // request id that passed in the last 15 minutes.
+    if (verified.has(order.requestId)) {
+      trace.turnstile = 'reused';
+    } else {
       const check = await verify({ token: body.turnstile });
       if (!check.ok) return { response: json(422, { error: 'turnstile' }), outcome: 'turnstile', codes: check.codes };
       verified.set(order.requestId, now());
+      trace.turnstile = 'passed';
     }
 
     const sourceRow = `web ${order.requestId}`;
@@ -398,7 +404,7 @@ export function createService({
     }
   };
 
-  const route = async (event) => {
+  const route = async (event, trace) => {
     const method = event.requestContext?.http?.method;
     const path = event.rawPath;
     const isStock = path === '/api/stock' && (method === 'GET' || method === 'HEAD');
@@ -412,7 +418,7 @@ export function createService({
     const window = currentWindow(orders, now());
     if (!isOpen(window)) return { response: json(503, { open: false, window }), route: isStock ? 'stock' : 'order', outcome: 'closed' };
     if (isStock) return { response: await stockResponse(window), route: 'stock', outcome: 'ok' };
-    return { ...(await placeOrder(event, window)), route: 'order' };
+    return { ...(await placeOrder(event, window, trace)), route: 'order' };
   };
 
   return {
@@ -428,8 +434,9 @@ export function createService({
     async handle(event) {
       const started = now();
       let result;
+      const trace = {};
       try {
-        result = await route(event);
+        result = await route(event, trace);
       } catch (error) {
         const outcome = error.step === 'turnstile' ? 'turnstile-failed' : 'grist-failed';
         log({ level: 'error', outcome, step: error.step ?? 'unknown', status: error.status, codes: error.codes });
@@ -450,6 +457,7 @@ export function createService({
         ms: now() - started,
         hasAddress: viewerIp(event.headers) !== 'unknown',
         ...(result.codes ? { codes: result.codes } : {}),
+        ...(trace.turnstile ? { turnstile: trace.turnstile } : {}),
         ...(result.list ? { list: result.list } : {})
       });
       return result.response;

@@ -665,6 +665,26 @@ test('a retry of a proven order is not checked again: its token is spent', async
   assert.equal(checks.length, 1);
 });
 
+test('the last log line says how Turnstile passed: a fresh token, or the 15-minute bypass', async () => {
+  const { service, logs } = setup({ fail: { addLines: true } });
+  await service.handle(post(order({ turnstile: 'one' })));
+  assert.equal(logs.at(-1).turnstile, 'passed');
+  // The page resends after the 503 with the same request id and its spent token.
+  await service.handle(post(order({ turnstile: 'one' })));
+  assert.equal(logs.at(-1).turnstile, 'reused');
+
+  const fine = setup();
+  await fine.service.handle(post(order({ turnstile: 'two' })));
+  assert.equal(fine.logs.at(-1).outcome, 'created');
+  assert.equal(fine.logs.at(-1).turnstile, 'passed');
+  // Refused, or never reached (a typo, the stock route), it says nothing.
+  await fine.service.handle(post(order({ requestId: uuid(2), turnstile: 'bad' })));
+  assert.equal(fine.logs.at(-1).outcome, 'turnstile');
+  assert.equal(fine.logs.at(-1).turnstile, undefined);
+  await fine.service.handle(post(order({ email: 'nope' })));
+  assert.equal(fine.logs.at(-1).turnstile, undefined);
+});
+
 test('a proven request id is forgotten after a while', async () => {
   const { service, checks, clock } = setup({ fail: { addLines: true } });
   await service.handle(post(order({ turnstile: 'one' })));
