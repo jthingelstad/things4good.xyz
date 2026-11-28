@@ -131,6 +131,10 @@ function tools(page, scn, t) {
   return { more, less, ready, fill, errorText, waitError, waitDone, doneInfo, qty, note, moreDisabled, total, tokenReady, boxShows, hint, waitHint, expect, eq, remark, orders: () => scn.log.order };
 }
 
+// Tinylytics stays off the page in these tests; this stands in for its event call and records what it got.
+const COUNT_STOPS = 'window.tinylytics = { event: (name, value) => { (window.__events = window.__events || []).push([name, value]); } };';
+const stops = (page) => page.evaluate(() => window.__events || []);
+
 const causeName = (g) => CAUSES.find((c) => c.grist === g).name;
 const ALL = CAUSES.map((c) => c.grist);
 const HINT = 'Check the box above so we know you’re not a bot.';
@@ -188,6 +192,10 @@ S.happy = { order: [ok({ ok: true, total: 110 })], async run(x, page) {
   x.eq('done next', d.next, MSG.nextSps);
   x.eq('done has focus', d.focused, 'order-done');
   x.expect('form hidden', d.formHidden, 'form still showing');
+  // A tab left on the done screen must stop solving tokens nobody will spend.
+  x.eq('turnstile widget removed after the order', await page.$$eval('#order-check *', (n) => n.length), 0);
+  await page.waitForTimeout(1000);
+  x.eq('still removed a moment later', await page.$$eval('#order-check iframe', (n) => n.length), 0);
 } };
 
 S.twoCauses = { causes: true, order: [ok({ ok: true, total: 25 })], async run(x, page) {
@@ -415,19 +423,21 @@ S.afterWindow = { stock: stockOf((s) => { s.window = 'after'; for (const p of s.
   x.eq('after-window pickup words', (await x.doneInfo()).next, MSG.nextAfter);
 } };
 
-S.turnstileBlocked = { block: /challenges\.cloudflare\.com/, order: [ok({ ok: true })], async run(x, page) {
+S.turnstileBlocked = { block: /challenges\.cloudflare\.com/, init: COUNT_STOPS, order: [ok({ ok: true })], async run(x, page) {
   await x.ready(); await x.more(ID.apple); await x.fill();
   await page.click('#order-submit');
   x.eq('message', await x.waitError(5000), `Our spam check didn’t load. Reload the page, or email ${EMAIL}.`);
   x.eq('nothing sent', x.orders().length, 0);
+  x.eq('counted as stopped: check broken', await stops(page), [['order.stopped', 'check-broken']]);
   x.eq('button back', await page.textContent('#order-submit'), 'Place order');
 } };
 
-S.turnstileFails = { key: 'fail', order: [ok({ ok: true })], async run(x, page) {
+S.turnstileFails = { key: 'fail', init: COUNT_STOPS, order: [ok({ ok: true })], async run(x, page) {
   await x.ready(); await x.more(ID.apple); await x.fill();
   await page.click('#order-submit');
   x.eq('message after 15 s', await x.waitError(25000), MSG.notYet);
   x.eq('nothing sent', x.orders().length, 0);
+  x.eq('counted as stopped: no token in the wait', await stops(page), [['order.stopped', 'check-wait']]);
 } };
 
 S.doubleClick = { order: [{ status: 200, body: { ok: true, total: 25 }, delay: 1500 }], async run(x, page) {

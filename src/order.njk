@@ -352,6 +352,24 @@ card:
     if (check !== null) turnstile.reset(check);
   }
 
+  // Once an order is in, the widget goes. Left on the done screen it kept solving a fresh token every five
+  // minutes that nothing ever spent (one tab, 138 tokens in a week, 2026-11). Nothing on this page takes a
+  // second order; a path that did would have to call loadCheck again first.
+  function removeCheck() {
+    token = "";
+    if (check === null) return;
+    try { turnstile.remove(check); } catch (e) { /* already gone */ }
+    check = null;
+  }
+
+  // Counts a buyer the page itself stopped before sending, so we can see whether the check turns real people
+  // away. The reason only, nothing about the buyer. Tinylytics may be blocked or still loading: never matters.
+  const countStop = (reason) => {
+    try {
+      if (window.tinylytics && typeof window.tinylytics.event === "function") window.tinylytics.event("order.stopped", reason);
+    } catch (e) { /* analytics never gets in the way of an order */ }
+  };
+
   // A retry with the same answers keeps its id, so the service can't take the order twice. Changed
   // answers are a new order.
   let requestId, lastAnswers;
@@ -402,6 +420,8 @@ card:
     done.hidden = false;
     done.focus();
     done.scrollIntoView({ block: "start" });
+    // Last, so a failure above still leaves a working widget for the try-again path.
+    removeCheck();
   }
 
   const FIELD_WORDS = { name: "your name", email: "your email", mobile: "your mobile number", note: "your note", fulfillment: "how to get them to you", causes: "the causes you picked", items: "the candles in your order" };
@@ -460,6 +480,7 @@ card:
     if (response && response.ok && data.ok) return showDone(answers, items, data.total);
     if (proof) resetCheck();
     if (data.error === "no-check") {
+      countStop(checkBroken ? "check-broken" : "check-wait");
       return sayError(checkBroken
         ? `Our spam check didn’t load. Reload the page, or email ${EMAIL}.`
         : "Our spam check isn’t done yet. If a box shows above the button, check it, then press Place order again.");
